@@ -9,6 +9,7 @@
     <property file="module.properties" />
 	<property name="fullName" value="m2m2-${name}-${version}" />
     <property file="${coreHome}/module-common.properties" />
+	<property name="deploy.jar.paths" value="${coreHome}/target/web/modules" />
     	
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${coreHome}/lib-opt/ant-contrib-1.0b3.jar" />
 
@@ -125,6 +126,7 @@
         <if>
             <isset property="tagdir"/>
             <then>
+            	<mkdir dir="${module.core}/${tagdir}" />
                 <!-- Move the tag dir to under the WEB-INF dir -->
                 <move todir="${coreHome}/target/web/WEB-INF/tags/${name}">
                     <fileset dir="${module.core}/${tagdir}"/>
@@ -163,6 +165,7 @@
         <if>
             <isset property="tagdir"/>
             <then>
+            	<mkdir dir="${coreHome}/${tagpkg}"/>
                 <!-- Copy the compiled tag dir back to the module -->
                 <property name="tagpkg" value="target/work/jsp/org/apache/jsp/tag/web/${name}"/>
                 <echo message="${tagpkg}"/>
@@ -205,7 +208,7 @@
     </target>
     
     <target name="copy-web" description="Copy the web dir to the core - useful when developing">
-        <copy todir="${coreHome}/web/modules/${name}/web" preservelastmodified="true">
+    	<copy todir="${coreHome}/target/web/modules/${name}/web" preservelastmodified="true">
             <fileset dir="web"><include name="**/*"/></fileset>
         </copy>
     </target>
