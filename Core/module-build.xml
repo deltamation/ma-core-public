@@ -165,10 +165,10 @@
         <if>
             <isset property="tagdir"/>
             <then>
-            	<mkdir dir="${coreHome}/${tagpkg}"/>
                 <!-- Copy the compiled tag dir back to the module -->
                 <property name="tagpkg" value="target/work/jsp/org/apache/jsp/tag/web/${name}"/>
                 <echo message="${tagpkg}"/>
+                <mkdir dir="${coreHome}/${tagpkg}"/>
                 <copy todir="${tagpkg}" preservelastmodified="true">
                     <fileset dir="${coreHome}/${tagpkg}"><include name="**/*"/></fileset>
                 </copy>
