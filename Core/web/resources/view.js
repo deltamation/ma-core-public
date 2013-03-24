@@ -163,7 +163,7 @@ mango.view.pointDetails.setData = function(state) {
     
     if (state.change != null) {
         show($("pointChangeNode"));
-        if (dojo.byId("pointChange").id != document.activeElement.parentNode.id) {
+        if (document.activeElement.parentNode.id != "pointChange") {
             $set("pointChange", state.change);
         }
     }
