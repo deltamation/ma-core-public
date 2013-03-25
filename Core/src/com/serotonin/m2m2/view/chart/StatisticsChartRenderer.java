@@ -94,6 +94,7 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
                 model.put("maximum", stats.getMaximumValue());
                 model.put("maxTime", stats.getMaximumTime());
                 model.put("average", stats.getAverage());
+                model.put("integral", stats.getIntegral());
                 if (includeSum)
                     model.put("sum", stats.getSum());
                 model.put("count", stats.getCount());
