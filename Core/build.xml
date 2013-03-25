@@ -83,7 +83,9 @@
         <delete dir="${build.dir}/web/WEB-INF/filedata" />
         <mkdir dir="${build.dir}/web/WEB-INF/filedata" />
         
-        <mkdir dir="${build.dir}/overrides" />
+		<copy todir="${build.dir}/overrides" preservelastmodified="true">
+        	<fileset dir="overrides"><include name="**/*.*"/></fileset>
+        </copy>
         <mkdir dir="${build.dir}/logs" />
 	</target>
     
