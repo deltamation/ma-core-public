@@ -94,11 +94,11 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
                 "pointEdit.logging.valueType.average");
     }
 
-    public static final int ENGINEERING_UNITS_DEFAULT = 95; // No units
+    public static final int ENGINEERING_UNITS_DEFAULT = EngineeringUnits.noUnits;
     public static ExportCodes ENGINEERING_UNITS_CODES = new ExportCodes();
     static {
         Translations en = Translations.getTranslations(Locale.ENGLISH);
-        for (int i = 0; i < 190; i++) {
+        for (int i = 0; i < EngineeringUnits.numberOfUnits; i++) {
             EngineeringUnits eu = new EngineeringUnits(i);
             ENGINEERING_UNITS_CODES.addElement(i, StringUtils.capitalize(en.translate(eu.getKey())), eu.getKey());
         }

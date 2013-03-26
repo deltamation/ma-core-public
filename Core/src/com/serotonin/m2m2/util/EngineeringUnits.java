@@ -4,220 +4,232 @@
  */
 package com.serotonin.m2m2.util;
 
+import com.serotonin.m2m2.view.conversion.Conversions;
+
 public class EngineeringUnits {
+    public static final int numberOfUnits = 197;
+    
     // Acceleration
-    public static final EngineeringUnits metersPerSecondPerSecond = new EngineeringUnits(166);
+    public static final int metersPerSecondPerSecond = 166;
     // Area
-    public static final EngineeringUnits squareMeters = new EngineeringUnits(0);
-    public static final EngineeringUnits squareCentimeters = new EngineeringUnits(116);
-    public static final EngineeringUnits squareFeet = new EngineeringUnits(1);
-    public static final EngineeringUnits squareInches = new EngineeringUnits(115);
+    public static final int squareMeters = 0;
+    public static final int squareCentimeters = 116;
+    public static final int squareFeet = 1;
+    public static final int squareInches = 115;
     // Currency
-    public static final EngineeringUnits currency1 = new EngineeringUnits(105);
-    public static final EngineeringUnits currency2 = new EngineeringUnits(106);
-    public static final EngineeringUnits currency3 = new EngineeringUnits(107);
-    public static final EngineeringUnits currency4 = new EngineeringUnits(108);
-    public static final EngineeringUnits currency5 = new EngineeringUnits(109);
-    public static final EngineeringUnits currency6 = new EngineeringUnits(110);
-    public static final EngineeringUnits currency7 = new EngineeringUnits(111);
-    public static final EngineeringUnits currency8 = new EngineeringUnits(112);
-    public static final EngineeringUnits currency9 = new EngineeringUnits(113);
-    public static final EngineeringUnits currency10 = new EngineeringUnits(114);
+    public static final int currency1 = 105;
+    public static final int currency2 = 106;
+    public static final int currency3 = 107;
+    public static final int currency4 = 108;
+    public static final int currency5 = 109;
+    public static final int currency6 = 110;
+    public static final int currency7 = 111;
+    public static final int currency8 = 112;
+    public static final int currency9 = 113;
+    public static final int currency10 = 114;
     // Electrical
-    public static final EngineeringUnits milliamperes = new EngineeringUnits(2);
-    public static final EngineeringUnits amperes = new EngineeringUnits(3);
-    public static final EngineeringUnits amperesPerMeter = new EngineeringUnits(167);
-    public static final EngineeringUnits amperesPerSquareMeter = new EngineeringUnits(168);
-    public static final EngineeringUnits ampereSquareMeters = new EngineeringUnits(169);
-    public static final EngineeringUnits farads = new EngineeringUnits(170);
-    public static final EngineeringUnits henrys = new EngineeringUnits(171);
-    public static final EngineeringUnits ohms = new EngineeringUnits(4);
-    public static final EngineeringUnits ohmMeters = new EngineeringUnits(172);
-    public static final EngineeringUnits milliohms = new EngineeringUnits(145);
-    public static final EngineeringUnits kilohms = new EngineeringUnits(122);
-    public static final EngineeringUnits megohms = new EngineeringUnits(123);
-    public static final EngineeringUnits siemens = new EngineeringUnits(173); // 1 mho equals 1 siemens
-    public static final EngineeringUnits siemensPerMeter = new EngineeringUnits(174);
-    public static final EngineeringUnits teslas = new EngineeringUnits(175);
-    public static final EngineeringUnits volts = new EngineeringUnits(5);
-    public static final EngineeringUnits millivolts = new EngineeringUnits(124);
-    public static final EngineeringUnits kilovolts = new EngineeringUnits(6);
-    public static final EngineeringUnits megavolts = new EngineeringUnits(7);
-    public static final EngineeringUnits voltAmperes = new EngineeringUnits(8);
-    public static final EngineeringUnits kilovoltAmperes = new EngineeringUnits(9);
-    public static final EngineeringUnits megavoltAmperes = new EngineeringUnits(10);
-    public static final EngineeringUnits voltAmperesReactive = new EngineeringUnits(11);
-    public static final EngineeringUnits kilovoltAmperesReactive = new EngineeringUnits(12);
-    public static final EngineeringUnits megavoltAmperesReactive = new EngineeringUnits(13);
-    public static final EngineeringUnits voltsPerDegreeKelvin = new EngineeringUnits(176);
-    public static final EngineeringUnits voltsPerMeter = new EngineeringUnits(177);
-    public static final EngineeringUnits degreesPhase = new EngineeringUnits(14);
-    public static final EngineeringUnits powerFactor = new EngineeringUnits(15);
-    public static final EngineeringUnits webers = new EngineeringUnits(178);
+    public static final int milliamperes = 2;
+    public static final int amperes = 3;
+    public static final int amperesPerMeter = 167;
+    public static final int amperesPerSquareMeter = 168;
+    public static final int ampereSquareMeters = 169;
+    public static final int farads = 170;
+    public static final int henrys = 171;
+    public static final int ohms = 4;
+    public static final int ohmMeters = 172;
+    public static final int milliohms = 145;
+    public static final int kilohms = 122;
+    public static final int megohms = 123;
+    public static final int siemens = 173; // 1 mho equals 1 siemens
+    public static final int siemensPerMeter = 174;
+    public static final int teslas = 175;
+    public static final int volts = 5;
+    public static final int millivolts = 124;
+    public static final int kilovolts = 6;
+    public static final int megavolts = 7;
+    public static final int voltAmperes = 8;
+    public static final int kilovoltAmperes = 9;
+    public static final int megavoltAmperes = 10;
+    public static final int voltAmperesReactive = 11;
+    public static final int kilovoltAmperesReactive = 12;
+    public static final int megavoltAmperesReactive = 13;
+    public static final int voltsPerDegreeKelvin = 176;
+    public static final int voltsPerMeter = 177;
+    public static final int degreesPhase = 14;
+    public static final int powerFactor = 15;
+    public static final int webers = 178;
+    public static final int coulombs = 195;
     // Energy
-    public static final EngineeringUnits joules = new EngineeringUnits(16);
-    public static final EngineeringUnits kilojoules = new EngineeringUnits(17);
-    public static final EngineeringUnits kilojoulesPerKilogram = new EngineeringUnits(125);
-    public static final EngineeringUnits megajoules = new EngineeringUnits(126);
-    public static final EngineeringUnits wattHours = new EngineeringUnits(18);
-    public static final EngineeringUnits kilowattHours = new EngineeringUnits(19);
-    public static final EngineeringUnits megawattHours = new EngineeringUnits(146);
-    public static final EngineeringUnits btus = new EngineeringUnits(20);
-    public static final EngineeringUnits kiloBtus = new EngineeringUnits(147);
-    public static final EngineeringUnits megaBtus = new EngineeringUnits(148);
-    public static final EngineeringUnits therms = new EngineeringUnits(21);
-    public static final EngineeringUnits tonHours = new EngineeringUnits(22);
+    public static final int joules = 16;
+    public static final int kilojoules = 17;
+    public static final int kilojoulesPerKilogram = 125;
+    public static final int megajoules = 126;
+    public static final int wattHours = 18;
+    public static final int kilowattHours = 19;
+    public static final int megawattHours = 146;
+    public static final int btus = 20;
+    public static final int kiloBtus = 147;
+    public static final int megaBtus = 148;
+    public static final int therms = 21;
+    public static final int tonHours = 22;
     // Enthalpy
-    public static final EngineeringUnits joulesPerKilogramDryAir = new EngineeringUnits(23);
-    public static final EngineeringUnits kilojoulesPerKilogramDryAir = new EngineeringUnits(149);
-    public static final EngineeringUnits megajoulesPerKilogramDryAir = new EngineeringUnits(150);
-    public static final EngineeringUnits btusPerPoundDryAir = new EngineeringUnits(24);
-    public static final EngineeringUnits btusPerPound = new EngineeringUnits(117);
+    public static final int joulesPerKilogramDryAir = 23;
+    public static final int kilojoulesPerKilogramDryAir = 149;
+    public static final int megajoulesPerKilogramDryAir = 150;
+    public static final int btusPerPoundDryAir = 24;
+    public static final int btusPerPound = 117;
     // Entropy
-    public static final EngineeringUnits joulesPerDegreeKelvin = new EngineeringUnits(127);
-    public static final EngineeringUnits kilojoulesPerDegreeKelvin = new EngineeringUnits(151);
-    public static final EngineeringUnits megajoulesPerDegreeKelvin = new EngineeringUnits(152);
-    public static final EngineeringUnits joulesPerKilogramDegreeKelvin = new EngineeringUnits(128);
+    public static final int joulesPerDegreeKelvin = 127;
+    public static final int kilojoulesPerDegreeKelvin = 151;
+    public static final int megajoulesPerDegreeKelvin = 152;
+    public static final int joulesPerKilogramDegreeKelvin = 128;
     // Force
-    public static final EngineeringUnits newton = new EngineeringUnits(153);
+    public static final int newton = 153;
     // Frequency
-    public static final EngineeringUnits cyclesPerHour = new EngineeringUnits(25);
-    public static final EngineeringUnits cyclesPerMinute = new EngineeringUnits(26);
-    public static final EngineeringUnits hertz = new EngineeringUnits(27);
-    public static final EngineeringUnits kilohertz = new EngineeringUnits(129);
-    public static final EngineeringUnits megahertz = new EngineeringUnits(130);
-    public static final EngineeringUnits perHour = new EngineeringUnits(131);
+    public static final int cyclesPerHour = 25;
+    public static final int cyclesPerMinute = 26;
+    public static final int hertz = 27;
+    public static final int kilohertz = 129;
+    public static final int megahertz = 130;
+    public static final int perHour = 131;
     // Humidity
-    public static final EngineeringUnits gramsOfWaterPerKilogramDryAir = new EngineeringUnits(28);
-    public static final EngineeringUnits percentRelativeHumidity = new EngineeringUnits(29);
+    public static final int gramsOfWaterPerKilogramDryAir = 28;
+    public static final int percentRelativeHumidity = 29;
     // Length
-    public static final EngineeringUnits millimeters = new EngineeringUnits(30);
-    public static final EngineeringUnits centimeters = new EngineeringUnits(118);
-    public static final EngineeringUnits meters = new EngineeringUnits(31);
-    public static final EngineeringUnits inches = new EngineeringUnits(32);
-    public static final EngineeringUnits feet = new EngineeringUnits(33);
+    public static final int millimeters = 30;
+    public static final int centimeters = 118;
+    public static final int meters = 31;
+    public static final int kilometers = 196;
+    public static final int inches = 32;
+    public static final int feet = 33;
     // Light
-    public static final EngineeringUnits candelas = new EngineeringUnits(179);
-    public static final EngineeringUnits candelasPerSquareMeter = new EngineeringUnits(180);
-    public static final EngineeringUnits wattsPerSquareFoot = new EngineeringUnits(34);
-    public static final EngineeringUnits wattsPerSquareMeter = new EngineeringUnits(35);
-    public static final EngineeringUnits lumens = new EngineeringUnits(36);
-    public static final EngineeringUnits luxes = new EngineeringUnits(37);
-    public static final EngineeringUnits footCandles = new EngineeringUnits(38);
+    public static final int candelas = 179;
+    public static final int candelasPerSquareMeter = 180;
+    public static final int wattsPerSquareFoot = 34;
+    public static final int wattsPerSquareMeter = 35;
+    public static final int lumens = 36;
+    public static final int luxes = 37;
+    public static final int footCandles = 38;
     // Mass
-    public static final EngineeringUnits kilograms = new EngineeringUnits(39);
-    public static final EngineeringUnits poundsMass = new EngineeringUnits(40);
-    public static final EngineeringUnits tons = new EngineeringUnits(41);
+    public static final int grams = 190;
+    public static final int kilograms = 39;
+    public static final int tonnes = 191;
+    public static final int poundsMass = 40;
+    public static final int tons = 41;
     // Mass Flow
-    public static final EngineeringUnits gramsPerSecond = new EngineeringUnits(154);
-    public static final EngineeringUnits gramsPerMinute = new EngineeringUnits(155);
-    public static final EngineeringUnits kilogramsPerSecond = new EngineeringUnits(42);
-    public static final EngineeringUnits kilogramsPerMinute = new EngineeringUnits(43);
-    public static final EngineeringUnits kilogramsPerHour = new EngineeringUnits(44);
-    public static final EngineeringUnits poundsMassPerSecond = new EngineeringUnits(119);
-    public static final EngineeringUnits poundsMassPerMinute = new EngineeringUnits(45);
-    public static final EngineeringUnits poundsMassPerHour = new EngineeringUnits(46);
-    public static final EngineeringUnits tonsPerHour = new EngineeringUnits(156);
+    public static final int gramsPerSecond = 154;
+    public static final int gramsPerMinute = 155;
+    public static final int kilogramsPerSecond = 42;
+    public static final int kilogramsPerMinute = 43;
+    public static final int kilogramsPerHour = 44;
+    public static final int tonnesPerSecond = 192;
+    public static final int tonnesPerMinute = 193;
+    public static final int tonnesPerHour = 194;
+    public static final int poundsMassPerSecond = 119;
+    public static final int poundsMassPerMinute = 45;
+    public static final int poundsMassPerHour = 46;
+    public static final int tonsPerHour = 156;
     // Power
-    public static final EngineeringUnits milliwatts = new EngineeringUnits(132);
-    public static final EngineeringUnits watts = new EngineeringUnits(47);
-    public static final EngineeringUnits kilowatts = new EngineeringUnits(48);
-    public static final EngineeringUnits megawatts = new EngineeringUnits(49);
-    public static final EngineeringUnits btusPerHour = new EngineeringUnits(50);
-    public static final EngineeringUnits kiloBtusPerHour = new EngineeringUnits(157);
-    public static final EngineeringUnits horsepower = new EngineeringUnits(51);
-    public static final EngineeringUnits tonsRefrigeration = new EngineeringUnits(52);
+    public static final int milliwatts = 132;
+    public static final int watts = 47;
+    public static final int kilowatts = 48;
+    public static final int megawatts = 49;
+    public static final int btusPerHour = 50;
+    public static final int kiloBtusPerHour = 157;
+    public static final int horsepower = 51;
+    public static final int tonsRefrigeration = 52;
     // Pressure
-    public static final EngineeringUnits pascals = new EngineeringUnits(53);
-    public static final EngineeringUnits hectopascals = new EngineeringUnits(133);
-    public static final EngineeringUnits kilopascals = new EngineeringUnits(54);
-    public static final EngineeringUnits millibars = new EngineeringUnits(134);
-    public static final EngineeringUnits bars = new EngineeringUnits(55);
-    public static final EngineeringUnits poundsForcePerSquareInch = new EngineeringUnits(56);
-    public static final EngineeringUnits centimetersOfWater = new EngineeringUnits(57);
-    public static final EngineeringUnits inchesOfWater = new EngineeringUnits(58);
-    public static final EngineeringUnits millimetersOfMercury = new EngineeringUnits(59);
-    public static final EngineeringUnits centimetersOfMercury = new EngineeringUnits(60);
-    public static final EngineeringUnits inchesOfMercury = new EngineeringUnits(61);
+    public static final int pascals = 53;
+    public static final int hectopascals = 133;
+    public static final int kilopascals = 54;
+    public static final int millibars = 134;
+    public static final int bars = 55;
+    public static final int poundsForcePerSquareInch = 56;
+    public static final int centimetersOfWater = 57;
+    public static final int inchesOfWater = 58;
+    public static final int millimetersOfMercury = 59;
+    public static final int centimetersOfMercury = 60;
+    public static final int inchesOfMercury = 61;
     // Temperature
-    public static final EngineeringUnits degreesCelsius = new EngineeringUnits(62);
-    public static final EngineeringUnits degreesKelvin = new EngineeringUnits(63);
-    public static final EngineeringUnits degreesKelvinPerHour = new EngineeringUnits(181);
-    public static final EngineeringUnits degreesKelvinPerMinute = new EngineeringUnits(182);
-    public static final EngineeringUnits degreesFahrenheit = new EngineeringUnits(64);
-    public static final EngineeringUnits degreeDaysCelsius = new EngineeringUnits(65);
-    public static final EngineeringUnits degreeDaysFahrenheit = new EngineeringUnits(66);
-    public static final EngineeringUnits deltaDegreesFahrenheit = new EngineeringUnits(120);
-    public static final EngineeringUnits deltaDegreesKelvin = new EngineeringUnits(121);
+    public static final int degreesCelsius = 62;
+    public static final int degreesKelvin = 63;
+    public static final int degreesKelvinPerHour = 181;
+    public static final int degreesKelvinPerMinute = 182;
+    public static final int degreesFahrenheit = 64;
+    public static final int degreeDaysCelsius = 65;
+    public static final int degreeDaysFahrenheit = 66;
+    public static final int deltaDegreesFahrenheit = 120;
+    public static final int deltaDegreesKelvin = 121;
     // Time
-    public static final EngineeringUnits years = new EngineeringUnits(67);
-    public static final EngineeringUnits months = new EngineeringUnits(68);
-    public static final EngineeringUnits weeks = new EngineeringUnits(69);
-    public static final EngineeringUnits days = new EngineeringUnits(70);
-    public static final EngineeringUnits hours = new EngineeringUnits(71);
-    public static final EngineeringUnits minutes = new EngineeringUnits(72);
-    public static final EngineeringUnits seconds = new EngineeringUnits(73);
-    public static final EngineeringUnits hundredthsSeconds = new EngineeringUnits(158);
-    public static final EngineeringUnits milliseconds = new EngineeringUnits(159);
+    public static final int years = 67;
+    public static final int months = 68;
+    public static final int weeks = 69;
+    public static final int days = 70;
+    public static final int hours = 71;
+    public static final int minutes = 72;
+    public static final int seconds = 73;
+    public static final int hundredthsSeconds = 158;
+    public static final int milliseconds = 159;
     // Torque
-    public static final EngineeringUnits newtonMeters = new EngineeringUnits(160);
+    public static final int newtonMeters = 160;
     // Velocity
-    public static final EngineeringUnits millimetersPerSecond = new EngineeringUnits(161);
-    public static final EngineeringUnits millimetersPerMinute = new EngineeringUnits(162);
-    public static final EngineeringUnits metersPerSecond = new EngineeringUnits(74);
-    public static final EngineeringUnits metersPerMinute = new EngineeringUnits(163);
-    public static final EngineeringUnits metersPerHour = new EngineeringUnits(164);
-    public static final EngineeringUnits kilometersPerHour = new EngineeringUnits(75);
-    public static final EngineeringUnits feetPerSecond = new EngineeringUnits(76);
-    public static final EngineeringUnits feetPerMinute = new EngineeringUnits(77);
-    public static final EngineeringUnits milesPerHour = new EngineeringUnits(78);
+    public static final int millimetersPerSecond = 161;
+    public static final int millimetersPerMinute = 162;
+    public static final int metersPerSecond = 74;
+    public static final int metersPerMinute = 163;
+    public static final int metersPerHour = 164;
+    public static final int kilometersPerSecond = 197;
+    public static final int kilometersPerHour = 75;
+    public static final int feetPerSecond = 76;
+    public static final int feetPerMinute = 77;
+    public static final int milesPerHour = 78;
     // Volume
-    public static final EngineeringUnits cubicFeet = new EngineeringUnits(79);
-    public static final EngineeringUnits cubicMeters = new EngineeringUnits(80);
-    public static final EngineeringUnits imperialGallons = new EngineeringUnits(81);
-    public static final EngineeringUnits liters = new EngineeringUnits(82);
-    public static final EngineeringUnits usGallons = new EngineeringUnits(83);
+    public static final int cubicFeet = 79;
+    public static final int cubicMeters = 80;
+    public static final int imperialGallons = 81;
+    public static final int liters = 82;
+    public static final int usGallons = 83;
     // Volumetric Flow
-    public static final EngineeringUnits cubicFeetPerSecond = new EngineeringUnits(142);
-    public static final EngineeringUnits cubicFeetPerMinute = new EngineeringUnits(84);
-    public static final EngineeringUnits cubicMetersPerSecond = new EngineeringUnits(85);
-    public static final EngineeringUnits cubicMetersPerMinute = new EngineeringUnits(165);
-    public static final EngineeringUnits cubicMetersPerHour = new EngineeringUnits(135);
-    public static final EngineeringUnits imperialGallonsPerMinute = new EngineeringUnits(86);
-    public static final EngineeringUnits litersPerSecond = new EngineeringUnits(87);
-    public static final EngineeringUnits litersPerMinute = new EngineeringUnits(88);
-    public static final EngineeringUnits litersPerHour = new EngineeringUnits(136);
-    public static final EngineeringUnits usGallonsPerMinute = new EngineeringUnits(89);
+    public static final int cubicFeetPerSecond = 142;
+    public static final int cubicFeetPerMinute = 84;
+    public static final int cubicMetersPerSecond = 85;
+    public static final int cubicMetersPerMinute = 165;
+    public static final int cubicMetersPerHour = 135;
+    public static final int imperialGallonsPerMinute = 86;
+    public static final int litersPerSecond = 87;
+    public static final int litersPerMinute = 88;
+    public static final int litersPerHour = 136;
+    public static final int usGallonsPerMinute = 89;
     // Other
-    public static final EngineeringUnits degreesAngular = new EngineeringUnits(90);
-    public static final EngineeringUnits degreesCelsiusPerHour = new EngineeringUnits(91);
-    public static final EngineeringUnits degreesCelsiusPerMinute = new EngineeringUnits(92);
-    public static final EngineeringUnits degreesFahrenheitPerHour = new EngineeringUnits(93);
-    public static final EngineeringUnits degreesFahrenheitPerMinute = new EngineeringUnits(94);
-    public static final EngineeringUnits jouleSeconds = new EngineeringUnits(183);
-    public static final EngineeringUnits kilogramsPerCubicMeter = new EngineeringUnits(186);
-    public static final EngineeringUnits kilowattHoursPerSquareMeter = new EngineeringUnits(137);
-    public static final EngineeringUnits kilowattHoursPerSquareFoot = new EngineeringUnits(138);
-    public static final EngineeringUnits megajoulesPerSquareMeter = new EngineeringUnits(139);
-    public static final EngineeringUnits megajoulesPerSquareFoot = new EngineeringUnits(140);
-    public static final EngineeringUnits noUnits = new EngineeringUnits(95);
-    public static final EngineeringUnits newtonSeconds = new EngineeringUnits(187);
-    public static final EngineeringUnits newtonsPerMeter = new EngineeringUnits(188);
-    public static final EngineeringUnits partsPerMillion = new EngineeringUnits(96);
-    public static final EngineeringUnits partsPerBillion = new EngineeringUnits(97);
-    public static final EngineeringUnits percent = new EngineeringUnits(98);
-    public static final EngineeringUnits percentObscurationPerFoot = new EngineeringUnits(143);
-    public static final EngineeringUnits percentObscurationPerMeter = new EngineeringUnits(144);
-    public static final EngineeringUnits percentPerSecond = new EngineeringUnits(99);
-    public static final EngineeringUnits perMinute = new EngineeringUnits(100);
-    public static final EngineeringUnits perSecond = new EngineeringUnits(101);
-    public static final EngineeringUnits psiPerDegreeFahrenheit = new EngineeringUnits(102);
-    public static final EngineeringUnits radians = new EngineeringUnits(103);
-    public static final EngineeringUnits radiansPerSecond = new EngineeringUnits(184);
-    public static final EngineeringUnits revolutionsPerMinute = new EngineeringUnits(104);
-    public static final EngineeringUnits squareMetersPerNewton = new EngineeringUnits(185);
-    public static final EngineeringUnits wattsPerMeterPerDegreeKelvin = new EngineeringUnits(189);
-    public static final EngineeringUnits wattsPerSquareMeterDegreeKelvin = new EngineeringUnits(141);
+    public static final int degreesAngular = 90;
+    public static final int degreesCelsiusPerHour = 91;
+    public static final int degreesCelsiusPerMinute = 92;
+    public static final int degreesFahrenheitPerHour = 93;
+    public static final int degreesFahrenheitPerMinute = 94;
+    public static final int jouleSeconds = 183;
+    public static final int kilogramsPerCubicMeter = 186;
+    public static final int kilowattHoursPerSquareMeter = 137;
+    public static final int kilowattHoursPerSquareFoot = 138;
+    public static final int megajoulesPerSquareMeter = 139;
+    public static final int megajoulesPerSquareFoot = 140;
+    public static final int noUnits = 95;
+    public static final int newtonSeconds = 187;
+    public static final int newtonsPerMeter = 188;
+    public static final int partsPerMillion = 96;
+    public static final int partsPerBillion = 97;
+    public static final int percent = 98;
+    public static final int percentObscurationPerFoot = 143;
+    public static final int percentObscurationPerMeter = 144;
+    public static final int percentPerSecond = 99;
+    public static final int perMinute = 100;
+    public static final int perSecond = 101;
+    public static final int psiPerDegreeFahrenheit = 102;
+    public static final int radians = 103;
+    public static final int radiansPerSecond = 184;
+    public static final int revolutionsPerMinute = 104;
+    public static final int squareMetersPerNewton = 185;
+    public static final int wattsPerMeterPerDegreeKelvin = 189;
+    public static final int wattsPerSquareMeterDegreeKelvin = 141;
 
     private final int value;
 
@@ -230,10 +242,150 @@ public class EngineeringUnits {
     }
 
     public String getKey() {
-        return "engUnit." + value;
+        return getKey(value);
     }
 
     public String getAbbrevKey() {
+        return getAbbrevKey(value);
+    }
+    
+    public static String getKey(int value) {
+        return "engUnit." + value;
+    }
+
+    public static String getAbbrevKey(int value) {
         return "engUnit.abbr." + value;
+    }
+    
+    public static valueAndEngineeringUnit toIntegratedUnit(double inputValue, int inputUnit) {
+        int outputUnit;
+        double outputValue;
+        
+        switch (inputUnit) {
+        case amperes:
+        case milliamperes:
+            outputValue = Conversions.convert(inputUnit, amperes, inputValue);
+            outputUnit = coulombs;
+            break;
+        case milliwatts:
+        case watts:
+        case kilowatts:
+        case megawatts:
+            outputValue = Conversions.convert(inputUnit, watts, inputValue);
+            outputUnit = joules;
+            break;
+        case metersPerSecondPerSecond:
+            outputValue = Conversions.convert(inputUnit, metersPerSecondPerSecond, inputValue);
+            outputUnit = metersPerSecond;
+            break;
+        case gramsPerSecond:
+        case gramsPerMinute:
+            outputValue = Conversions.convert(inputUnit, gramsPerSecond, inputValue);
+            outputUnit = grams;
+            break;
+        case kilogramsPerSecond:
+        case kilogramsPerMinute:
+        case kilogramsPerHour:
+            outputValue = Conversions.convert(inputUnit, kilogramsPerSecond, inputValue);
+            outputUnit = kilograms;
+            break;
+        case tonnesPerSecond:
+        case tonnesPerMinute:
+        case tonnesPerHour:
+            outputValue = Conversions.convert(inputUnit, tonnesPerSecond, inputValue);
+            outputUnit = tonnes;
+            break;
+        case poundsMassPerSecond:
+        case poundsMassPerMinute:
+        case poundsMassPerHour:
+            outputValue = Conversions.convert(inputUnit, poundsMassPerSecond, inputValue);
+            outputUnit = poundsMass;
+            break;
+        case millimetersPerSecond:
+        case millimetersPerMinute:
+            outputValue = Conversions.convert(inputUnit, millimetersPerSecond, inputValue);
+            outputUnit = millimeters;
+            break;
+        case metersPerSecond:
+        case metersPerMinute:
+        case metersPerHour:
+            outputValue = Conversions.convert(inputUnit, metersPerSecond, inputValue);
+            outputUnit = meters;
+            break;
+        case feetPerSecond:
+            outputValue = Conversions.convert(inputUnit, feetPerSecond, inputValue);
+            outputUnit = feet;
+            break;
+        case cubicFeetPerSecond:
+        case cubicFeetPerMinute:
+            outputValue = Conversions.convert(inputUnit, cubicFeetPerSecond, inputValue);
+            outputUnit = cubicFeet;
+            break;
+        case cubicMetersPerSecond:
+        case cubicMetersPerMinute:
+        case cubicMetersPerHour:
+            outputValue = Conversions.convert(inputUnit, cubicMetersPerSecond, inputValue);
+            outputUnit = cubicMeters;
+            break;
+        case litersPerSecond:
+        case litersPerMinute:
+        case litersPerHour:
+            outputValue = Conversions.convert(inputUnit, litersPerSecond, inputValue);
+            outputUnit = liters;
+            break;
+        case percentPerSecond:
+            outputValue = Conversions.convert(inputUnit, percentPerSecond, inputValue);
+            outputUnit = percent;
+            break;
+        case perSecond:
+        case perMinute:
+        case perHour:
+            outputValue = Conversions.convert(inputUnit, perSecond, inputValue);
+            outputUnit = noUnits;
+            break;
+        case radiansPerSecond:
+            outputValue = Conversions.convert(inputUnit, radiansPerSecond, inputValue);
+            outputUnit = radians;
+            break;
+        case kilometersPerSecond:
+        case kilometersPerHour:
+            outputValue = Conversions.convert(inputUnit, kilometersPerSecond, inputValue);
+            outputUnit = kilometers;
+            break;
+        default:
+            return null;
+        }
+        
+        if (outputValue == Double.NaN) {
+            return null;
+        }
+        
+        return new valueAndEngineeringUnit(outputValue, outputUnit);
+    }
+    
+    public static class valueAndEngineeringUnit {
+        private Double value;
+        private int unit;
+
+        public valueAndEngineeringUnit(Double value, int unit) {
+            this.value = value;
+            this.unit = unit;
+        }
+        
+        public Double getValue() {
+            return value;
+        }
+
+        public void setValue(Double value) {
+            this.value = value;
+        }
+
+        public int getUnit() {
+            return unit;
+        }
+
+        public void setUnit(int unit) {
+            this.unit = unit;
+        }
     }
 }

@@ -60,6 +60,7 @@
     <sst:option value="14"><fmt:message key="engUnit.14"/></sst:option>
     <sst:option value="15"><fmt:message key="engUnit.15"/></sst:option>
     <sst:option value="178"><fmt:message key="engUnit.178"/></sst:option>
+    <sst:option value="178"><fmt:message key="engUnit.195"/></sst:option>
   </optgroup>
   <optgroup label="<fmt:message key="engUnitGroup.energy"/>">
     <sst:option value="16"><fmt:message key="engUnit.16"/></sst:option>
@@ -107,6 +108,7 @@
     <sst:option value="30"><fmt:message key="engUnit.30"/></sst:option>
     <sst:option value="118"><fmt:message key="engUnit.118"/></sst:option>
     <sst:option value="31"><fmt:message key="engUnit.31"/></sst:option>
+    <sst:option value="196"><fmt:message key="engUnit.196"/></sst:option>
     <sst:option value="32"><fmt:message key="engUnit.32"/></sst:option>
     <sst:option value="33"><fmt:message key="engUnit.33"/></sst:option>
   </optgroup>
@@ -120,7 +122,9 @@
     <sst:option value="38"><fmt:message key="engUnit.38"/></sst:option>
   </optgroup>
   <optgroup label="<fmt:message key="engUnitGroup.mass"/>">
+    <sst:option value="190"><fmt:message key="engUnit.190"/></sst:option>
     <sst:option value="39"><fmt:message key="engUnit.39"/></sst:option>
+    <sst:option value="191"><fmt:message key="engUnit.191"/></sst:option>
     <sst:option value="40"><fmt:message key="engUnit.40"/></sst:option>
     <sst:option value="41"><fmt:message key="engUnit.41"/></sst:option>
   </optgroup>
@@ -130,10 +134,14 @@
     <sst:option value="42"><fmt:message key="engUnit.42"/></sst:option>
     <sst:option value="43"><fmt:message key="engUnit.43"/></sst:option>
     <sst:option value="44"><fmt:message key="engUnit.44"/></sst:option>
+    <sst:option value="192"><fmt:message key="engUnit.192"/></sst:option>
+    <sst:option value="193"><fmt:message key="engUnit.193"/></sst:option>
+    <sst:option value="194"><fmt:message key="engUnit.194"/></sst:option>
     <sst:option value="119"><fmt:message key="engUnit.119"/></sst:option>
     <sst:option value="45"><fmt:message key="engUnit.45"/></sst:option>
     <sst:option value="46"><fmt:message key="engUnit.46"/></sst:option>
     <sst:option value="156"><fmt:message key="engUnit.156"/></sst:option>
+
   </optgroup>
   <optgroup label="<fmt:message key="engUnitGroup.power"/>">
     <sst:option value="132"><fmt:message key="engUnit.132"/></sst:option>
@@ -189,6 +197,7 @@
   <sst:option value="74"><fmt:message key="engUnit.74"/></sst:option>
   <sst:option value="163"><fmt:message key="engUnit.163"/></sst:option>
   <sst:option value="164"><fmt:message key="engUnit.164"/></sst:option>
+  <sst:option value="164"><fmt:message key="engUnit.197"/></sst:option>
   <sst:option value="165"><fmt:message key="engUnit.165"/></sst:option>
   <sst:option value="76"><fmt:message key="engUnit.76"/></sst:option>
   <sst:option value="77"><fmt:message key="engUnit.77"/></sst:option>

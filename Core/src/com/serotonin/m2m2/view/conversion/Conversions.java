@@ -21,6 +21,21 @@ public class Conversions {
     private static final LinearConversion DEGREES_CELSIUS_TO_DEGREES_FAHRENHEIT = new LinearConversion(1.8, 32);
     private static final LinearConversion DEGREES_FAHRENHEIT_TO_DEGREES_CELSIUS = DEGREES_CELSIUS_TO_DEGREES_FAHRENHEIT
             .getInverse();
+    
+    private static final LinearConversion TIMES_BY_ONE_THOUSAND = new LinearConversion(1000, 0);
+    private static final LinearConversion DIVIDE_BY_ONE_THOUSAND = TIMES_BY_ONE_THOUSAND.getInverse();
+    private static final LinearConversion TIMES_BY_ONE_MILLION = new LinearConversion(1000000, 0);
+    private static final LinearConversion DIVIDE_BY_ONE_MILLION = TIMES_BY_ONE_MILLION.getInverse();
+    private static final LinearConversion TIMES_BY_ONE_BILLION = new LinearConversion(1000000000, 0);
+    private static final LinearConversion DIVIDE_BY_ONE_BILLION = TIMES_BY_ONE_BILLION.getInverse();
+    
+    private static final LinearConversion MINUTES_TO_SECONDS = new LinearConversion(60, 0);
+    private static final LinearConversion SECONDS_TO_MINUTES = MINUTES_TO_SECONDS.getInverse();
+    private static final LinearConversion HOURS_TO_SECONDS = new LinearConversion(3600, 0);
+    private static final LinearConversion SECONDS_TO_HOURS = HOURS_TO_SECONDS.getInverse();
+    
+    private static final LinearConversion PER_MINUTE_TO_PER_SECOND = SECONDS_TO_MINUTES;
+    private static final LinearConversion PER_HOUR_TO_PER_SECOND = SECONDS_TO_HOURS;
 
     static {
         availableConversions.put(
@@ -29,6 +44,72 @@ public class Conversions {
         availableConversions.put(
                 new ConversionType(EngineeringUnits.degreesCelsius, EngineeringUnits.degreesFahrenheit),
                 DEGREES_CELSIUS_TO_DEGREES_FAHRENHEIT);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.milliamperes, EngineeringUnits.amperes),
+                DIVIDE_BY_ONE_THOUSAND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.milliwatts, EngineeringUnits.watts),
+                DIVIDE_BY_ONE_THOUSAND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.kilowatts, EngineeringUnits.watts),
+                TIMES_BY_ONE_THOUSAND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.megawatts, EngineeringUnits.watts),
+                TIMES_BY_ONE_BILLION);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.gramsPerMinute, EngineeringUnits.gramsPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.kilogramsPerMinute, EngineeringUnits.kilogramsPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.kilogramsPerHour, EngineeringUnits.kilogramsPerSecond),
+                PER_HOUR_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.tonnesPerMinute, EngineeringUnits.tonnesPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.tonnesPerHour, EngineeringUnits.tonnesPerSecond),
+                PER_HOUR_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.poundsMassPerMinute, EngineeringUnits.poundsMassPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.poundsMassPerHour, EngineeringUnits.poundsMassPerSecond),
+                PER_HOUR_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.millimetersPerMinute, EngineeringUnits.millimetersPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.metersPerMinute, EngineeringUnits.metersPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.metersPerHour, EngineeringUnits.metersPerSecond),
+                PER_HOUR_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.cubicFeetPerMinute, EngineeringUnits.cubicFeetPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.cubicMetersPerMinute, EngineeringUnits.cubicMetersPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.cubicMetersPerHour, EngineeringUnits.cubicMetersPerSecond),
+                PER_HOUR_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.litersPerMinute, EngineeringUnits.litersPerSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.litersPerHour, EngineeringUnits.litersPerSecond),
+                PER_HOUR_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.perMinute, EngineeringUnits.perSecond),
+                PER_MINUTE_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.perHour, EngineeringUnits.perSecond),
+                PER_HOUR_TO_PER_SECOND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.kilometersPerHour, EngineeringUnits.kilometersPerSecond),
+                PER_HOUR_TO_PER_SECOND);
     }
 
     public static Conversion getConversion(EngineeringUnits from, EngineeringUnits to) {
@@ -53,6 +134,10 @@ public class Conversions {
     }
 
     public static double convert(Integer from, Integer to, double value) {
+        if (from.equals(to)) {
+            return value;
+        }
+        
         Conversion conversion = getConversion(from, to);
         if (conversion == null)
             return Double.NaN;
@@ -86,6 +171,20 @@ public class Conversions {
 
         public Integer getTo() {
             return to;
+        }
+        
+        @Override
+        public int hashCode() {
+            int result = 1;
+            result = 37 * result + from;
+            result = 37 * result + to;
+            return result;
+        }
+        
+        @Override
+        public boolean equals(Object that) {
+            ConversionType b = (ConversionType) that;
+            return (this.from.equals(b.from) && this.to.equals(b.to));
         }
     }
 

@@ -8,12 +8,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.serotonin.json.spi.JsonProperty;
 import com.serotonin.m2m2.DataTypes;
+import com.serotonin.m2m2.i18n.Translations;
 import com.serotonin.m2m2.rt.dataImage.PointValueFacade;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
+import com.serotonin.m2m2.util.EngineeringUnits;
+import com.serotonin.m2m2.util.EngineeringUnits.valueAndEngineeringUnit;
 import com.serotonin.m2m2.view.ImplDefinition;
 import com.serotonin.m2m2.view.stats.AnalogStatistics;
 import com.serotonin.m2m2.view.stats.StartsAndRuntimeList;
@@ -38,6 +42,8 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
     public ImplDefinition getDef() {
         return definition;
     }
+    
+    int engineeringUnits;
 
     @JsonProperty
     private boolean includeSum;
@@ -46,9 +52,10 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
         // no op
     }
 
-    public StatisticsChartRenderer(int timePeriod, int numberOfPeriods, boolean includeSum) {
+    public StatisticsChartRenderer(int timePeriod, int numberOfPeriods, boolean includeSum, int engineeringUnits) {
         super(timePeriod, numberOfPeriods);
         this.includeSum = includeSum;
+        this.engineeringUnits = engineeringUnits;
     }
 
     public boolean isIncludeSum() {
@@ -94,11 +101,18 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
                 model.put("maximum", stats.getMaximumValue());
                 model.put("maxTime", stats.getMaximumTime());
                 model.put("average", stats.getAverage());
-                model.put("integral", stats.getIntegral());
                 if (includeSum)
                     model.put("sum", stats.getSum());
                 model.put("count", stats.getCount());
                 model.put("noData", stats.getAverage() == null);
+                
+                valueAndEngineeringUnit integrated = EngineeringUnits.toIntegratedUnit(stats.getIntegral(), engineeringUnits);
+                if (integrated != null) {
+                    Translations en = Translations.getTranslations(Locale.ENGLISH);
+                    String abbrevUnit = en.translate(EngineeringUnits.getAbbrevKey(integrated.getUnit()));
+                    model.put("integral", integrated.getValue());
+                    model.put("integralUnits", abbrevUnit);
+                }
             }
             else if (dataTypeId == DataTypes.ALPHANUMERIC) {
                 ValueChangeCounter stats = new ValueChangeCounter(startTime, endTime, startVT, values);

@@ -14,6 +14,18 @@
     </path>
     
 	<target name="clean" description="Clean output directories">
+		<delete dir="${build.dir}/lib" />
+		<delete dir="${build.dir}/classes"/>
+		<delete file="${build.dir}/MANIFEST.MF"/>
+		<delete dir="${build.dir}/patches"/>
+		<delete dir="${build.dir}/ftl"/>
+		<delete dir="${build.dir}/web"/>
+		<delete dir="${build.dir}/overrides"/>
+		<delete dir="${build.dir}/logs"/>
+		<delete dir="${build.dir}/db"/>
+		<delete dir="${build.dir}/work"/>
+		
+
 		<delete dir="${build.dir}"/>
 		<mkdir dir="${build.dir}"/>
 	</target>

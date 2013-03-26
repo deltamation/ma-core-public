@@ -134,7 +134,7 @@ public class DataPointDetailsDwr extends BaseDwr {
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("point", pointVO);
-        StatisticsChartRenderer r = new StatisticsChartRenderer(periodType, period, includeSum);
+        StatisticsChartRenderer r = new StatisticsChartRenderer(periodType, period, includeSum, pointVO.getEngineeringUnits());
         r.addDataToModel(model, pointVO);
 
         ProcessResult response = new ProcessResult();
