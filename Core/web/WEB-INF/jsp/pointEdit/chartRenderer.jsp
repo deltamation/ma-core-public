@@ -49,6 +49,11 @@
       <tr>
         <td class="formLabelRequired"><fmt:message key="pointEdit.chart.includeSum"/></td>
         <td class="formField"><input id="chartRendererStatsIncludeSum" type="checkbox"/></td>
+        
+      </tr>
+      <tr>
+        <td class="formLabelRequired"><fmt:message key="pointEdit.chart.integralEngUnits"/></td>
+        <td class="formField"><tag:engineeringUnits id="chartRendererStatsIntegralEngUnits"/></td>
       </tr>
     </tbody>
     <tbody id="chartRendererImageFlipbook" style="display:none;">
@@ -85,6 +90,7 @@
               $set("chartRendererStatsNumberOfPeriods", "${form.chartRenderer.numberOfPeriods}");
               $set("chartRendererStatsTimePeriod", "${form.chartRenderer.timePeriod}");
               $set("chartRendererStatsIncludeSum", ${form.chartRenderer.includeSum});
+              $set("chartRendererStatsIntegralEngUnits", ${form.chartRenderer.integralEngUnits});
             </c:when>
             <c:when test='${form.chartRenderer.typeName == "chartRendererImageFlipbook"}'>
               $set("chartRendererImageFlipbookLimit", "${form.chartRenderer.limit}");
@@ -134,8 +140,8 @@
               else if (numberOfPeriods < 1)
                   alert("<fmt:message key="pointEdit.chart.invalidPeriods"/>");
               else
-                  DataPointEditDwr.setStatisticsChartRenderer($get("chartRendererStatsTimePeriod"), 
-                          numberOfPeriods, $get("chartRendererStatsIncludeSum"), callback);
+                  DataPointEditDwr.setStatisticsChartRenderer($get("chartRendererStatsTimePeriod"), numberOfPeriods,
+                		  $get("chartRendererStatsIncludeSum"), $get("chartRendererStatsIntegralEngUnits"), callback);
           }
           else if (typeName == "chartRendererImageFlipbook") {
               var limit = parseInt($get("chartRendererImageFlipbookLimit"));

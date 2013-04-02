@@ -4,8 +4,6 @@
  */
 package com.serotonin.m2m2.util;
 
-import com.serotonin.m2m2.view.conversion.Conversions;
-
 public class EngineeringUnits {
     public static final int numberOfUnits = 197;
     
@@ -257,135 +255,44 @@ public class EngineeringUnits {
         return "engUnit.abbr." + value;
     }
     
-    public static valueAndEngineeringUnit toIntegratedUnit(double inputValue, int inputUnit) {
-        int outputUnit;
-        double outputValue;
-        
-        switch (inputUnit) {
-        case amperes:
-        case milliamperes:
-            outputValue = Conversions.convert(inputUnit, amperes, inputValue);
-            outputUnit = coulombs;
-            break;
-        case milliwatts:
-        case watts:
-        case kilowatts:
-        case megawatts:
-            outputValue = Conversions.convert(inputUnit, watts, inputValue);
-            outputUnit = joules;
-            break;
-        case metersPerSecondPerSecond:
-            outputValue = Conversions.convert(inputUnit, metersPerSecondPerSecond, inputValue);
-            outputUnit = metersPerSecond;
-            break;
-        case gramsPerSecond:
-        case gramsPerMinute:
-            outputValue = Conversions.convert(inputUnit, gramsPerSecond, inputValue);
-            outputUnit = grams;
-            break;
-        case kilogramsPerSecond:
-        case kilogramsPerMinute:
-        case kilogramsPerHour:
-            outputValue = Conversions.convert(inputUnit, kilogramsPerSecond, inputValue);
-            outputUnit = kilograms;
-            break;
-        case tonnesPerSecond:
-        case tonnesPerMinute:
-        case tonnesPerHour:
-            outputValue = Conversions.convert(inputUnit, tonnesPerSecond, inputValue);
-            outputUnit = tonnes;
-            break;
-        case poundsMassPerSecond:
-        case poundsMassPerMinute:
-        case poundsMassPerHour:
-            outputValue = Conversions.convert(inputUnit, poundsMassPerSecond, inputValue);
-            outputUnit = poundsMass;
-            break;
-        case millimetersPerSecond:
-        case millimetersPerMinute:
-            outputValue = Conversions.convert(inputUnit, millimetersPerSecond, inputValue);
-            outputUnit = millimeters;
-            break;
+    public static Integer integralConversionUnit(int integratedUnit) {
+        switch (integratedUnit) {
+        case coulombs:
+            return amperes;
+        case joules:
+            return watts;
         case metersPerSecond:
-        case metersPerMinute:
-        case metersPerHour:
-            outputValue = Conversions.convert(inputUnit, metersPerSecond, inputValue);
-            outputUnit = meters;
-            break;
-        case feetPerSecond:
-            outputValue = Conversions.convert(inputUnit, feetPerSecond, inputValue);
-            outputUnit = feet;
-            break;
-        case cubicFeetPerSecond:
-        case cubicFeetPerMinute:
-            outputValue = Conversions.convert(inputUnit, cubicFeetPerSecond, inputValue);
-            outputUnit = cubicFeet;
-            break;
-        case cubicMetersPerSecond:
-        case cubicMetersPerMinute:
-        case cubicMetersPerHour:
-            outputValue = Conversions.convert(inputUnit, cubicMetersPerSecond, inputValue);
-            outputUnit = cubicMeters;
-            break;
-        case litersPerSecond:
-        case litersPerMinute:
-        case litersPerHour:
-            outputValue = Conversions.convert(inputUnit, litersPerSecond, inputValue);
-            outputUnit = liters;
-            break;
-        case percentPerSecond:
-            outputValue = Conversions.convert(inputUnit, percentPerSecond, inputValue);
-            outputUnit = percent;
-            break;
-        case perSecond:
-        case perMinute:
-        case perHour:
-            outputValue = Conversions.convert(inputUnit, perSecond, inputValue);
-            outputUnit = noUnits;
-            break;
-        case radiansPerSecond:
-            outputValue = Conversions.convert(inputUnit, radiansPerSecond, inputValue);
-            outputUnit = radians;
-            break;
-        case kilometersPerSecond:
-        case kilometersPerHour:
-            outputValue = Conversions.convert(inputUnit, kilometersPerSecond, inputValue);
-            outputUnit = kilometers;
-            break;
+            return metersPerSecondPerSecond;
+        case grams:
+            return gramsPerSecond;
+        case kilograms:
+            return kilogramsPerSecond;
+        case tonnes:
+            return tonnesPerSecond;
+        case poundsMass:
+            return poundsMassPerSecond;
+        case millimeters:
+            return millimetersPerSecond;
+        case meters:
+            return metersPerSecond;
+        case feet:
+            return feetPerSecond;
+        case cubicFeet:
+            return cubicFeetPerSecond;
+        case cubicMeters:
+            return cubicMetersPerSecond;
+        case liters:
+            return litersPerSecond;
+        case percent:
+            return percentPerSecond;
+        case noUnits:
+            return perSecond;
+        case radians:
+            return radiansPerSecond;
+        case kilometers:
+            return kilometersPerSecond;
         default:
             return null;
-        }
-        
-        if (outputValue == Double.NaN) {
-            return null;
-        }
-        
-        return new valueAndEngineeringUnit(outputValue, outputUnit);
-    }
-    
-    public static class valueAndEngineeringUnit {
-        private Double value;
-        private int unit;
-
-        public valueAndEngineeringUnit(Double value, int unit) {
-            this.value = value;
-            this.unit = unit;
-        }
-        
-        public Double getValue() {
-            return value;
-        }
-
-        public void setValue(Double value) {
-            this.value = value;
-        }
-
-        public int getUnit() {
-            return unit;
-        }
-
-        public void setUnit(int unit) {
-            this.unit = unit;
         }
     }
 }

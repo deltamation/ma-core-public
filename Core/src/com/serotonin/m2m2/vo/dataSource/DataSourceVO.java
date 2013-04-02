@@ -74,7 +74,7 @@ abstract public class DataSourceVO<T extends DataSourceVO<?>> implements Seriali
     private Map<Integer, Integer> alarmLevels = new HashMap<Integer, Integer>();
 
     @JsonProperty
-    private boolean purgeOverride = true;
+    private boolean purgeOverride = false;
     private int purgeType = PurgeTypes.YEARS;
     @JsonProperty
     private int purgePeriod = 1;

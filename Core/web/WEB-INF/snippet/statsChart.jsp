@@ -33,7 +33,7 @@
       <b><fmt:message key="common.stats.max"/></b>: ${m2m2:specificHtmlTextValue(point, maximum)} @ ${m2m2:time(maxTime)}<br/>
       <b><fmt:message key="common.stats.avg"/></b>: ${m2m2:specificHtmlTextValue(point, average)}<br/>
       <c:if test="${!empty integral}">
-        <b><fmt:message key="common.stats.integral"/></b>: ${m2m2:specificHtmlTextValue(point, integral)} ${integralUnits}<br/>
+        <b><fmt:message key="common.stats.integral"/></b>: ${m2m2:integralText(point, integral)}<br/>
       </c:if>
       <c:if test="${!empty sum}">
         <b><fmt:message key="common.stats.sum"/></b>: ${m2m2:specificHtmlTextValue(point, sum)}<br/>

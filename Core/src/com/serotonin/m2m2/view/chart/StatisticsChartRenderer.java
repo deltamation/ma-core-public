@@ -11,17 +11,24 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.serotonin.json.JsonException;
+import com.serotonin.json.JsonReader;
+import com.serotonin.json.ObjectWriter;
 import com.serotonin.json.spi.JsonProperty;
+import com.serotonin.json.type.JsonObject;
 import com.serotonin.m2m2.DataTypes;
+import com.serotonin.m2m2.i18n.TranslatableJsonException;
 import com.serotonin.m2m2.i18n.Translations;
 import com.serotonin.m2m2.rt.dataImage.PointValueFacade;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
 import com.serotonin.m2m2.util.EngineeringUnits;
-import com.serotonin.m2m2.util.EngineeringUnits.valueAndEngineeringUnit;
 import com.serotonin.m2m2.view.ImplDefinition;
+import com.serotonin.m2m2.view.conversion.Conversions;
 import com.serotonin.m2m2.view.stats.AnalogStatistics;
 import com.serotonin.m2m2.view.stats.StartsAndRuntimeList;
 import com.serotonin.m2m2.view.stats.ValueChangeCounter;
+import com.serotonin.m2m2.view.text.AnalogRenderer;
+import com.serotonin.m2m2.view.text.TextRenderer;
 import com.serotonin.m2m2.vo.DataPointVO;
 
 public class StatisticsChartRenderer extends TimePeriodChartRenderer {
@@ -43,19 +50,30 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
         return definition;
     }
     
-    int engineeringUnits;
-
     @JsonProperty
     private boolean includeSum;
+    
+    private int engUnits = 95;
+    private int integralEngUnits = 95;
+
+    public int getIntegralEngUnits() {
+        return integralEngUnits;
+    }
+
+    public void setIntegralEngUnits(int integralEngUnits) {
+        this.integralEngUnits = integralEngUnits;
+    }
 
     public StatisticsChartRenderer() {
         // no op
     }
 
-    public StatisticsChartRenderer(int timePeriod, int numberOfPeriods, boolean includeSum, int engineeringUnits) {
+    public StatisticsChartRenderer(int timePeriod, int numberOfPeriods, boolean includeSum,
+            int engUnits, int integralEngUnits) {
         super(timePeriod, numberOfPeriods);
         this.includeSum = includeSum;
-        this.engineeringUnits = engineeringUnits;
+        this.engUnits = engUnits;
+        this.integralEngUnits = integralEngUnits;
     }
 
     public boolean isIncludeSum() {
@@ -106,12 +124,12 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
                 model.put("count", stats.getCount());
                 model.put("noData", stats.getAverage() == null);
                 
-                valueAndEngineeringUnit integrated = EngineeringUnits.toIntegratedUnit(stats.getIntegral(), engineeringUnits);
-                if (integrated != null) {
-                    Translations en = Translations.getTranslations(Locale.ENGLISH);
-                    String abbrevUnit = en.translate(EngineeringUnits.getAbbrevKey(integrated.getUnit()));
-                    model.put("integral", integrated.getValue());
-                    model.put("integralUnits", abbrevUnit);
+                Integer conversionUnit = EngineeringUnits.integralConversionUnit(integralEngUnits);
+                if (conversionUnit != null) {
+                    double outputValue = Conversions.convert(engUnits, conversionUnit, stats.getIntegral());
+                    if (outputValue != Double.NaN) {
+                        model.put("integral", outputValue);
+                    }
                 }
             }
             else if (dataTypeId == DataTypes.ALPHANUMERIC) {
@@ -127,6 +145,12 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
     public String getChartSnippetFilename() {
         return "statsChart.jsp";
     }
+    
+    public TextRenderer getIntegralRenderer() {
+        Translations en = Translations.getTranslations(Locale.ENGLISH);
+        String abbrevUnit = en.translate(EngineeringUnits.getAbbrevKey(integralEngUnits));
+        return new AnalogRenderer("0.0", abbrevUnit);
+    }
 
     //
     // /
@@ -134,11 +158,13 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
     // /
     //
     private static final long serialVersionUID = -1;
-    private static final int version = 2;
+    private static final int version = 3;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(version);
         out.writeBoolean(includeSum);
+        out.writeInt(engUnits);
+        out.writeInt(integralEngUnits);
     }
 
     private void readObject(ObjectInputStream in) throws IOException {
@@ -149,5 +175,30 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
             includeSum = true;
         else if (ver == 2)
             includeSum = in.readBoolean();
+        else if (ver == 3) {
+            includeSum = in.readBoolean();
+            engUnits = in.readInt();
+            integralEngUnits = in.readInt();
+        }
     }
+    
+    @Override
+    public void jsonWrite(ObjectWriter writer) throws IOException, JsonException {
+        super.jsonWrite(writer);
+        writer.writeEntry("integralEngUnitsType", DataPointVO.ENGINEERING_UNITS_CODES.getCode(integralEngUnits));
+    }
+
+    @Override
+    public void jsonRead(JsonReader reader, JsonObject jsonObject) throws JsonException {
+        super.jsonRead(reader, jsonObject);
+
+        String text = jsonObject.getString("integralEngUnitsType");
+        if (text == null) {
+            throw new TranslatableJsonException("emport.error.chart.missing", "integralEngUnitsType",
+                    DataPointVO.ENGINEERING_UNITS_CODES.getCodeList());
+        }
+
+        integralEngUnits = DataPointVO.ENGINEERING_UNITS_CODES.getId(text);
+    }
+    
 }

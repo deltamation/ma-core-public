@@ -102,6 +102,15 @@ public class Conversions {
                 new ConversionType(EngineeringUnits.litersPerHour, EngineeringUnits.litersPerSecond),
                 PER_HOUR_TO_PER_SECOND);
         availableConversions.put(
+                new ConversionType(EngineeringUnits.litersPerSecond, EngineeringUnits.cubicMetersPerSecond),
+                DIVIDE_BY_ONE_THOUSAND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.litersPerMinute, EngineeringUnits.cubicMetersPerMinute),
+                DIVIDE_BY_ONE_THOUSAND);
+        availableConversions.put(
+                new ConversionType(EngineeringUnits.litersPerHour, EngineeringUnits.cubicMetersPerHour),
+                DIVIDE_BY_ONE_THOUSAND);
+        availableConversions.put(
                 new ConversionType(EngineeringUnits.perMinute, EngineeringUnits.perSecond),
                 PER_MINUTE_TO_PER_SECOND);
         availableConversions.put(

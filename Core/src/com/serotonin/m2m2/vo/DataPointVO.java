@@ -152,7 +152,7 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     @JsonProperty
     private double tolerance = 0;
     @JsonProperty
-    private boolean purgeOverride = true;
+    private boolean purgeOverride = false;
     private int purgeType = Common.TimePeriods.YEARS;
     @JsonProperty
     private int purgePeriod = 1;

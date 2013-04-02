@@ -25,9 +25,10 @@
 		<delete dir="${build.dir}/db"/>
 		<delete dir="${build.dir}/work"/>
 		
-
+		<!--
 		<delete dir="${build.dir}"/>
 		<mkdir dir="${build.dir}"/>
+		-->
 	</target>
 	
 	<target name="compile" description="Compile main source tree java files">
@@ -89,7 +90,7 @@
             </fileset>
         </copy>
         <!-- Empty the modules dir -->
-        <delete dir="${build.dir}/web/modules" />
+		<delete dir="${build.dir}/web/modules" />
         <mkdir dir="${build.dir}/web/modules" />
         <!-- Empty the filedata dir -->
         <delete dir="${build.dir}/web/WEB-INF/filedata" />
