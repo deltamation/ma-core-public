@@ -61,6 +61,13 @@
           <td class="formError">${status.errorMessage}</td>
         </tr>
       </spring:bind>
+      <spring:bind path="form.integralEngUnits">
+        <tr>
+          <td class="formLabelRequired"><fmt:message key="pointEdit.props.integralEngUnits"/></td>
+          <td class="formField"><tag:engineeringUnits name="integralEngUnits" value="${status.value}"/></td>
+          <td class="formError">${status.errorMessage}</td>
+        </tr>
+      </spring:bind>
     </tbody>
     
     <spring:bind path="form.chartColour">

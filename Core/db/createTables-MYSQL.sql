@@ -122,6 +122,7 @@ create table dataPoints (
   defaultCacheSize int,
   discardExtremeValues char(1),
   engineeringUnits int,
+  integralEngUnits int,
   data longblob not null,
   primary key (id)
 ) engine=InnoDB;

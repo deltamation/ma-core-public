@@ -115,6 +115,7 @@ create table dataPoints (
   defaultCacheSize int,
   discardExtremeValues char(1),
   engineeringUnits int,
+  integralEngUnits int,
   data image not null,
   primary key (id)
 );

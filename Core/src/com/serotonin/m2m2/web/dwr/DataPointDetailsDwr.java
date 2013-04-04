@@ -24,7 +24,6 @@ import com.serotonin.m2m2.rt.dataImage.DataPointRT;
 import com.serotonin.m2m2.rt.dataImage.PointValueFacade;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
 import com.serotonin.m2m2.rt.dataImage.types.ImageValue;
-import com.serotonin.m2m2.view.chart.ChartRenderer;
 import com.serotonin.m2m2.view.chart.StatisticsChartRenderer;
 import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.m2m2.vo.User;
@@ -135,15 +134,7 @@ public class DataPointDetailsDwr extends BaseDwr {
 
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("point", pointVO);
-        
-        int integralType = 95;
-        ChartRenderer pointCr = pointVO.getChartRenderer();
-        if (pointCr instanceof StatisticsChartRenderer) {
-            StatisticsChartRenderer statCr = (StatisticsChartRenderer) pointCr;
-            integralType = statCr.getIntegralEngUnits();
-        }
-        StatisticsChartRenderer r = new StatisticsChartRenderer(periodType, period, includeSum,
-                pointVO.getEngineeringUnits(), integralType);
+        StatisticsChartRenderer r = new StatisticsChartRenderer(periodType, period, includeSum);
         r.addDataToModel(model, pointVO);
 
         ProcessResult response = new ProcessResult();

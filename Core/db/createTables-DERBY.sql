@@ -118,6 +118,7 @@ create table dataPoints (
   defaultCacheSize int,
   discardExtremeValues char(1),
   engineeringUnits int,
+  integralEngUnits int,
   data blob not null
 );
 alter table dataPoints add constraint dataPointsPk primary key (id);

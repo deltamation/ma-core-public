@@ -107,10 +107,8 @@ public class DataPointEditDwr extends BaseDwr {
     }
 
     @DwrPermission(user = true)
-    public void setStatisticsChartRenderer(int timePeriod, int numberOfPeriods, boolean includeSum, int integralEngUnits) {
-        DataPointVO point = getDataPoint();
-        setChartRenderer(new StatisticsChartRenderer(timePeriod, numberOfPeriods, includeSum,
-                point.getEngineeringUnits(), integralEngUnits));
+    public void setStatisticsChartRenderer(int timePeriod, int numberOfPeriods, boolean includeSum) {
+        setChartRenderer(new StatisticsChartRenderer(timePeriod, numberOfPeriods, includeSum));
     }
 
     @DwrPermission(user = true)

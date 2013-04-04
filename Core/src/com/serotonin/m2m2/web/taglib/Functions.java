@@ -27,7 +27,6 @@ import com.serotonin.m2m2.module.SystemEventTypeDefinition;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
 import com.serotonin.m2m2.rt.dataImage.types.DataValue;
 import com.serotonin.m2m2.rt.dataImage.types.NumericValue;
-import com.serotonin.m2m2.view.chart.StatisticsChartRenderer;
 import com.serotonin.m2m2.view.text.TextRenderer;
 import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.m2m2.vo.User;
@@ -49,11 +48,9 @@ public class Functions {
     }
     
     public static String getIntegralText(DataPointVO point, double integralValue) {
-        if (point == null || !(point.getChartRenderer() instanceof StatisticsChartRenderer) ||
-                Double.valueOf(integralValue).isNaN())
+        if (point == null || Double.valueOf(integralValue).isNaN())
             return "-";
-        StatisticsChartRenderer chartRenderer = (StatisticsChartRenderer) point.getChartRenderer();
-        String result = chartRenderer.getIntegralRenderer().getText(integralValue, TextRenderer.HINT_SPECIFIC);
+        String result = point.getIntegralRenderer().getText(integralValue, TextRenderer.HINT_SPECIFIC);
         if (!StringUtils.isBlank(result))
             return encodeDQuot(result);
         return result;
