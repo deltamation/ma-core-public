@@ -20,6 +20,7 @@ public class ExportPointInfo {
     private String colour;
     private float weight;
     private boolean consolidatedChart;
+    private boolean individualChart;
     private int plotType;
 
     public String getExtendedName() {
@@ -96,6 +97,14 @@ public class ExportPointInfo {
 
     public void setConsolidatedChart(boolean consolidatedChart) {
         this.consolidatedChart = consolidatedChart;
+    }
+    
+    public boolean isIndividualChart() {
+        return individualChart;
+    }
+
+    public void setIndividualChart(boolean individualChart) {
+        this.individualChart = individualChart;
     }
 
     public int getPlotType() {
