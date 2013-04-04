@@ -49,7 +49,8 @@ public class Functions {
     }
     
     public static String getIntegralText(DataPointVO point, double integralValue) {
-        if (point == null)
+        if (point == null || !(point.getChartRenderer() instanceof StatisticsChartRenderer) ||
+                Double.valueOf(integralValue).isNaN())
             return "-";
         StatisticsChartRenderer chartRenderer = (StatisticsChartRenderer) point.getChartRenderer();
         String result = chartRenderer.getIntegralRenderer().getText(integralValue, TextRenderer.HINT_SPECIFIC);

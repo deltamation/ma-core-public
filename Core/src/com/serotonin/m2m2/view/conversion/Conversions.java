@@ -142,14 +142,14 @@ public class Conversions {
         return convert(from.getValue(), to.getValue(), value);
     }
 
-    public static double convert(Integer from, Integer to, double value) {
+    public static Double convert(Integer from, Integer to, double value) {
         if (from.equals(to)) {
             return value;
         }
         
         Conversion conversion = getConversion(from, to);
         if (conversion == null)
-            return Double.NaN;
+            return null;
         return conversion.convert(value);
     }
 

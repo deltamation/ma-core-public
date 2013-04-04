@@ -126,8 +126,8 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
                 
                 Integer conversionUnit = EngineeringUnits.integralConversionUnit(integralEngUnits);
                 if (conversionUnit != null) {
-                    double outputValue = Conversions.convert(engUnits, conversionUnit, stats.getIntegral());
-                    if (outputValue != Double.NaN) {
+                    Double outputValue = Conversions.convert(engUnits, conversionUnit, stats.getIntegral());
+                    if (outputValue != null) {
                         model.put("integral", outputValue);
                     }
                 }
