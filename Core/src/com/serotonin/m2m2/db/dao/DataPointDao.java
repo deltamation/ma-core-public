@@ -191,7 +191,7 @@ public class DataPointDao extends BaseDao {
                         + "intervalLoggingPeriodType, intervalLoggingPeriod, intervalLoggingType, tolerance, " //
                         + "purgeOverride, purgeType, purgePeriod, defaultCacheSize, discardExtremeValues, " //
                         + "engineeringUnits, integralEngUnits, data) " //
-                        + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", //
+                        + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", //
                 new Object[] { dp.getXid(), dp.getDataSourceId(), dp.getName(), dp.getDeviceName(),
                         boolToChar(dp.isEnabled()), dp.getPointFolderId(), dp.getLoggingType(),
                         dp.getIntervalLoggingPeriodType(), dp.getIntervalLoggingPeriod(), dp.getIntervalLoggingType(),
