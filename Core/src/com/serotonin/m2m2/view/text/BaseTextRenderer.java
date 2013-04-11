@@ -9,9 +9,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.serotonin.ShouldNeverHappenException;
 import com.serotonin.json.JsonException;
 import com.serotonin.json.JsonReader;
 import com.serotonin.json.ObjectWriter;
@@ -20,24 +21,45 @@ import com.serotonin.json.spi.TypeResolver;
 import com.serotonin.json.type.JsonObject;
 import com.serotonin.json.type.JsonValue;
 import com.serotonin.m2m2.i18n.TranslatableJsonException;
+import com.serotonin.m2m2.module.ModuleRegistry;
+import com.serotonin.m2m2.module.TextRendererDefinition;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
 import com.serotonin.m2m2.rt.dataImage.types.DataValue;
 import com.serotonin.m2m2.view.ImplDefinition;
 
 abstract public class BaseTextRenderer implements TextRenderer, JsonSerializable {
     static List<ImplDefinition> definitions;
+    static Map<String, Class<? extends TextRenderer>> classMap;
 
     static void ensureDefinitions() {
         if (definitions == null) {
             List<ImplDefinition> d = new ArrayList<ImplDefinition>();
+            Map<String, Class<? extends TextRenderer>> c = new HashMap<String, Class<? extends TextRenderer>>();
+            
             d.add(AnalogRenderer.getDefinition());
+            c.put(AnalogRenderer.getDefinition().getExportName(), AnalogRenderer.class);
             d.add(BinaryTextRenderer.getDefinition());
+            c.put(BinaryTextRenderer.getDefinition().getExportName(), BinaryTextRenderer.class);
             d.add(MultistateRenderer.getDefinition());
+            c.put(MultistateRenderer.getDefinition().getExportName(), MultistateRenderer.class);
             d.add(NoneRenderer.getDefinition());
+            c.put(NoneRenderer.getDefinition().getExportName(), NoneRenderer.class);
             d.add(PlainRenderer.getDefinition());
+            c.put(PlainRenderer.getDefinition().getExportName(), PlainRenderer.class);
             d.add(RangeRenderer.getDefinition());
+            c.put(RangeRenderer.getDefinition().getExportName(), RangeRenderer.class);
             d.add(TimeRenderer.getDefinition());
+            c.put(TimeRenderer.getDefinition().getExportName(), TimeRenderer.class);
+            
+            List<TextRendererDefinition> moduleDefs = ModuleRegistry.getDefinitions(TextRendererDefinition.class);
+            for (TextRendererDefinition moduleDef : moduleDefs) {
+                ImplDefinition textRenderDef = moduleDef.getTextRendererDefinition();
+                d.add(textRenderDef);
+                c.put(textRenderDef.getExportName(), moduleDef.getTextRendererClass());
+            }
+            
             definitions = d;
+            classMap = c;
         }
     }
 
@@ -53,9 +75,8 @@ abstract public class BaseTextRenderer implements TextRenderer, JsonSerializable
 
     public static List<String> getExportTypes() {
         ensureDefinitions();
-        List<String> result = new ArrayList<String>(definitions.size());
-        for (ImplDefinition def : definitions)
-            result.add(def.getExportName());
+        List<String> result = new ArrayList<String>(classMap.size());
+        result.addAll(classMap.keySet());
         return result;
     }
 
@@ -187,39 +208,19 @@ abstract public class BaseTextRenderer implements TextRenderer, JsonSerializable
         public Type resolve(JsonValue jsonValue) throws JsonException {
             JsonObject json = jsonValue.toJsonObject();
 
-            String type = json.getString("type");
+            String type = json.getString("type").toUpperCase();
             if (type == null)
                 throw new TranslatableJsonException("emport.error.text.missing", "type", getExportTypes());
 
-            ImplDefinition def = null;
             ensureDefinitions();
-            for (ImplDefinition id : definitions) {
-                if (id.getExportName().equalsIgnoreCase(type)) {
-                    def = id;
-                    break;
-                }
-            }
-
-            if (def == null)
-                throw new TranslatableJsonException("emport.error.text.invalid", "type", type, getExportTypes());
-
+            
             Class<? extends TextRenderer> clazz = null;
-            if (def == AnalogRenderer.getDefinition())
-                clazz = AnalogRenderer.class;
-            else if (def == BinaryTextRenderer.getDefinition())
-                clazz = BinaryTextRenderer.class;
-            else if (def == MultistateRenderer.getDefinition())
-                clazz = MultistateRenderer.class;
-            else if (def == NoneRenderer.getDefinition())
-                clazz = NoneRenderer.class;
-            else if (def == PlainRenderer.getDefinition())
-                clazz = PlainRenderer.class;
-            else if (def == RangeRenderer.getDefinition())
-                clazz = RangeRenderer.class;
-            else if (def == TimeRenderer.getDefinition())
-                clazz = TimeRenderer.class;
-            else
-                throw new ShouldNeverHappenException("What's this?: " + def.getName());
+            if (classMap.containsKey(type)) {
+                clazz = classMap.get(type);
+            }
+            else {
+                throw new TranslatableJsonException("emport.error.text.invalid", "type", type, getExportTypes());
+            }
 
             return clazz;
         }
