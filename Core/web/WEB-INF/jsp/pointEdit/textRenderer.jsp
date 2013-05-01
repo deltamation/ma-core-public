@@ -146,6 +146,13 @@
         <td class="formField"><input id="textRendererTimeConversionExponent" type="text"/></td>
       </tr>
     </tbody>
+    
+    <c:forEach items="${textRendererModules}" var="module">
+      <c:if test="${!empty module.includePath}">
+        <jsp:include page="${module.includePath}"/>
+      </c:if>
+    </c:forEach>
+    
   </table>
 </div>
 
@@ -156,7 +163,8 @@
       var currentTextRenderer;
       var multistateValues = new Array();
       var rangeValues = new Array();
-      
+      var moduleSaveActions = {};
+   
       this.init = function() {
           // Colour handler events
           dijit.byId("textRendererRangeColour").onChange = this.handlerRangeColour;
@@ -198,10 +206,11 @@
               $set("textRendererTimeFormat", "${sst:dquotEncode(form.textRenderer.format)}");
               $set("textRendererTimeConversionExponent", "${sst:dquotEncode(form.textRenderer.conversionExponent)}");
             </c:when>
-            <c:otherwise>
-              dojo.debug("Unknown text renderer: ${form.textRenderer.typeName}");
-            </c:otherwise>
           </c:choose>
+          
+          <c:forEach items="${textRendererModules}" var="module">
+              moduleSaveActions["${module.name}"] = ${module.saveAction};
+          </c:forEach>
           
           textRendererEditor.change();
       }
@@ -233,6 +242,9 @@
           else if (typeName == "textRendererTime")
               DataPointEditDwr.setTimeTextRenderer($get("textRendererTimeFormat"),
                       $get("textRendererTimeConversionExponent"), callback);
+          else if (typeName in moduleSaveActions) {
+        	  moduleSaveActions[typeName](callback);
+      	  }
           else
               callback();
       };

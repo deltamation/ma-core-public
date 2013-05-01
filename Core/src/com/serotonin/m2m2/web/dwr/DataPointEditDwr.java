@@ -84,10 +84,11 @@ public class DataPointEditDwr extends BaseDwr {
         setTextRenderer(new TimeRenderer(format, conversionExponent));
     }
 
-    private void setTextRenderer(TextRenderer renderer) {
+    @DwrPermission(user = true)
+    public void setTextRenderer(TextRenderer renderer) {
         getDataPoint().setTextRenderer(renderer);
     }
-
+    
     //
     // Set chart renderer
     //

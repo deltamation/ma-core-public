@@ -90,6 +90,8 @@ public class DataPointEditController extends SimpleFormController {
         result.put("textRenderers", BaseTextRenderer.getImplementation(point.getPointLocator().getDataTypeId()));
         result.put("chartRenderers", BaseChartRenderer.getImplementations(point.getPointLocator().getDataTypeId()));
         result.put("eventDetectors", PointEventDetectorVO.getImplementations(point.getPointLocator().getDataTypeId()));
+        
+        result.put("textRendererModules", BaseTextRenderer.getModuleDefinitions());
 
         ControllerUtils.addPointListDataToModel(Common.getUser(request), point.getId(), result);
 

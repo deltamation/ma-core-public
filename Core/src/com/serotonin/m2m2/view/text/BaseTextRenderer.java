@@ -30,6 +30,7 @@ import com.serotonin.m2m2.view.ImplDefinition;
 abstract public class BaseTextRenderer implements TextRenderer, JsonSerializable {
     static List<ImplDefinition> definitions;
     static Map<String, Class<? extends TextRenderer>> classMap;
+    static List<TextRendererDefinition> moduleDefs;
 
     static void ensureDefinitions() {
         if (definitions == null) {
@@ -51,7 +52,7 @@ abstract public class BaseTextRenderer implements TextRenderer, JsonSerializable
             d.add(TimeRenderer.getDefinition());
             c.put(TimeRenderer.getDefinition().getExportName(), TimeRenderer.class);
             
-            List<TextRendererDefinition> moduleDefs = ModuleRegistry.getDefinitions(TextRendererDefinition.class);
+            moduleDefs = ModuleRegistry.getDefinitions(TextRendererDefinition.class);
             for (TextRendererDefinition moduleDef : moduleDefs) {
                 ImplDefinition textRenderDef = moduleDef.getTextRendererDefinition();
                 d.add(textRenderDef);
@@ -71,6 +72,11 @@ abstract public class BaseTextRenderer implements TextRenderer, JsonSerializable
                 impls.add(def);
         }
         return impls;
+    }
+    
+    public static List<TextRendererDefinition> getModuleDefinitions() {
+        ensureDefinitions();
+        return moduleDefs;
     }
 
     public static List<String> getExportTypes() {
