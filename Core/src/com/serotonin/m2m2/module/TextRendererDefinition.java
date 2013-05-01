@@ -5,6 +5,8 @@
 
 package com.serotonin.m2m2.module;
 
+import java.util.Map;
+
 import com.serotonin.m2m2.view.ImplDefinition;
 import com.serotonin.m2m2.view.text.TextRenderer;
 
@@ -52,4 +54,10 @@ public abstract class TextRendererDefinition extends ModuleElementDefinition {
     public String getName() {
         return getTextRendererDefinition().getName();
     }
+    
+    /**
+     * Allows the Text renderer to add data to the point edit model
+     * @param result
+     */
+    public abstract void addToModel(Map<String, Object> result);
 }

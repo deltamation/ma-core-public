@@ -23,6 +23,7 @@ import com.serotonin.ShouldNeverHappenException;
 import com.serotonin.m2m2.Common;
 import com.serotonin.m2m2.DataTypes;
 import com.serotonin.m2m2.db.dao.DataPointDao;
+import com.serotonin.m2m2.module.TextRendererDefinition;
 import com.serotonin.m2m2.view.chart.BaseChartRenderer;
 import com.serotonin.m2m2.view.text.BaseTextRenderer;
 import com.serotonin.m2m2.vo.DataPointVO;
@@ -91,7 +92,11 @@ public class DataPointEditController extends SimpleFormController {
         result.put("chartRenderers", BaseChartRenderer.getImplementations(point.getPointLocator().getDataTypeId()));
         result.put("eventDetectors", PointEventDetectorVO.getImplementations(point.getPointLocator().getDataTypeId()));
         
-        result.put("textRendererModules", BaseTextRenderer.getModuleDefinitions());
+        List<TextRendererDefinition> defs = BaseTextRenderer.getModuleDefinitions();
+        result.put("textRendererModules", defs);
+        for (TextRendererDefinition def : defs) {
+            def.addToModel(result);
+        }
 
         ControllerUtils.addPointListDataToModel(Common.getUser(request), point.getId(), result);
 
