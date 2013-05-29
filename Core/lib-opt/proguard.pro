@@ -7,6 +7,9 @@
 -keep public class ** extends com.serotonin.json.spi.JsonSerializable {
 	@com.serotonin.json.spi.JsonProperty *;
 }
+-keep public class ** extends com.serotonin.m2m2.db.upgrade.DBUpgrade {
+	public *;
+}
 
 -include annotations.pro
 
