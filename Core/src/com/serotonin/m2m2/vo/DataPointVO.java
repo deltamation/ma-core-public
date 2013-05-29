@@ -676,7 +676,7 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     //
     // Serialization
     //
-    private static final int version = 5;
+    private static final int version = 6;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(version);
@@ -687,6 +687,7 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
         out.writeDouble(discardHighLimit);
         SerializationHelper.writeSafeUTF(out, chartColour);
         out.writeInt(plotType);
+        out.writeInt(integralEngUnits);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -793,6 +794,16 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             discardHighLimit = in.readDouble();
             chartColour = SerializationHelper.readSafeUTF(in);
             plotType = in.readInt();
+        }
+        else if (ver == 6) {
+            textRenderer = (TextRenderer) in.readObject();
+            chartRenderer = (ChartRenderer) in.readObject();
+            pointLocator = (PointLocatorVO) in.readObject();
+            discardLowLimit = in.readDouble();
+            discardHighLimit = in.readDouble();
+            chartColour = SerializationHelper.readSafeUTF(in);
+            plotType = in.readInt();
+            integralEngUnits = in.readInt();
         }
 
         // Check the purge type. Weird how this could have been set to 0.

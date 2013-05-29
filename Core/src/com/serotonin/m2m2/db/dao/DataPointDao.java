@@ -69,7 +69,7 @@ public class DataPointDao extends BaseDao {
     "select dp.data, dp.id, dp.xid, dp.dataSourceId, dp.name, dp.deviceName, dp.enabled, dp.pointFolderId, " //
             + "  dp.loggingType, dp.intervalLoggingPeriodType, dp.intervalLoggingPeriod, dp.intervalLoggingType, " //
             + "  dp.tolerance, dp.purgeOverride, dp.purgeType, dp.purgePeriod, dp.defaultCacheSize, " //
-            + "  dp.discardExtremeValues, dp.engineeringUnits, dp.integralEngUnits, ds.name, ds.xid, ds.dataSourceType " //
+            + "  dp.discardExtremeValues, dp.engineeringUnits, ds.name, ds.xid, ds.dataSourceType " //
             + "from dataPoints dp join dataSources ds on ds.id = dp.dataSourceId ";
 
     public List<DataPointVO> getDataPoints(Comparator<IDataPoint> comparator, boolean includeRelationalData) {
@@ -138,7 +138,6 @@ public class DataPointDao extends BaseDao {
             dp.setDefaultCacheSize(rs.getInt(++i));
             dp.setDiscardExtremeValues(charToBool(rs.getString(++i)));
             dp.setEngineeringUnits(rs.getInt(++i));
-            dp.setIntegralEngUnits(rs.getInt(++i));
 
             // Data source information.
             dp.setDataSourceName(rs.getString(++i));
@@ -190,17 +189,17 @@ public class DataPointDao extends BaseDao {
                 "insert into dataPoints (xid, dataSourceId, name, deviceName, enabled, pointFolderId, loggingType, " //
                         + "intervalLoggingPeriodType, intervalLoggingPeriod, intervalLoggingType, tolerance, " //
                         + "purgeOverride, purgeType, purgePeriod, defaultCacheSize, discardExtremeValues, " //
-                        + "engineeringUnits, integralEngUnits, data) " //
-                        + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", //
+                        + "engineeringUnits, data) " //
+                        + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", //
                 new Object[] { dp.getXid(), dp.getDataSourceId(), dp.getName(), dp.getDeviceName(),
                         boolToChar(dp.isEnabled()), dp.getPointFolderId(), dp.getLoggingType(),
                         dp.getIntervalLoggingPeriodType(), dp.getIntervalLoggingPeriod(), dp.getIntervalLoggingType(),
                         dp.getTolerance(), boolToChar(dp.isPurgeOverride()), dp.getPurgeType(), dp.getPurgePeriod(),
                         dp.getDefaultCacheSize(), boolToChar(dp.isDiscardExtremeValues()), dp.getEngineeringUnits(),
-                        dp.getIntegralEngUnits(), SerializationHelper.writeObject(dp) }, //
+                        SerializationHelper.writeObject(dp) }, //
                 new int[] { Types.VARCHAR, Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.CHAR, Types.INTEGER,
                         Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.DOUBLE, Types.CHAR,
-                        Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.CHAR, Types.INTEGER, Types.INTEGER, Types.BINARY }));
+                        Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.CHAR, Types.INTEGER, Types.BINARY }));
 
         // Save the relational information.
         saveEventDetectors(dp);
@@ -242,16 +241,16 @@ public class DataPointDao extends BaseDao {
                 "update dataPoints set xid=?, name=?, deviceName=?, enabled=?, pointFolderId=?, loggingType=?, " //
                         + "intervalLoggingPeriodType=?, intervalLoggingPeriod=?, intervalLoggingType=?, " //
                         + "tolerance=?, purgeOverride=?, purgeType=?, purgePeriod=?, defaultCacheSize=?, " //
-                        + "discardExtremeValues=?, engineeringUnits=?, integralEngUnits=?, data=? where id=?", //
+                        + "discardExtremeValues=?, engineeringUnits=?, data=? where id=?", //
                 new Object[] { dp.getXid(), dp.getName(), dp.getDeviceName(), boolToChar(dp.isEnabled()),
                         dp.getPointFolderId(), dp.getLoggingType(), dp.getIntervalLoggingPeriodType(),
                         dp.getIntervalLoggingPeriod(), dp.getIntervalLoggingType(), dp.getTolerance(),
                         boolToChar(dp.isPurgeOverride()), dp.getPurgeType(), dp.getPurgePeriod(),
                         dp.getDefaultCacheSize(), boolToChar(dp.isDiscardExtremeValues()), dp.getEngineeringUnits(),
-                        dp.getIntegralEngUnits(), SerializationHelper.writeObject(dp), dp.getId() }, //
+                        SerializationHelper.writeObject(dp), dp.getId() }, //
                 new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.CHAR, Types.INTEGER, Types.INTEGER,
                         Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.DOUBLE, Types.CHAR, Types.INTEGER,
-                        Types.INTEGER, Types.INTEGER, Types.CHAR, Types.INTEGER, Types.INTEGER, Types.BINARY, Types.INTEGER });
+                        Types.INTEGER, Types.INTEGER, Types.CHAR, Types.INTEGER, Types.BINARY, Types.INTEGER });
     }
 
     public void deleteDataPoints(final int dataSourceId) {
