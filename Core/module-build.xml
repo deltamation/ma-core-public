@@ -7,30 +7,34 @@
  -->
 <project name="MA - Module build" basedir=".">
     <property file="module.properties" />
-	<property name="fullName" value="m2m2-${name}-${version}" />
+    <property name="fullName" value="m2m2-${name}-${version}" />
     <property file="${coreHome}/module-common.properties" />
-	<property name="deploy.jar.paths" value="${coreHome}/target/web/modules" />
-    	
+    <property name="deploy.jar.paths" value="${coreHome}/target/web/modules" />
+        
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${coreHome}/lib-opt/ant-contrib-1.0b3.jar" />
 
-	<path id="master-classpath">
-		<pathelement path="${coreHome}/bin" />
-		<fileset dir="${coreHome}/lib">
-			<include name="*.jar" />
-		</fileset>
-		<fileset dir="lib">
-			<include name="*.jar" />
-		</fileset>
-		<pathelement path="target" />
-	</path>
+    <path id="master-classpath">
+        <pathelement path="${coreHome}/bin" />
+        <fileset dir="${coreHome}/lib">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="lib" erroronmissingdir="false">
+            <include name="*.jar" />
+        </fileset>
+        <!-- Grab the external libs that we won't package up -->
+        <fileset dir="external-lib" erroronmissingdir="false">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement path="target" />
+    </path>
 
-	<target name="clean" description="Clean the target area">
+    <target name="clean" description="Clean the target area">
   <echo message="${coreHome}"/>
-        		<delete dir="target" />
-	</target>
+                <delete dir="target" />
+    </target>
 
-	<target name="compile" description="Compile main source tree java files">
-		<mkdir dir="target"/>
+    <target name="compile" description="Compile main source tree java files">
+        <mkdir dir="target"/>
         
         <available property="lib.exists" file="lib" type="dir" />
         <if>
@@ -41,41 +45,41 @@
             </else>
         </if>
         
-		<javac destdir="target" target="1.6" source="1.6" debug="true" debuglevel="lines,vars,source" 
+        <javac destdir="target" target="1.6" source="1.6" debug="true" debuglevel="lines,vars,source" 
                 deprecation="false" optimize="false" failonerror="true" includeantruntime="false">
-			<src path="src" />
-			<classpath refid="master-classpath" />
-		</javac>
-	</target>
+            <src path="src" />
+            <classpath refid="master-classpath" />
+        </javac>
+    </target>
 
-	<target name="jar" depends="clean,compile" description="Create a jar file of the compiled classes">
-		<delete file="${fullName}.jar" />
-		<delete file="target/MANIFEST.MF" />
-		<tstamp>
-			<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
-		</tstamp>
+    <target name="jar" depends="clean,compile" description="Create a jar file of the compiled classes">
+        <delete file="${fullName}.jar" />
+        <delete file="target/MANIFEST.MF" />
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+        </tstamp>
 
-		<manifest file="target/MANIFEST.MF">
-			<attribute name="Built-By" value="Serotonin Software Inc., Markham, Ontario" />
-			<attribute name="Build-Date" value="${TODAY}" />
-		</manifest>
+        <manifest file="target/MANIFEST.MF">
+            <attribute name="Built-By" value="Serotonin Software Inc., Markham, Ontario" />
+            <attribute name="Build-Date" value="${TODAY}" />
+        </manifest>
 
         <mkdir dir="target/lib" />
-		<jar destfile="target/lib/${fullName}.jar" manifest="target/MANIFEST.MF">
-			<fileset dir="target">
-				<include name="**/*.class" />
-				<exclude name="MANIFEST.MF" />
-			</fileset>
-		</jar>
-		
-		<if>
-			<istrue value="${includeSource}"/>
-			<then>
-		        <copy todir="target/src" preservelastmodified="true">
-		            <fileset dir="src"><include name="**/*.*"/></fileset>
-		        </copy>
-			</then>
-		</if>
+        <jar destfile="target/lib/${fullName}.jar" manifest="target/MANIFEST.MF">
+            <fileset dir="target">
+                <include name="**/*.class" />
+                <exclude name="MANIFEST.MF" />
+            </fileset>
+        </jar>
+        
+        <if>
+            <istrue value="${includeSource}"/>
+            <then>
+                <copy todir="target/src" preservelastmodified="true">
+                    <fileset dir="src"><include name="**/*.*"/></fileset>
+                </copy>
+            </then>
+        </if>
         
         <available property="scripts.exists" file="scripts" type="dir" />
         <if>
@@ -88,7 +92,37 @@
         </if>
     </target>
     
-    <target name="jsp-compile" depends="jar" description="Conditionally compile the JSPs">
+    <target name="proguard" depends="jar" description="Optimize, obfusicate and repackage jars">
+        <if><istrue value="${proguard}"/><then>
+        	<path id="injars">
+        		<pathelement path="target/lib/${fullName}.jar" />
+    	    </path>
+        	<path id="libraryjars">
+        		<pathelement path="${java.home}/lib/rt.jar" />
+        		<pathelement path="${coreHome}/bin" />
+        		<fileset dir="${coreHome}/lib">
+		            <include name="*.jar" />
+		        </fileset>
+                <fileset dir="lib" erroronmissingdir="false">
+                    <include name="*.jar" />
+                </fileset>
+                <fileset dir="external-lib" erroronmissingdir="false">
+                    <include name="*.jar" />
+                </fileset>
+                <pathelement path="target" />
+			</path>
+        	
+            <taskdef resource="proguard/ant/task.properties" classpath="${coreHome}/lib-opt/proguard.jar" />
+            <proguard configuration="${coreHome}/lib-opt/proguard.pro">
+                <injar refid="injars" />
+                <libraryjar refid="libraryjars" />
+                <outjar path="target/lib/${fullName}-proguard.jar" />
+            </proguard>
+            <move file="target/lib/${fullName}-proguard.jar" tofile="target/lib/${fullName}.jar" />
+        </then></if>
+    </target>
+    
+    <target name="jsp-compile" depends="proguard" description="Conditionally compile the JSPs">
         <taskdef name="jetty-jspc" classname="com.serotonin.ant.JettyJspCompile"><classpath refid="master-classpath" /></taskdef>
         <available property="web.exists" file="web" type="dir" />
         <if>
@@ -126,7 +160,7 @@
         <if>
             <isset property="tagdir"/>
             <then>
-            	<mkdir dir="${module.core}/${tagdir}" />
+                <mkdir dir="${module.core}/${tagdir}" />
                 <!-- Move the tag dir to under the WEB-INF dir -->
                 <move todir="${coreHome}/target/web/WEB-INF/tags/${name}">
                     <fileset dir="${module.core}/${tagdir}"/>
@@ -207,8 +241,13 @@
         <copy todir="${todir}" preservelastmodified="true" file="${deploy.file}" />
     </target>
     
+    <target name="release" description="Release build and deploy">
+        <property name="proguard" value="true" />
+        <antcall target="deploy" />
+    </target>
+    
     <target name="copy-web" description="Copy the web dir to the core - useful when developing">
-    	<copy todir="${coreHome}/target/web/modules/${name}/web" preservelastmodified="true">
+        <copy todir="${coreHome}/target/web/modules/${name}/web" preservelastmodified="true">
             <fileset dir="web"><include name="**/*"/></fileset>
         </copy>
     </target>
