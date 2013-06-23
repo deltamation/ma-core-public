@@ -119,7 +119,6 @@ CREATE TABLE dataPoints (
   defaultCacheSize integer,
   discardExtremeValues character(1),
   engineeringUnits integer,
-  integralEngUnits int,
   data bytea NOT NULL,
   PRIMARY KEY (id)
 );
