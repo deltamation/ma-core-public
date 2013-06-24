@@ -171,7 +171,7 @@
         <fileset id="jsps.fs" dir="${coreHome}/target/web" includes="modules/${name}/**/*"/>
         <property name="canonical" location="${coreHome}/target/web"/>
         <pathconvert property="jsps" pathsep="," refid="jsps.fs">
-            <map from="${canonical}" to=""/>
+            <map from="${canonical}" to="."/>
         </pathconvert>
         
         <!-- Compile the JSPs -->
