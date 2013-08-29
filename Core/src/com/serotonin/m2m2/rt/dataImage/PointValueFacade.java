@@ -56,15 +56,54 @@ public class PointValueFacade {
     // Point values lists
     //
     public List<PointValueTime> getPointValues(long since) {
-        if (point != null)
-            return point.getPointValues(since);
-        return pointValueDao.getPointValues(dataPointId, since);
+        List<PointValueTime> list;
+        
+        if (point != null) {
+            list = point.getPointValues(since);
+        }
+        else {
+            list = pointValueDao.getPointValues(dataPointId, since);
+        }
+        
+        PointValueTime prevValue = getPointValueBefore(since);
+        if (prevValue != null) {
+            PointValueTime startValue = new PointValueTime(prevValue.getValue(), since);
+            list.add(0, startValue);
+        }
+        
+        if (!list.isEmpty()) {
+            PointValueTime lastValue = list.get(list.size()-1);
+            if (lastValue != null)
+                list.add(new PointValueTime(lastValue.getValue(), System.currentTimeMillis()));
+        }
+        
+        return list;
     }
 
     public List<PointValueTime> getPointValuesBetween(long from, long to) {
-        if (point != null)
-            return point.getPointValuesBetween(from, to);
-        return pointValueDao.getPointValuesBetween(dataPointId, from, to);
+        List<PointValueTime> list;
+        
+        if (point != null) {
+            list = point.getPointValuesBetween(from, to);
+        }
+        else {
+            list = pointValueDao.getPointValuesBetween(dataPointId, from, to);
+        }
+        
+        PointValueTime prevValue = getPointValueBefore(from);
+        if (prevValue != null) {
+            PointValueTime startValue = new PointValueTime(prevValue.getValue(), from);
+            list.add(0, startValue);
+        }
+        
+        if (!list.isEmpty()) {
+            long endTime = to <= System.currentTimeMillis() ? to : System.currentTimeMillis();
+            PointValueTime lastValue = list.get(list.size()-1);
+            if (lastValue != null)
+                list.add(new PointValueTime(lastValue.getValue(), endTime));
+        }
+        
+        return list;
     }
 
     public List<PointValueTime> getLatestPointValues(int limit) {
