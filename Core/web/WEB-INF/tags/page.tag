@@ -40,6 +40,7 @@
   <style type="text/css">
     @import "${dojoURI}dojox/editor/plugins/resources/css/StatusBar.css";
     @import "${dojoURI}dojox/layout/resources/FloatingPane.css";
+    @import "${dojoURI}dojox/layout/resources/ResizeHandle.css";
     @import "${dojoURI}dijit/themes/${theme}/${theme}.css";
     @import "${dojoURI}dojo/resources/dojo.css";
   </style>  

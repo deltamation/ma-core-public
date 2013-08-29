@@ -252,6 +252,10 @@
         </zip>
     </target>
     
+	<target name="docs" description="Generate Java Doc">
+		<javadoc sourcepath="src" destdir="target/doc" classpathref="master-classpath"/>
+	</target>
+	
     <target name="deploy" depends="zip" description="Copy the zip to configured places">
         <foreach list="${deploy.jar.paths}" target="|deploy" param="todir" delimiter="|">
             <param name="deploy.file" value="target/${fullName}.zip" />
