@@ -5,14 +5,18 @@
   relatively - to the directory of your core project. In Eclipse this can be done by going to 
   Window -> Preferences -> Any -> Runtime -> Properties and adding a the coreHome property.
  -->
-<project name="MA - Module build" basedir=".">
+<project name="MA - Module build" basedir="." xmlns:maven="antlib:org.apache.maven.artifact.ant">
     <property file="module.properties" />
     <property name="fullName" value="m2m2-${name}-${version}" />
     <property file="${coreHome}/module-common.properties" />
     <property name="deploy.jar.paths" value="${coreHome}/target/web/modules" />
         
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${coreHome}/lib-opt/ant-contrib-1.0b3.jar" />
-
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpath="${coreHome}/lib-opt/maven-ant-tasks-2.1.3.jar" />
+	
+	<maven:pom id="maven.pom" file="pom.xml" />
+	<maven:dependencies filesetId="mavenJars" pomRefId="maven.pom" />
+	
     <path id="master-classpath">
         <fileset dir="${coreHome}/target/lib">
             <include name="*.jar" />
@@ -24,9 +28,12 @@
         <fileset dir="external-lib" erroronmissingdir="false">
             <include name="*.jar" />
         </fileset>
+    	
+    	<fileset refid="mavenJars" />
+    	
         <pathelement path="target" />
     </path>
-
+	
     <target name="clean" description="Clean the target area">
   <echo message="${coreHome}"/>
                 <delete dir="target" />
@@ -225,6 +232,13 @@
             <fileset dir="target"><include name="work/**/*" /></fileset>
             <fileset dir="target" ><include name="src/**/*" /></fileset>
             <fileset dir="target" ><include name="bin/**/*" /></fileset>
+        	<mappedresources>
+        		<fileset refid="mavenJars" />
+                <chainedmapper>
+                  <flattenmapper/>
+                  <globmapper from="*.jar" to="lib/*.jar" />
+                </chainedmapper>
+        	</mappedresources>
         </zip>
     </target>
     
