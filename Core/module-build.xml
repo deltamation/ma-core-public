@@ -145,15 +145,25 @@
     
     <target name="jsp-compile" depends="proguard" description="Conditionally compile the JSPs">
         <taskdef name="jetty-jspc" classname="com.serotonin.ant.JettyJspCompile"><classpath refid="master-classpath" /></taskdef>
-        <available property="web.exists" file="web" type="dir" />
+    	
+    	<fileset id="module.jsps" dir="web">
+        	<include name="**/*.jsp"/>
+            <include name="**/*.jspf"/>
+            <include name="**/*.tag"/>
+            <include name="**/*.tagf"/>
+    	</fileset>
+    	
+    	<pathconvert refid="module.jsps" property="module.jsps.exist" setonempty="false"/>
         <if>
-            <isset property="web.exists"/>
+            <isset property="module.jsps.exist"/>
             <then>
                 <available property="work.exists" file="${coreHome}/target/work/jsp" type="dir" />
                 <if>
                     <isset property="work.exists"/>
                     <then>
-                        <antcall target="|jsp-compile"/>
+                        <antcall target="|jsp-compile">
+                        	<reference refid="module.jsps" />
+                    	</antcall>
                     </then>
                     <else>
                         <fail message="Run the core jsp-compile target first"/>
@@ -169,12 +179,7 @@
         <!-- Copy the web files to core dirs -->
         <delete dir="${module.core}"/>
         <copy todir="${module.core}/web" preservelastmodified="true">
-            <fileset dir="web">
-                <include name="**/*.jsp"/>
-                <include name="**/*.jspf"/>
-                <include name="**/*.tag"/>
-                <include name="**/*.tagf"/>
-            </fileset>
+        	<fileset refid="module.jsps"/>
         </copy>
         
         <!-- Check if there is a tags lib -->
