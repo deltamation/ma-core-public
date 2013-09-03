@@ -24,10 +24,12 @@
         <then>
         	<artifact:pom file="pom.xml" id="maven-pom" />
         	<artifact:dependencies filesetId="maven-deps" type="jar" pomRefId="maven-pom" />
+        	<artifact:dependencies filesetId="maven-deps-runtime" type="jar" pomRefId="maven-pom" useScope="runtime" />
         </then>
         <else>
         	<!-- Define an empty fileset -->
         	<fileset id="maven-deps" dir="non.existing.directory" erroronmissingdir="false"/>
+        	<fileset id="maven-deps-runtime" dir="non.existing.directory" erroronmissingdir="false"/>
         </else>
     </if>
 
@@ -254,7 +256,7 @@
             <fileset dir="target" ><include name="bin/**/*" /></fileset>
 
         	<mappedresources>
-        		<fileset refid="maven-deps" />
+        		<fileset refid="maven-deps-runtime" />
                 <chainedmapper>
                   <flattenmapper/>
                   <globmapper from="*.jar" to="lib/*.jar" />
