@@ -6,6 +6,22 @@
   <properties>
     <maCore>${env.MA_CORE}</maCore>
   </properties>
+  
+  <repositories>
+    <repository>
+      <id>mango-core</id>
+      <name>Mango Dependancies</name>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>file://${project.basedir}/maven-local</url>
+    </repository>
+  </repositories>
+  
   <build>
     <directory>maven-target</directory>
     <sourceDirectory>src</sourceDirectory>
@@ -136,46 +152,34 @@
           <version>2.1.7</version>
       </dependency>
       <dependency>
-          <groupId>serotonin-json</groupId>
+          <groupId>com.infiniteautomation</groupId>
           <artifactId>serotonin-json</artifactId>
           <version>2.0.6</version>
-          <scope>system</scope>
-          <systemPath>${maCore}/lib/serotonin-JSON.jar</systemPath>
       </dependency>
       <dependency>
-          <groupId>serotonin-providers</groupId>
+          <groupId>com.infiniteautomation</groupId>
           <artifactId>serotonin-providers</artifactId>
           <version>2.0.6</version>
-          <scope>system</scope>
-          <systemPath>${maCore}/lib/serotonin-providers.jar</systemPath>
       </dependency>
       <dependency>
-          <groupId>serotonin-timer</groupId>
+          <groupId>com.infiniteautomation</groupId>
           <artifactId>serotonin-timer</artifactId>
           <version>2.0.6</version>
-          <scope>system</scope>
-          <systemPath>${maCore}/lib/serotonin-timer.jar</systemPath>
       </dependency>
       <dependency>
-          <groupId>serotonin-utils</groupId>
+          <groupId>com.infiniteautomation</groupId>
           <artifactId>serotonin-utils</artifactId>
           <version>2.0.6</version>
-          <scope>system</scope>
-          <systemPath>${maCore}/lib/seroUtils.jar</systemPath>
       </dependency>
       <dependency>
-          <groupId>serotonin-mashared</groupId>
+          <groupId>com.infiniteautomation</groupId>
           <artifactId>serotonin-mashared</artifactId>
           <version>2.0.6</version>
-          <scope>system</scope>
-          <systemPath>${maCore}/lib/ma-shared.jar</systemPath>
       </dependency>
       <dependency>
-          <groupId>serotonin-mapriv</groupId>
+          <groupId>com.infiniteautomation</groupId>
           <artifactId>serotonin-mapriv</artifactId>
           <version>2.0.6</version>
-          <scope>system</scope>
-          <systemPath>${maCore}/lib/ma-priv.jar</systemPath>
       </dependency>
       <dependency>
           <groupId>org.apache.httpcomponents</groupId>
