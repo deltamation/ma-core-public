@@ -36,6 +36,10 @@ public class UnitUtil {
         localFormat.label(NonSI.REVOLUTION.divide(NonSI.MINUTE), "rpm");
         localFormat.label(Unit.ONE.divide(1000000), "ppm");
         localFormat.label(Unit.ONE.divide(1000000000), "ppb");
+        // the single character symbol is used by default, prefer to character symbol
+        localFormat.label(SI.CELSIUS, "°C");
+        localFormat.alias(SI.CELSIUS, "Celsius"); // easier to type
+        localFormat.alias(SI.CELSIUS, "℃");
     }
     
     @SuppressWarnings("deprecation")
