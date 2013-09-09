@@ -58,8 +58,6 @@ function help(documentId, source) {
             resizable: true,
             style: "position: absolute; zIndex: 980; padding: 2px;"
         }, div);
-        
-        fp.startup();
     }
     
     var top, left;
@@ -113,9 +111,8 @@ function helpImpl(documentId) {
                 content += "<p>"+ mango.i18n["js.help.lastUpdated"] +": "+ result.lastUpdated +"</p>";
             content = "<div>"+ content +"</div><div style='height:13px'></div>";
             fp.set('content', content);
+            fp.startup();
         }
-        if(fp.get('_wasShown') === true)
-        	fp.show(); //Show the values
     });
 };
 
