@@ -14,9 +14,7 @@ import com.serotonin.json.spi.JsonProperty;
 import com.serotonin.m2m2.DataTypes;
 import com.serotonin.m2m2.rt.dataImage.PointValueFacade;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
-import com.serotonin.m2m2.util.EngineeringUnits;
 import com.serotonin.m2m2.view.ImplDefinition;
-import com.serotonin.m2m2.view.conversion.Conversions;
 import com.serotonin.m2m2.view.stats.AnalogStatistics;
 import com.serotonin.m2m2.view.stats.StartsAndRuntimeList;
 import com.serotonin.m2m2.view.stats.ValueChangeCounter;
@@ -101,13 +99,8 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
                 model.put("count", stats.getCount());
                 model.put("noData", stats.getAverage() == null);
                 
-                Integer conversionUnit = EngineeringUnits.integralConversionUnit(point.getIntegralEngUnits());
-                if (conversionUnit != null) {
-                    Double outputValue = Conversions.convert(point.getEngineeringUnits(), conversionUnit, stats.getIntegral());
-                    if (outputValue != null) {
-                        model.put("integral", outputValue);
-                    }
-                }
+                double integral = point.getIntegralConverter().convert(stats.getIntegral());
+                model.put("integral", integral);
             }
             else if (dataTypeId == DataTypes.ALPHANUMERIC) {
                 ValueChangeCounter stats = new ValueChangeCounter(startTime, endTime, startVT, values);

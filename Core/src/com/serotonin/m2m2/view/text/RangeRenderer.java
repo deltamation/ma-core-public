@@ -16,9 +16,10 @@ import com.serotonin.m2m2.DataTypes;
 import com.serotonin.m2m2.rt.dataImage.types.DataValue;
 import com.serotonin.m2m2.rt.dataImage.types.NumericValue;
 import com.serotonin.m2m2.view.ImplDefinition;
+import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.util.SerializationHelper;
 
-public class RangeRenderer extends BaseTextRenderer {
+public class RangeRenderer extends BaseTextRenderer implements PointDependentRenderer, ConvertingRenderer {
     private static ImplDefinition definition = new ImplDefinition("textRendererRange", "RANGE", "textRenderer.range",
             new int[] { DataTypes.NUMERIC });
 
@@ -78,6 +79,10 @@ public class RangeRenderer extends BaseTextRenderer {
 
     @Override
     public String getText(double value, int hint) {
+        if (point.isUseRenderedUnit()) {
+            value = point.getRenderedConverter().convert(value);
+        }
+        
         if (hint == HINT_RAW || hint == HINT_SPECIFIC)
             return new DecimalFormat(format).format(value);
 
@@ -143,5 +148,23 @@ public class RangeRenderer extends BaseTextRenderer {
             format = SerializationHelper.readSafeUTF(in);
             rangeValues = (List<RangeValue>) in.readObject();
         }
+    }
+    
+    protected DataPointVO point;
+
+    /* (non-Javadoc)
+     * @see com.serotonin.m2m2.view.text.PointDependentRenderer#getPoint()
+     */
+    @Override
+    public DataPointVO getPoint() {
+        return point;
+    }
+
+    /* (non-Javadoc)
+     * @see com.serotonin.m2m2.view.text.PointDependentRenderer#setPoint(com.serotonin.m2m2.vo.DataPointVO)
+     */
+    @Override
+    public void setPoint(DataPointVO point) {
+        this.point = point;
     }
 }

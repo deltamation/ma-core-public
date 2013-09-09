@@ -9,7 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Locale;
+
+import javax.measure.converter.UnitConverter;
+import javax.measure.unit.Unit;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,23 +31,24 @@ import com.serotonin.m2m2.db.dao.DataPointDao;
 import com.serotonin.m2m2.i18n.ProcessResult;
 import com.serotonin.m2m2.i18n.TranslatableJsonException;
 import com.serotonin.m2m2.i18n.TranslatableMessage;
-import com.serotonin.m2m2.i18n.Translations;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
 import com.serotonin.m2m2.rt.dataImage.types.DataValue;
 import com.serotonin.m2m2.rt.event.type.AuditEventType;
 import com.serotonin.m2m2.util.ChangeComparable;
-import com.serotonin.m2m2.util.EngineeringUnits;
 import com.serotonin.m2m2.util.ExportCodes;
+import com.serotonin.m2m2.util.UnitUtil;
 import com.serotonin.m2m2.view.chart.ChartRenderer;
-import com.serotonin.m2m2.view.text.AnalogRenderer;
+import com.serotonin.m2m2.view.text.IntegralRenderer;
 import com.serotonin.m2m2.view.text.NoneRenderer;
 import com.serotonin.m2m2.view.text.PlainRenderer;
+import com.serotonin.m2m2.view.text.PointDependentRenderer;
 import com.serotonin.m2m2.view.text.TextRenderer;
 import com.serotonin.m2m2.vo.dataSource.PointLocatorVO;
 import com.serotonin.m2m2.vo.event.PointEventDetectorVO;
 import com.serotonin.util.ColorUtils;
 import com.serotonin.util.SerializationHelper;
 import com.serotonin.validation.StringValidation;
+import javax.measure.unit.SI;
 
 public class DataPointVO implements Serializable, Cloneable, JsonSerializable, ChangeComparable<DataPointVO>,
         IDataPoint {
@@ -93,16 +96,6 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
                 "pointEdit.logging.valueType.minimum");
         INTERVAL_LOGGING_TYPE_CODES.addElement(IntervalLoggingTypes.AVERAGE, "AVERAGE",
                 "pointEdit.logging.valueType.average");
-    }
-
-    public static final int ENGINEERING_UNITS_DEFAULT = EngineeringUnits.noUnits;
-    public static ExportCodes ENGINEERING_UNITS_CODES = new ExportCodes();
-    static {
-        Translations en = Translations.getTranslations(Locale.ENGLISH);
-        for (int i = 0; i < EngineeringUnits.numberOfUnits; i++) {
-            EngineeringUnits eu = new EngineeringUnits(i);
-            ENGINEERING_UNITS_CODES.addElement(i, StringUtils.capitalize(en.translate(eu.getKey())), eu.getKey());
-        }
     }
 
     public interface PlotTypes {
@@ -171,10 +164,24 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     private double discardLowLimit = -Double.MAX_VALUE;
     @JsonProperty
     private double discardHighLimit = Double.MAX_VALUE;
-    private int engineeringUnits = ENGINEERING_UNITS_DEFAULT;
-    private int integralEngUnits = ENGINEERING_UNITS_DEFAULT;
+    /**
+     * @deprecated
+     * Use unit instead
+     */
+    @Deprecated
+    private int engineeringUnits = com.serotonin.m2m2.util.EngineeringUnits.noUnits;
     @JsonProperty
     private String chartColour;
+
+    // replaces engineeringUnits
+    Unit<?> unit = defaultUnit();
+    // replaces integralEngUnits
+    Unit<?> integralUnit = defaultIntegralUnit();
+    // unit used for rendering if the renderer supports it
+    Unit<?> renderedUnit = defaultUnit();
+    
+    boolean useIntegralUnit = false;
+    boolean useRenderedUnit = false;
 
     private int plotType = PlotTypes.STEP;
 
@@ -228,14 +235,17 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
 
     public void defaultTextRenderer() {
         if (pointLocator == null)
-            textRenderer = new PlainRenderer("");
+            setTextRenderer(new PlainRenderer("", false));
         else {
             switch (pointLocator.getDataTypeId()) {
             case DataTypes.IMAGE:
-                textRenderer = new NoneRenderer();
+                setTextRenderer(new NoneRenderer());
+                break;
+            case DataTypes.NUMERIC:
+                setTextRenderer(new PlainRenderer("", true));
                 break;
             default:
-                textRenderer = new PlainRenderer("");
+                setTextRenderer(new PlainRenderer("", false));
             }
         }
     }
@@ -458,13 +468,14 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     }
 
     public void setTextRenderer(TextRenderer textRenderer) {
+        if (textRenderer instanceof PointDependentRenderer) {
+            ((PointDependentRenderer) textRenderer).setPoint(this);
+        }
         this.textRenderer = textRenderer;
     }
     
     public TextRenderer getIntegralRenderer() {
-        Translations en = Translations.getTranslations(Locale.ENGLISH);
-        String abbrevUnit = en.translate(EngineeringUnits.getAbbrevKey(integralEngUnits));
-        return new AnalogRenderer("0.0", abbrevUnit);
+        return new IntegralRenderer("0.0", this);
     }
 
     public ChartRenderer getChartRenderer() {
@@ -547,20 +558,64 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
         this.discardHighLimit = discardHighLimit;
     }
 
+    /**
+     * @deprecated
+     * Use getUnit() instead
+     * @return
+     */
+    @Deprecated
     public int getEngineeringUnits() {
         return engineeringUnits;
     }
 
+    /**
+     * @deprecated
+     * Use setUnit() instead
+     * @param engineeringUnits
+     */
+    @Deprecated
     public void setEngineeringUnits(int engineeringUnits) {
         this.engineeringUnits = engineeringUnits;
     }
     
-    public int getIntegralEngUnits() {
-        return integralEngUnits;
+    public Unit<?> getIntegralUnit() {
+        return integralUnit;
     }
 
-    public void setIntegralEngUnits(int integralEngUnits) {
-        this.integralEngUnits = integralEngUnits;
+    public void setIntegralUnit(Unit<?> integralUnit) {
+        this.integralUnit = integralUnit;
+    }
+    
+    public Unit<?> getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit<?> unit) {
+        this.unit = unit;
+    }
+    
+    public Unit<?> getRenderedUnit() {
+        return renderedUnit;
+    }
+
+    public void setRenderedUnit(Unit<?> renderedUnit) {
+        this.renderedUnit = renderedUnit;
+    }
+    
+    public boolean isUseIntegralUnit() {
+        return useIntegralUnit;
+    }
+
+    public void setUseIntegralUnit(boolean useIntegralUnit) {
+        this.useIntegralUnit = useIntegralUnit;
+    }
+
+    public boolean isUseRenderedUnit() {
+        return useRenderedUnit;
+    }
+
+    public void setUseRenderedUnit(boolean useRenderedUnit) {
+        this.useRenderedUnit = useRenderedUnit;
     }
 
     public String getChartColour() {
@@ -653,6 +708,65 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             response.addContextualMessage("plotType", "validate.invalidValue");
         if (plotType != PlotTypes.STEP && pointLocator.getDataTypeId() != DataTypes.NUMERIC)
             response.addContextualMessage("plotType", "validate.invalidValue");
+        
+        if (!validateIntegralUnit()) {
+            response.addContextualMessage("integralUnit", "validate.unitNotCompatible");
+        }
+        
+        if (!validateRenderedUnit()) {
+            response.addContextualMessage("renderedUnit", "validate.unitNotCompatible");
+        }
+    }
+    
+    public boolean validateIntegralUnit() {
+        if (!useIntegralUnit) {
+            integralUnit = defaultIntegralUnit();
+            return true;
+        }
+        
+        // integral unit should have same dimensions as the default integrated unit
+        if (integralUnit == null)
+            return false;
+        return integralUnit.isCompatible(defaultIntegralUnit());
+    }
+    
+    public boolean validateRenderedUnit() {
+        if (!useRenderedUnit) {
+            renderedUnit = unit;
+            return true;
+        }
+        
+        // integral unit should have same dimensions as the default integrated unit
+        if (renderedUnit == null)
+            return false;
+        return renderedUnit.isCompatible(unit);
+    }
+    
+    // default unit is ONE ie no units
+    private Unit<?> defaultUnit() {
+        return Unit.ONE;
+    }
+    
+    // default integrated unit is the base unit times seconds
+    // as we are integrating over time
+    private Unit<?> defaultIntegralUnit() {
+        return unit.times(SI.SECOND);
+    }
+    
+    public void calcUnit() {
+        unit = UnitUtil.convertToUnit(engineeringUnits);
+    }
+    
+    public void calcIntegralUnit() {
+        integralUnit = defaultIntegralUnit();
+    }
+    
+    public UnitConverter getIntegralConverter() {
+        return defaultIntegralUnit().getConverterTo(integralUnit);
+    }
+    
+    public UnitConverter getRenderedConverter() {
+        return unit.getConverterTo(renderedUnit);
     }
 
     @Override
@@ -666,17 +780,19 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
                 + chartRenderer + ", eventDetectors=" + eventDetectors + ", comments=" + comments
                 + ", defaultCacheSize=" + defaultCacheSize + ", discardExtremeValues=" + discardExtremeValues
                 + ", discardLowLimit=" + discardLowLimit + ", discardHighLimit=" + discardHighLimit
-                + ", engineeringUnits=" + engineeringUnits + ", chartColour=" + chartColour + ", plotType=" + plotType
+                + ", unit=" + unit + ", integralUnit=" + integralUnit + ", renderedUnit=" + renderedUnit
+                + ", useIntegralUnit=" + useIntegralUnit + ", useRenderedUnit=" + useRenderedUnit
+                + ", chartColour=" + chartColour + ", plotType=" + plotType
                 + ", pointLocator=" + pointLocator + ", dataSourceTypeName=" + dataSourceTypeName + ", dataSourceName="
                 + dataSourceName + ", dataSourceXid=" + dataSourceXid + ", lastValue=" + lastValue + ", settable="
-                + settable + ", integralEngUnits=" + integralEngUnits + "]";
+                + settable + "]";
     }
 
     //
     //
     // Serialization
     //
-    private static final int version = 6;
+    private static final int version = 7;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(version);
@@ -687,7 +803,11 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
         out.writeDouble(discardHighLimit);
         SerializationHelper.writeSafeUTF(out, chartColour);
         out.writeInt(plotType);
-        out.writeInt(integralEngUnits);
+        out.writeObject(unit);
+        out.writeObject(integralUnit);
+        out.writeObject(renderedUnit);
+        out.writeBoolean(useIntegralUnit);
+        out.writeBoolean(useRenderedUnit);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -713,9 +833,10 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             discardExtremeValues = in.readBoolean();
             discardLowLimit = in.readDouble();
             discardHighLimit = in.readDouble();
-            engineeringUnits = in.readInt();
+            unit = UnitUtil.convertToUnit(in.readInt());
             chartColour = null;
             plotType = PlotTypes.STEP;
+            integralUnit = defaultIntegralUnit();
         }
         else if (ver == 2) {
             name = SerializationHelper.readSafeUTF(in);
@@ -736,9 +857,10 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             discardExtremeValues = in.readBoolean();
             discardLowLimit = in.readDouble();
             discardHighLimit = in.readDouble();
-            engineeringUnits = in.readInt();
+            unit = UnitUtil.convertToUnit(in.readInt());
             chartColour = SerializationHelper.readSafeUTF(in);
             plotType = PlotTypes.STEP;
+            integralUnit = defaultIntegralUnit();
         }
         else if (ver == 3) {
             name = SerializationHelper.readSafeUTF(in);
@@ -759,9 +881,10 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             discardExtremeValues = in.readBoolean();
             discardLowLimit = in.readDouble();
             discardHighLimit = in.readDouble();
-            engineeringUnits = in.readInt();
+            unit = UnitUtil.convertToUnit(in.readInt());
             chartColour = SerializationHelper.readSafeUTF(in);
             plotType = PlotTypes.STEP;
+            integralUnit = defaultIntegralUnit();
         }
         else if (ver == 4) {
             name = SerializationHelper.readSafeUTF(in);
@@ -782,9 +905,10 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             discardExtremeValues = in.readBoolean();
             discardLowLimit = in.readDouble();
             discardHighLimit = in.readDouble();
-            engineeringUnits = in.readInt();
+            unit = UnitUtil.convertToUnit(in.readInt());
             chartColour = SerializationHelper.readSafeUTF(in);
             plotType = in.readInt();
+            integralUnit = defaultIntegralUnit();
         }
         else if (ver == 5) {
             textRenderer = (TextRenderer) in.readObject();
@@ -794,6 +918,8 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             discardHighLimit = in.readDouble();
             chartColour = SerializationHelper.readSafeUTF(in);
             plotType = in.readInt();
+            unit = null; // calcUnit() is called from Dao
+            integralUnit = null; // calcIntegralUnit() is called from Dao
         }
         else if (ver == 6) {
             textRenderer = (TextRenderer) in.readObject();
@@ -803,8 +929,24 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             discardHighLimit = in.readDouble();
             chartColour = SerializationHelper.readSafeUTF(in);
             plotType = in.readInt();
-            integralEngUnits = in.readInt();
+            unit = null; // calcUnit() is called from Dao
+            integralUnit = UnitUtil.convertToUnit(in.readInt()); // legacy integralEngUnits
         }
+        else if (ver == 7) {
+            textRenderer = (TextRenderer) in.readObject();
+            chartRenderer = (ChartRenderer) in.readObject();
+            pointLocator = (PointLocatorVO) in.readObject();
+            discardLowLimit = in.readDouble();
+            discardHighLimit = in.readDouble();
+            chartColour = SerializationHelper.readSafeUTF(in);
+            plotType = in.readInt();
+            unit = (Unit<?>) in.readObject();
+            integralUnit = (Unit<?>) in.readObject();
+            renderedUnit = (Unit<?>) in.readObject();
+            useIntegralUnit = in.readBoolean();
+            useRenderedUnit = in.readBoolean();
+        }
+        setTextRenderer(textRenderer); // makes sure point is set on PointDependentRenderers
 
         // Check the purge type. Weird how this could have been set to 0.
         if (purgeType == 0)
@@ -822,9 +964,12 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
         writer.writeEntry("purgeType", Common.TIME_PERIOD_CODES.getCode(purgeType));
         writer.writeEntry("pointLocator", pointLocator);
         writer.writeEntry("eventDetectors", eventDetectors);
-        writer.writeEntry("engineeringUnits", ENGINEERING_UNITS_CODES.getCode(engineeringUnits));
         writer.writeEntry("plotType", PLOT_TYPE_CODES.getCode(plotType));
-        writer.writeEntry("integralEngUnits", ENGINEERING_UNITS_CODES.getCode(integralEngUnits));
+        writer.writeEntry("unit", UnitUtil.formatUcum(unit));
+        if (useIntegralUnit)
+            writer.writeEntry("integralUnit", UnitUtil.formatUcum(integralUnit));
+        if (useRenderedUnit)
+            writer.writeEntry("renderedUnit", UnitUtil.formatUcum(renderedUnit));
     }
 
     @Override
@@ -896,18 +1041,21 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             }
         }
 
-        text = jsonObject.getString("engineeringUnits");
+        text = jsonObject.getString("unit");
         if (text != null) {
-            engineeringUnits = ENGINEERING_UNITS_CODES.getId(text);
-            if (engineeringUnits == -1)
-                engineeringUnits = ENGINEERING_UNITS_DEFAULT;
+            unit = parseUnitString(text, "unit");
         }
         
-        text = jsonObject.getString("integralEngUnits");
+        text = jsonObject.getString("integralUnit");
         if (text != null) {
-            integralEngUnits = DataPointVO.ENGINEERING_UNITS_CODES.getId(text);
-            if (integralEngUnits == -1)
-                integralEngUnits = ENGINEERING_UNITS_DEFAULT;
+            useIntegralUnit = true;
+            integralUnit = parseUnitString(text, "integralUnit");
+        }
+        
+        text = jsonObject.getString("renderedUnit");
+        if (text != null) {
+            useRenderedUnit = true;
+            renderedUnit = parseUnitString(text, "renderedUnit");
         }
         
         text = jsonObject.getString("plotType");
@@ -916,6 +1064,15 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             if (plotType == -1)
                 throw new TranslatableJsonException("emport.error.invalid", "plotType", text,
                         PLOT_TYPE_CODES.getCodeList());
+        }
+    }
+    
+    private Unit<?> parseUnitString(String string, String item) throws TranslatableJsonException {
+        try {
+            return UnitUtil.parseUcum(string);
+        }
+        catch (Exception e) {
+            throw new TranslatableJsonException("emport.error.parseError", item);
         }
     }
 }

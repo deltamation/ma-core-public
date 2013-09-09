@@ -138,6 +138,12 @@ public class DataPointDao extends BaseDao {
             dp.setDefaultCacheSize(rs.getInt(++i));
             dp.setDiscardExtremeValues(charToBool(rs.getString(++i)));
             dp.setEngineeringUnits(rs.getInt(++i));
+            if (dp.getUnit() == null) {
+                dp.calcUnit();
+            }
+            if (dp.getIntegralUnit() == null || !dp.validateIntegralUnit()) {
+                dp.calcIntegralUnit();
+            }
 
             // Data source information.
             dp.setDataSourceName(rs.getString(++i));

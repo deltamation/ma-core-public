@@ -4,6 +4,19 @@
  */
 package com.serotonin.m2m2.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.measure.unit.Unit;
+import javax.measure.unit.SI;
+import javax.measure.unit.NonSI;
+
+/**
+ * @deprecated
+ * These codes are no longer used.
+ * Use UnitUtil.convertToUnit() to convert to the Unit<?> type
+ */
+@Deprecated
 public class EngineeringUnits {
     public static final int numberOfUnits = 197;
     
@@ -255,44 +268,220 @@ public class EngineeringUnits {
         return "engUnit.abbr." + value;
     }
     
-    public static Integer integralConversionUnit(int integratedUnit) {
-        switch (integratedUnit) {
-        case coulombs:
-            return amperes;
-        case joules:
-            return watts;
-        case metersPerSecond:
-            return metersPerSecondPerSecond;
-        case grams:
-            return gramsPerSecond;
-        case kilograms:
-            return kilogramsPerSecond;
-        case tonnes:
-            return tonnesPerSecond;
-        case poundsMass:
-            return poundsMassPerSecond;
-        case millimeters:
-            return millimetersPerSecond;
-        case meters:
-            return metersPerSecond;
-        case feet:
-            return feetPerSecond;
-        case cubicFeet:
-            return cubicFeetPerSecond;
-        case cubicMeters:
-            return cubicMetersPerSecond;
-        case liters:
-            return litersPerSecond;
-        case percent:
-            return percentPerSecond;
-        case noUnits:
-            return perSecond;
-        case radians:
-            return radiansPerSecond;
-        case kilometers:
-            return kilometersPerSecond;
-        default:
-            return null;
-        }
+    protected static final Map<Integer, Unit<?>> conversionMap;
+    static {
+        conversionMap = new HashMap<Integer, Unit<?>>();
+        
+        // Acceleration
+        conversionMap.put(metersPerSecondPerSecond, SI.METRES_PER_SQUARE_SECOND);
+        // Area
+        conversionMap.put(squareMeters, SI.SQUARE_METRE);
+        conversionMap.put(squareCentimeters, SI.CENTIMETRE.pow(2));
+        conversionMap.put(squareFeet, NonSI.FOOT.pow(2));
+        conversionMap.put(squareInches, NonSI.INCH.pow(2));
+        // Currency -- NOT possible, no set currencies
+        // Electrical
+        conversionMap.put(milliamperes, SI.MILLI(SI.AMPERE));
+        conversionMap.put(amperes, SI.AMPERE);
+        conversionMap.put(amperesPerMeter, SI.AMPERE.divide(SI.METER));
+        conversionMap.put(amperesPerSquareMeter, SI.AMPERE.divide(SI.SQUARE_METRE));
+        conversionMap.put(ampereSquareMeters, SI.AMPERE.times(SI.SQUARE_METRE));
+        conversionMap.put(farads, SI.FARAD);
+        conversionMap.put(henrys, SI.HENRY);
+        conversionMap.put(ohms, SI.OHM);
+        conversionMap.put(ohmMeters, SI.OHM.times(SI.METER));
+        conversionMap.put(milliohms, SI.MILLI(SI.OHM));
+        conversionMap.put(kilohms, SI.KILO(SI.OHM));
+        conversionMap.put(megohms, SI.MEGA(SI.OHM));
+        conversionMap.put(siemens, SI.SIEMENS);
+        conversionMap.put(siemensPerMeter, SI.SIEMENS.divide(SI.METER));
+        conversionMap.put(teslas, SI.TESLA);
+        conversionMap.put(volts, SI.VOLT);
+        conversionMap.put(millivolts, SI.MILLI(SI.VOLT));
+        conversionMap.put(kilovolts, SI.KILO(SI.VOLT));
+        conversionMap.put(megavolts, SI.MEGA(SI.VOLT));
+        conversionMap.put(voltAmperes, SI.VOLT.times(SI.AMPERE));
+        conversionMap.put(kilovoltAmperes, SI.KILO(SI.VOLT).times(SI.AMPERE));
+        conversionMap.put(megavoltAmperes, SI.MEGA(SI.VOLT).times(SI.AMPERE));
+        conversionMap.put(voltAmperesReactive, SI.VOLT.times(SI.AMPERE)); // same units as VA
+        conversionMap.put(kilovoltAmperesReactive, SI.KILO(SI.VOLT).times(SI.AMPERE)); // same units as VA
+        conversionMap.put(megavoltAmperesReactive, SI.MEGA(SI.VOLT).times(SI.AMPERE)); // same units as VA
+        conversionMap.put(voltsPerDegreeKelvin, SI.VOLT.divide(SI.KELVIN));
+        conversionMap.put(voltsPerMeter, SI.VOLT.divide(SI.METER));
+        conversionMap.put(degreesPhase, NonSI.DEGREE_ANGLE);
+        conversionMap.put(powerFactor, Unit.ONE); // dimensionless
+        conversionMap.put(webers, SI.WEBER);
+        conversionMap.put(coulombs, SI.COULOMB);
+        // Energy
+        conversionMap.put(joules, SI.JOULE);
+        conversionMap.put(kilojoules, SI.KILO(SI.JOULE));
+        conversionMap.put(kilojoulesPerKilogram, SI.KILO(SI.JOULE).divide(SI.KILOGRAM));
+        conversionMap.put(megajoules, SI.MEGA(SI.JOULE));
+        conversionMap.put(wattHours, SI.WATT.times(NonSI.HOUR));
+        conversionMap.put(kilowattHours, SI.KILO(SI.WATT).times(NonSI.HOUR));
+        conversionMap.put(megawattHours, SI.MEGA(SI.WATT).times(NonSI.HOUR));
+        conversionMap.put(btus, UnitUtil.BTU);
+        conversionMap.put(kiloBtus, SI.KILO(UnitUtil.BTU));
+        conversionMap.put(megaBtus, SI.MEGA(UnitUtil.BTU));
+        conversionMap.put(therms, UnitUtil.THERM);
+        conversionMap.put(tonHours, NonSI.TON_US.times(NonSI.HOUR));
+        // Enthalpy
+        conversionMap.put(joulesPerKilogramDryAir, SI.JOULE.divide(SI.KILOGRAM));
+        conversionMap.put(kilojoulesPerKilogramDryAir, SI.KILO(SI.JOULE).divide(SI.KILOGRAM));
+        conversionMap.put(megajoulesPerKilogramDryAir, SI.MEGA(SI.JOULE).divide(SI.KILOGRAM));
+        conversionMap.put(btusPerPoundDryAir, UnitUtil.BTU.divide(NonSI.POUND));
+        conversionMap.put(btusPerPound, UnitUtil.BTU.divide(NonSI.POUND));
+        // Entropy
+        conversionMap.put(joulesPerDegreeKelvin, SI.JOULE.divide(SI.KELVIN));
+        conversionMap.put(kilojoulesPerDegreeKelvin, SI.KILO(SI.JOULE).divide(SI.KELVIN));
+        conversionMap.put(megajoulesPerDegreeKelvin, SI.MEGA(SI.JOULE).divide(SI.KELVIN));
+        conversionMap.put(joulesPerKilogramDegreeKelvin, SI.JOULE.divide(SI.KILOGRAM.times(SI.KELVIN)));
+        // Force
+        conversionMap.put(newton, SI.NEWTON);
+        // Frequency
+        conversionMap.put(cyclesPerHour, Unit.ONE.divide(NonSI.HOUR));
+        conversionMap.put(cyclesPerMinute, Unit.ONE.divide(NonSI.MINUTE));
+        conversionMap.put(hertz, SI.HERTZ);
+        conversionMap.put(kilohertz, SI.KILO(SI.HERTZ));
+        conversionMap.put(megahertz, SI.MEGA(SI.HERTZ));
+        conversionMap.put(perHour, Unit.ONE.divide(NonSI.HOUR));
+        // Humidity
+        conversionMap.put(gramsOfWaterPerKilogramDryAir, SI.GRAM.divide(SI.KILOGRAM));
+        conversionMap.put(percentRelativeHumidity, NonSI.PERCENT);
+        // Length
+        conversionMap.put(millimeters, SI.MILLIMETRE);
+        conversionMap.put(centimeters, SI.CENTIMETRE);
+        conversionMap.put(meters, SI.METRE);
+        conversionMap.put(kilometers, SI.KILOMETRE);
+        conversionMap.put(inches, NonSI.INCH);
+        conversionMap.put(feet, NonSI.FOOT);
+        // Light
+        conversionMap.put(candelas, SI.CANDELA);
+        conversionMap.put(candelasPerSquareMeter, SI.CANDELA.divide(SI.SQUARE_METRE));
+        conversionMap.put(wattsPerSquareFoot, SI.WATT.divide(NonSI.FOOT.pow(2)));
+        conversionMap.put(wattsPerSquareMeter, SI.WATT.divide(SI.SQUARE_METRE));
+        conversionMap.put(lumens, SI.LUMEN);
+        conversionMap.put(luxes, SI.LUX);
+        conversionMap.put(footCandles, SI.LUMEN.divide(NonSI.FOOT.pow(2)));
+        // Mass
+        conversionMap.put(grams, SI.GRAM);
+        conversionMap.put(kilograms, SI.KILOGRAM);
+        conversionMap.put(tonnes, NonSI.METRIC_TON);
+        conversionMap.put(poundsMass, NonSI.POUND);
+        conversionMap.put(tons, NonSI.TON_US);
+        // Mass Flow
+        conversionMap.put(gramsPerSecond, SI.GRAM.divide(SI.SECOND));
+        conversionMap.put(gramsPerMinute, SI.GRAM.divide(NonSI.MINUTE));
+        conversionMap.put(kilogramsPerSecond, SI.KILO(SI.GRAM).divide(SI.SECOND));
+        conversionMap.put(kilogramsPerMinute, SI.KILO(SI.GRAM).divide(NonSI.MINUTE));
+        conversionMap.put(kilogramsPerHour, SI.KILO(SI.GRAM).divide(NonSI.HOUR));
+        conversionMap.put(tonnesPerSecond, NonSI.METRIC_TON.divide(SI.SECOND));
+        conversionMap.put(tonnesPerMinute, NonSI.METRIC_TON.divide(NonSI.MINUTE));
+        conversionMap.put(tonnesPerHour, NonSI.METRIC_TON.divide(NonSI.HOUR));
+        conversionMap.put(poundsMassPerSecond, NonSI.POUND);
+        conversionMap.put(poundsMassPerMinute, NonSI.POUND.divide(NonSI.MINUTE));
+        conversionMap.put(poundsMassPerHour, NonSI.POUND.divide(NonSI.MINUTE));
+        conversionMap.put(tonsPerHour, NonSI.TON_US.divide(NonSI.HOUR));
+        // Power
+        conversionMap.put(milliwatts, SI.MILLI(SI.WATT));
+        conversionMap.put(watts, SI.WATT);
+        conversionMap.put(kilowatts, SI.KILO(SI.WATT));
+        conversionMap.put(megawatts, SI.MEGA(SI.WATT));
+        conversionMap.put(btusPerHour, UnitUtil.BTU.divide(NonSI.HOUR));
+        conversionMap.put(kiloBtusPerHour, SI.KILO(UnitUtil.BTU).divide(NonSI.HOUR));
+        conversionMap.put(horsepower, NonSI.HORSEPOWER);
+        conversionMap.put(tonsRefrigeration, NonSI.TON_US);
+        // Pressure
+        conversionMap.put(pascals, SI.PASCAL);
+        conversionMap.put(hectopascals, SI.HECTO(SI.PASCAL));
+        conversionMap.put(kilopascals, SI.KILO(SI.PASCAL));
+        conversionMap.put(millibars, SI.MILLI(NonSI.BAR));
+        conversionMap.put(bars, NonSI.BAR);
+        conversionMap.put(poundsForcePerSquareInch, UnitUtil.PSI);
+        conversionMap.put(centimetersOfWater, SI.PASCAL.times(98.0665));
+        conversionMap.put(inchesOfWater, SI.PASCAL.times(248.84));
+        conversionMap.put(millimetersOfMercury, NonSI.MILLIMETER_OF_MERCURY);
+        conversionMap.put(centimetersOfMercury, NonSI.MILLIMETER_OF_MERCURY.divide(10));
+        conversionMap.put(inchesOfMercury, NonSI.INCH_OF_MERCURY);
+        // Temperature
+        conversionMap.put(degreesCelsius, SI.CELSIUS);
+        conversionMap.put(degreesKelvin, SI.KELVIN);
+        conversionMap.put(degreesKelvinPerHour, SI.KELVIN.divide(NonSI.HOUR));
+        conversionMap.put(degreesKelvinPerMinute, SI.KELVIN.divide(NonSI.MINUTE));
+        conversionMap.put(degreesFahrenheit, NonSI.FAHRENHEIT);
+        conversionMap.put(degreeDaysCelsius, NonSI.DAY.times(SI.CELSIUS));
+        conversionMap.put(degreeDaysFahrenheit, NonSI.DAY.times(NonSI.FAHRENHEIT));
+        conversionMap.put(deltaDegreesFahrenheit, NonSI.FAHRENHEIT);
+        conversionMap.put(deltaDegreesKelvin, SI.KELVIN);
+        // Time
+        conversionMap.put(years, NonSI.YEAR);
+        conversionMap.put(months, NonSI.MONTH);
+        conversionMap.put(weeks, NonSI.WEEK);
+        conversionMap.put(days, NonSI.DAY);
+        conversionMap.put(hours, NonSI.HOUR);
+        conversionMap.put(minutes, NonSI.MINUTE);
+        conversionMap.put(seconds, SI.SECOND);
+        conversionMap.put(hundredthsSeconds, SI.CENTI(SI.SECOND));
+        conversionMap.put(milliseconds, SI.MILLI(SI.SECOND));
+        // Torque
+        conversionMap.put(newtonMeters, SI.NEWTON.times(SI.METER));
+        // Velocity
+        conversionMap.put(millimetersPerSecond, SI.MILLIMETRE.divide(SI.SECOND));
+        conversionMap.put(millimetersPerMinute, SI.MILLIMETRE.divide(NonSI.MINUTE));
+        conversionMap.put(metersPerSecond, SI.METRE.divide(SI.SECOND));
+        conversionMap.put(metersPerMinute, SI.METRE.divide(NonSI.MINUTE));
+        conversionMap.put(metersPerHour, SI.METRE.divide(NonSI.HOUR));
+        conversionMap.put(kilometersPerSecond, SI.KILOMETRE.divide(SI.SECOND));
+        conversionMap.put(kilometersPerHour, NonSI.KILOMETRES_PER_HOUR);
+        conversionMap.put(feetPerSecond, NonSI.FOOT.divide(SI.SECOND));
+        conversionMap.put(feetPerMinute, NonSI.FOOT.divide(NonSI.MINUTE));
+        conversionMap.put(milesPerHour, NonSI.MILES_PER_HOUR);
+        // Volume
+        conversionMap.put(cubicFeet, NonSI.FOOT.pow(3));
+        conversionMap.put(cubicMeters, SI.CUBIC_METRE);
+        conversionMap.put(imperialGallons, NonSI.GALLON_UK);
+        conversionMap.put(liters, NonSI.LITRE);
+        conversionMap.put(usGallons, NonSI.GALLON_LIQUID_US);
+        // Volumetric Flow
+        conversionMap.put(cubicFeetPerSecond, NonSI.FOOT.pow(3).divide(SI.SECOND));
+        conversionMap.put(cubicFeetPerMinute, NonSI.FOOT.pow(3).divide(NonSI.MINUTE));
+        conversionMap.put(cubicMetersPerSecond, SI.CUBIC_METRE.divide(SI.SECOND));
+        conversionMap.put(cubicMetersPerMinute, SI.CUBIC_METRE.divide(NonSI.MINUTE));
+        conversionMap.put(cubicMetersPerHour, SI.CUBIC_METRE.divide(NonSI.HOUR));
+        conversionMap.put(imperialGallonsPerMinute, NonSI.GALLON_UK.divide(NonSI.MINUTE));
+        conversionMap.put(litersPerSecond, NonSI.LITRE.divide(SI.SECOND));
+        conversionMap.put(litersPerMinute, NonSI.LITRE.divide(NonSI.MINUTE));
+        conversionMap.put(litersPerHour, NonSI.LITRE.divide(NonSI.HOUR));
+        conversionMap.put(usGallonsPerMinute, NonSI.GALLON_LIQUID_US.divide(NonSI.MINUTE));
+        // Other
+        conversionMap.put(degreesAngular, NonSI.DEGREE_ANGLE);
+        conversionMap.put(degreesCelsiusPerHour, SI.CELSIUS.divide(NonSI.HOUR));
+        conversionMap.put(degreesCelsiusPerMinute, SI.CELSIUS.divide(NonSI.MINUTE));
+        conversionMap.put(degreesFahrenheitPerHour, NonSI.FAHRENHEIT.divide(NonSI.HOUR));
+        conversionMap.put(degreesFahrenheitPerMinute, NonSI.FAHRENHEIT.divide(NonSI.MINUTE));
+        conversionMap.put(jouleSeconds, SI.JOULE.times(SI.SECOND));
+        conversionMap.put(kilogramsPerCubicMeter, SI.KILOGRAM.divide(SI.CUBIC_METRE));
+        conversionMap.put(kilowattHoursPerSquareMeter, SI.KILO(SI.WATT).divide(SI.SQUARE_METRE));
+        conversionMap.put(kilowattHoursPerSquareFoot, SI.KILO(SI.WATT).divide(NonSI.FOOT.pow(2)));
+        conversionMap.put(megajoulesPerSquareMeter, SI.MEGA(SI.JOULE).divide(SI.SQUARE_METRE));
+        conversionMap.put(megajoulesPerSquareFoot, SI.MEGA(SI.JOULE).divide(NonSI.FOOT.pow(2)));
+        conversionMap.put(noUnits, Unit.ONE);
+        conversionMap.put(newtonSeconds, SI.NEWTON.times(SI.SECOND));
+        conversionMap.put(newtonsPerMeter, SI.NEWTON.divide(SI.METRE));
+        conversionMap.put(partsPerMillion, Unit.ONE.divide(1000000));
+        conversionMap.put(partsPerBillion, Unit.ONE.divide(1000000000));
+        conversionMap.put(percent, NonSI.PERCENT);
+        conversionMap.put(percentObscurationPerFoot, NonSI.PERCENT.divide(NonSI.FOOT));
+        conversionMap.put(percentObscurationPerMeter, NonSI.PERCENT.divide(SI.METRE));
+        conversionMap.put(percentPerSecond, NonSI.PERCENT.divide(SI.SECOND));
+        conversionMap.put(perMinute, Unit.ONE.divide(NonSI.MINUTE));
+        conversionMap.put(perSecond, Unit.ONE.divide(SI.SECOND));
+        conversionMap.put(psiPerDegreeFahrenheit, UnitUtil.PSI.divide(NonSI.FAHRENHEIT));
+        conversionMap.put(radians, SI.RADIAN);
+        conversionMap.put(radiansPerSecond, SI.RADIAN.divide(SI.SECOND));
+        conversionMap.put(revolutionsPerMinute, NonSI.REVOLUTION.divide(NonSI.MINUTE));
+        conversionMap.put(squareMetersPerNewton, SI.SQUARE_METRE.divide(SI.NEWTON));
+        conversionMap.put(wattsPerMeterPerDegreeKelvin, SI.WATT.divide(SI.METRE).divide(SI.KELVIN));
+        conversionMap.put(wattsPerSquareMeterDegreeKelvin, SI.WATT.divide(SI.SQUARE_METRE).divide(SI.KELVIN));
     }
 }

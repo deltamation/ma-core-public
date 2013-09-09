@@ -25,6 +25,7 @@ import org.joda.time.IllegalFieldValueException;
 
 import com.serotonin.ShouldNeverHappenException;
 import com.serotonin.m2m2.Common;
+import com.serotonin.m2m2.DataTypes;
 import com.serotonin.m2m2.ILifecycle;
 import com.serotonin.m2m2.db.dao.DataPointDao;
 import com.serotonin.m2m2.db.dao.EventDao;
@@ -39,9 +40,11 @@ import com.serotonin.m2m2.rt.dataImage.PointValueTime;
 import com.serotonin.m2m2.rt.dataImage.SetPointSource;
 import com.serotonin.m2m2.rt.dataImage.types.DataValue;
 import com.serotonin.m2m2.rt.dataImage.types.ImageValue;
+import com.serotonin.m2m2.rt.dataImage.types.NumericValue;
 import com.serotonin.m2m2.rt.event.EventInstance;
 import com.serotonin.m2m2.util.DateUtils;
 import com.serotonin.m2m2.view.chart.ChartRenderer;
+import com.serotonin.m2m2.view.text.ConvertingRenderer;
 import com.serotonin.m2m2.vo.DataPointExtendedNameComparator;
 import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.m2m2.vo.User;
@@ -205,6 +208,14 @@ abstract public class BaseDwr {
         else {
             // Convert the string value into an object.
             DataValue value = DataValue.stringToValue(valueStr, point.getPointLocator().getDataTypeId());
+            
+            // do reverse conversion of renderer
+            if (point.isUseRenderedUnit() && value.getDataType() == DataTypes.NUMERIC && 
+                    point.getTextRenderer() instanceof ConvertingRenderer) {
+                double convertedValue = point.getRenderedConverter().inverse().convert(value.getDoubleValue());
+                value = new NumericValue(convertedValue);
+            }
+            
             Common.runtimeManager.setDataPointValue(point.getId(), value, source);
         }
     }

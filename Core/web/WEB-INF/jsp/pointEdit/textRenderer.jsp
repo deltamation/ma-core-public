@@ -3,6 +3,7 @@
     @author Matthew Lohbihler
 --%>
 <%@ include file="/WEB-INF/jsp/include/tech.jsp" %>
+
 <div class="borderDiv marB marR">
   <table>
     <tr><td colspan="3">
@@ -32,6 +33,13 @@
       </tr>
       <tr>
         <td class="formLabel"><fmt:message key="pointEdit.text.suffix"/></td>
+        <td class="formField">
+            <input id="textRendererAnalogUseUnit" type="checkbox" checked="checked" />
+            <label for="textRendererAnalogUseUnit"><fmt:message key="pointEdit.props.useUnitAsSuffix"/></label>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
         <td class="formField"><input id="textRendererAnalogSuffix" type="text"/></td>
       </tr>
     </tbody>
@@ -98,6 +106,13 @@
     <tbody id="textRendererPlain" style="display:none;">
       <tr>
         <td class="formLabel"><fmt:message key="pointEdit.text.suffix"/></td>
+        <td class="formField">
+            <input id="textRendererPlainUseUnit" type="checkbox" checked="checked" />
+            <label for="textRendererPlainUseUnit"><fmt:message key="pointEdit.props.useUnitAsSuffix"/></label>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
         <td class="formField"><input id="textRendererPlainSuffix" type="text"/></td>
       </tr>
     </tbody>
@@ -166,6 +181,18 @@
       var moduleSaveActions = {};
    
       this.init = function() {
+          var textRendererAnalogUseUnit = dojo.byId('textRendererAnalogUseUnit');
+          var textRendererAnalogSuffix = dojo.byId('textRendererAnalogSuffix');
+          textRendererAnalogUseUnit.onchange = function(value) {
+              textRendererAnalogSuffix.disabled = textRendererAnalogUseUnit.checked;
+          }
+          
+          var textRendererPlainUseUnit = dojo.byId('textRendererPlainUseUnit');
+          var textRendererPlainSuffix = dojo.byId('textRendererPlainSuffix');
+          textRendererPlainUseUnit.onchange = function(value) {
+              textRendererPlainSuffix.disabled = textRendererPlainUseUnit.checked;
+          }
+          
           // Colour handler events
           dijit.byId("textRendererRangeColour").onChange = this.handlerRangeColour;
           dijit.byId("textRendererMultistateColour").onChange = this.handlerMultistateColour;
@@ -176,6 +203,7 @@
           <c:choose>
             <c:when test='${form.textRenderer.typeName == "textRendererAnalog"}'>
               $set("textRendererAnalogFormat", "${sst:dquotEncode(form.textRenderer.format)}");
+              textRendererAnalogUseUnit.checked = ${sst:dquotEncode(form.textRenderer.useUnitAsSuffix)};
               $set("textRendererAnalogSuffix", "${sst:dquotEncode(form.textRenderer.suffix)}");
             </c:when>
             <c:when test='${form.textRenderer.typeName == "textRendererBinary"}'>
@@ -193,6 +221,7 @@
             <c:when test='${form.textRenderer.typeName == "textRendererNone"}'>
             </c:when>
             <c:when test='${form.textRenderer.typeName == "textRendererPlain"}'>
+              textRendererPlainUseUnit.checked = ${sst:dquotEncode(form.textRenderer.useUnitAsSuffix)};
               $set("textRendererPlainSuffix", "${sst:dquotEncode(form.textRenderer.suffix)}");
             </c:when>
             <c:when test='${form.textRenderer.typeName == "textRendererRange"}'>
@@ -213,6 +242,8 @@
           </c:forEach>
           
           textRendererEditor.change();
+          textRendererAnalogUseUnit.onchange();
+          textRendererPlainUseUnit.onchange();
       }
   
       this.change = function() {
@@ -226,7 +257,7 @@
           var typeName = $get("textRendererSelect");
           if (typeName == "textRendererAnalog")
               DataPointEditDwr.setAnalogTextRenderer($get("textRendererAnalogFormat"),
-                      $get("textRendererAnalogSuffix"), callback);
+                      $get("textRendererAnalogSuffix"), $get("textRendererAnalogUseUnit"), callback);
           else if (typeName == "textRendererBinary")
               DataPointEditDwr.setBinaryTextRenderer($get("textRendererBinaryZero"), 
                       dijit.byId("textRendererBinaryZeroColour").selectedColour, $get("textRendererBinaryOne"),
@@ -236,7 +267,7 @@
           else if (typeName == "textRendererNone")
               DataPointEditDwr.setNoneRenderer(callback);
           else if (typeName == "textRendererPlain")
-              DataPointEditDwr.setPlainRenderer($get("textRendererPlainSuffix"), callback);
+              DataPointEditDwr.setPlainRenderer($get("textRendererPlainSuffix"), $get("textRendererPlainUseUnit"), callback);
           else if (typeName == "textRendererRange")
               DataPointEditDwr.setRangeRenderer($get("textRendererRangeFormat"), rangeValues, callback);
           else if (typeName == "textRendererTime")

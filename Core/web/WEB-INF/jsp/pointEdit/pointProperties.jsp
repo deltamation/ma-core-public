@@ -9,11 +9,25 @@
 <script type="text/javascript">
   dojo.ready(function() {
       if (dataTypeId == <%= DataTypes.NUMERIC %>)
-          show("engineeringUnitsSection");
+          show("unitSection");
       else {
           $("plotType").disabled = true;
           $set("plotType", <%= DataPointVO.PlotTypes.STEP %>);
       }
+      
+      var useIntegralUnit = dojo.byId('useIntegralUnit');
+      var integralUnit = dojo.byId('integralUnit');
+      useIntegralUnit.onchange = function(value) {
+          integralUnit.disabled = !useIntegralUnit.checked;
+      }
+      useIntegralUnit.onchange();
+      
+      var useRenderedUnit = dojo.byId('useRenderedUnit');
+      var renderedUnit = dojo.byId('renderedUnit');
+      useRenderedUnit.onchange = function(value) {
+          renderedUnit.disabled = !useRenderedUnit.checked;
+      }
+      useRenderedUnit.onchange();
   });
 </script>
 
@@ -53,18 +67,41 @@
       </tr>
     </spring:bind>
     
-    <tbody id="engineeringUnitsSection" style="display:none;">
-      <spring:bind path="form.engineeringUnits">
+    <tbody id="unitSection" style="display:none;">
+      <spring:bind path="form.unit">
         <tr>
-          <td class="formLabelRequired"><fmt:message key="pointEdit.props.engineeringUnits"/></td>
-          <td class="formField"><tag:engineeringUnits name="engineeringUnits" value="${status.value}"/></td>
+          <td class="formLabelRequired"><fmt:message key="pointEdit.props.unit"/></td>
+          <td class="formField"><input type="text" name="unit" value="${status.value}"/></td>
           <td class="formError">${status.errorMessage}</td>
         </tr>
       </spring:bind>
-      <spring:bind path="form.integralEngUnits">
-        <tr>
-          <td class="formLabelRequired"><fmt:message key="pointEdit.props.integralEngUnits"/></td>
-          <td class="formField"><tag:engineeringUnits name="integralEngUnits" value="${status.value}"/></td>
+      <tr>
+        <td class="formLabelRequired"><fmt:message key="pointEdit.props.renderedUnit"/></td>
+        <td class="formField">
+          <sst:checkbox id="useRenderedUnit" name="useRenderedUnit" selectedValue="${form.useRenderedUnit}" />
+          <label for="useRenderedUnit"><fmt:message key="pointEdit.props.useRenderedUnit"/></label>
+        </td>
+        <td class="formError"></td>
+      </tr>
+      <spring:bind path="form.renderedUnit">
+        <tr id="renderedUnitSection">
+          <td></td>
+          <td class="formField"><input type="text" name="renderedUnit" id="renderedUnit" value="${status.value}"/></td>
+          <td class="formError">${status.errorMessage}</td>
+        </tr>
+      </spring:bind>
+      <tr>
+        <td class="formLabelRequired"><fmt:message key="pointEdit.props.integralUnit"/></td>
+        <td class="formField">
+          <sst:checkbox id="useIntegralUnit" name="useIntegralUnit" selectedValue="${form.useIntegralUnit}" />
+          <label for="useIntegralUnit"><fmt:message key="pointEdit.props.useIntegralUnit"/></label>
+        </td>
+        <td class="formError"></td>
+      </tr>
+      <spring:bind path="form.integralUnit">
+        <tr id="integralUnitSection">
+          <td></td>
+          <td class="formField"><input type="text" name="integralUnit" id="integralUnit" value="${status.value}"/></td>
           <td class="formError">${status.errorMessage}</td>
         </tr>
       </spring:bind>

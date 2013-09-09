@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.measure.unit.Unit;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,7 @@ import com.serotonin.m2m2.vo.event.PointEventDetectorVO;
 import com.serotonin.m2m2.vo.permission.Permissions;
 import com.serotonin.propertyEditor.DecimalFormatEditor;
 import com.serotonin.propertyEditor.IntegerFormatEditor;
+import com.serotonin.propertyEditor.UnitEditor;
 import com.serotonin.util.ValidationUtils;
 
 @SuppressWarnings("deprecation")
@@ -51,6 +53,8 @@ public class DataPointEditController extends SimpleFormController {
             dataPoint = user.getEditPoint();
             dataPoint.setDiscardExtremeValues(false); // Checkbox
             dataPoint.setPurgeOverride(false); // Checkbox
+            dataPoint.setUseIntegralUnit(false); // Checkbox
+            dataPoint.setUseRenderedUnit(false); // Checkbox
         }
         else {
             int id;
@@ -111,6 +115,9 @@ public class DataPointEditController extends SimpleFormController {
                 false));
         binder.registerCustomEditor(Double.TYPE, "discardHighLimit", new DecimalFormatEditor(new DecimalFormat("#.##"),
                 false));
+        binder.registerCustomEditor(Unit.class, "unit", new UnitEditor());
+        binder.registerCustomEditor(Unit.class, "integralUnit", new UnitEditor());
+        binder.registerCustomEditor(Unit.class, "renderedUnit", new UnitEditor());
     }
 
     @Override
@@ -172,7 +179,14 @@ public class DataPointEditController extends SimpleFormController {
             }
             xids.add(ped.getXid());
         }
-
+        
+        if (!point.validateIntegralUnit()) {
+            ValidationUtils.rejectValue(errors, "integralUnit", "validate.unitNotCompatible");
+        }
+        if (!point.validateRenderedUnit()) {
+            ValidationUtils.rejectValue(errors, "renderedUnit", "validate.unitNotCompatible");
+        }
+        
         if (!errors.hasErrors()) {
             if (WebUtils.hasSubmitParameter(request, SUBMIT_DISABLE)) {
                 point.setEnabled(false);
