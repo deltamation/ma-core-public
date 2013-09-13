@@ -57,7 +57,7 @@ public class MultistateRenderer extends BaseTextRenderer {
 
     @Override
     public String getText(int value, int hint) {
-        if (hint == HINT_RAW)
+        if ((hint & HINT_RAW) != 0)
             return Integer.toString(value);
 
         MultistateValue mv = getMultistateValue(value);

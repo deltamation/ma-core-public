@@ -115,7 +115,7 @@ public class BinaryTextRenderer extends BaseTextRenderer {
 
     @Override
     public String getText(boolean value, int hint) {
-        if (hint == TextRenderer.HINT_RAW)
+        if ((hint & HINT_RAW) != 0)
             return value ? "1" : "0";
         if (value)
             return oneLabel;

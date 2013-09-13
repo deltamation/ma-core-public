@@ -60,7 +60,7 @@ public class TimeRenderer extends BaseTextRenderer {
     public String getText(double value, int hint) {
         long l = (long) value;
 
-        if (hint == HINT_RAW || hint == HINT_SPECIFIC)
+        if ((hint & HINT_RAW) != 0 || (hint & HINT_SPECIFIC) != 0)
             return new Long(l).toString();
 
         l *= (long) Math.pow(10, conversionExponent);

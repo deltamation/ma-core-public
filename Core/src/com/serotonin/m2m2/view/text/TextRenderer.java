@@ -29,7 +29,11 @@ public interface TextRenderer extends Serializable {
      * Render the value in a way that does not generalize. Currently only used to prevent analog range renderers from
      * obfuscating a numeric into a descriptor.
      */
-    public static final int HINT_SPECIFIC = 3;
+    public static final int HINT_SPECIFIC = 4;
+    /**
+     * Do not convert when rendering
+     */
+    public static final int HINT_NO_CONVERT = 8;
 
     public static final String UNKNOWN_VALUE = "(n/a)";
 

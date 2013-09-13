@@ -98,11 +98,7 @@ public class StatisticsChartRenderer extends TimePeriodChartRenderer {
                     model.put("sum", stats.getSum());
                 model.put("count", stats.getCount());
                 model.put("noData", stats.getAverage() == null);
-                
-                // TODO integral renderer should do this conversion
-                // leave it like this until Report module can get the integral renderer
-                double integral = point.getIntegralConverter().convert(stats.getIntegral());
-                model.put("integral", integral);
+                model.put("integral", stats.getIntegral());
             }
             else if (dataTypeId == DataTypes.ALPHANUMERIC) {
                 ValueChangeCounter stats = new ValueChangeCounter(startTime, endTime, startVT, values);

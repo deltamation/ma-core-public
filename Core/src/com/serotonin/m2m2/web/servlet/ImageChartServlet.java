@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.measure.converter.UnitConverter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,10 +29,13 @@ import com.serotonin.m2m2.DataTypes;
 import com.serotonin.m2m2.db.dao.DataPointDao;
 import com.serotonin.m2m2.rt.dataImage.PointValueFacade;
 import com.serotonin.m2m2.rt.dataImage.PointValueTime;
+import com.serotonin.m2m2.rt.dataImage.types.NumericValue;
 import com.serotonin.m2m2.util.chart.DiscreteTimeSeries;
 import com.serotonin.m2m2.util.chart.ImageChartUtils;
 import com.serotonin.m2m2.util.chart.NumericTimeSeries;
 import com.serotonin.m2m2.util.chart.PointTimeSeriesCollection;
+import com.serotonin.m2m2.view.text.ConvertingRenderer;
+import com.serotonin.m2m2.view.text.TextRenderer;
 import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.m2m2.vo.event.PointEventDetectorVO;
 import com.serotonin.util.ColorUtils;
@@ -157,11 +161,25 @@ public class ImageChartServlet extends BaseInfoServlet {
                             data = pointValueFacade.getPointValues(from);
                         else
                             data = pointValueFacade.getPointValuesBetween(from, to);
-
+                        
                         if (dp.getPointLocator().getDataTypeId() == DataTypes.NUMERIC) {
                             TimeSeries ts = new TimeSeries(dp.getName(), null, dp.getTextRenderer().getMetaText());
-                            for (PointValueTime pv : data)
+                            
+                            TextRenderer tr = dp.getTextRenderer();
+                            ConvertingRenderer cr = (ConvertingRenderer) tr;
+                            UnitConverter converter = null;
+                            if (tr instanceof ConvertingRenderer) {
+                                converter = cr.getUnit().getConverterTo(cr.getRenderedUnit());
+                            }
+                            
+                            for (PointValueTime pv : data) {
+                                if (converter != null) {
+                                    double convertedValue = converter.convert(pv.getDoubleValue());
+                                    pv = new PointValueTime(new NumericValue(convertedValue), pv.getTime());
+                                }
                                 ImageChartUtils.addMillisecond(ts, pv.getTime(), pv.getValue().numberValue());
+                            }
+                            
                             ptsc.addNumericTimeSeries(new NumericTimeSeries(dp.getPlotType(), ts, colour, null));
                         }
                         else {

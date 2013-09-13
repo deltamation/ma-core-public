@@ -43,35 +43,45 @@ public class PlainRenderer extends ConvertingRenderer {
     private String suffix;
     
     public PlainRenderer() {
-        // no op
+        super();
     }
     
     /**
      * @param suffix
-     * @param point
      */
     public PlainRenderer(String suffix) {
+        super();
         this.suffix = suffix;
     }
 
     /**
      * @param suffix
-     * @param point
      * @param useUnitAsSuffix
      */
     public PlainRenderer(String suffix, boolean useUnitAsSuffix) {
+        super();
         this.suffix = suffix;
         this.useUnitAsSuffix = useUnitAsSuffix;
+    }
+    
+    @Override
+    protected void setDefaults() {
+        super.setDefaults();
+        suffix = "";
     }
 
     @Override
     public String getMetaText() {
+        if (useUnitAsSuffix)
+            return UnitUtil.formatLocal(renderedUnit);
         return suffix;
     }
 
     @Override
     protected String getTextImpl(DataValue value, int hint) {
         String raw;
+        String suffix = this.suffix;
+        
         if (value instanceof BinaryValue) {
             if (value.getBooleanValue())
                 raw = "1";
@@ -79,18 +89,17 @@ public class PlainRenderer extends ConvertingRenderer {
         }
         else if (value instanceof NumericValue) {
             double dblValue = value.getDoubleValue();
-            if (doConversion)
+            if ((hint & HINT_NO_CONVERT) == 0)
                 dblValue = unit.getConverterTo(renderedUnit).convert(dblValue);
             raw = Double.toString(dblValue);
+            if (useUnitAsSuffix)
+                suffix = " " + UnitUtil.formatLocal(renderedUnit);
         }
         else {
             raw = value.toString();
         }
 
-        if (useUnitAsSuffix)
-            suffix = " " + UnitUtil.formatLocal(renderedUnit);
-        
-        if (hint == HINT_RAW || suffix == null)
+        if ((hint & HINT_RAW) != 0 || suffix == null)
             return raw;
         
         return raw + suffix;
@@ -136,6 +145,8 @@ public class PlainRenderer extends ConvertingRenderer {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         int ver = in.readInt();
+        
+        setDefaults();
 
         // Switch on the version of the class so that version changes can be elegantly handled.
         if (ver == 1) {

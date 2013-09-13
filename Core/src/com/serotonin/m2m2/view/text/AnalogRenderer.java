@@ -46,15 +46,15 @@ public class AnalogRenderer extends ConvertingRenderer {
     protected String suffix;
     
     public AnalogRenderer() {
-        // no op
+        super();
     }
-    
+
     /**
      * @param format
      * @param suffix
-     * @param point
      */
     public AnalogRenderer(String format, String suffix) {
+        super();
         this.format = format;
         this.suffix = suffix;
     }
@@ -62,17 +62,26 @@ public class AnalogRenderer extends ConvertingRenderer {
     /**
      * @param format
      * @param suffix
-     * @param point
      * @param useUnitAsSuffix
      */
     public AnalogRenderer(String format, String suffix, boolean useUnitAsSuffix) {
+        super();
         this.format = format;
         this.suffix = suffix;
         this.useUnitAsSuffix = useUnitAsSuffix;
     }
     
     @Override
+    protected void setDefaults() {
+        super.setDefaults();
+        format = "0.00";
+        suffix = "";
+    }
+    
+    @Override
     public String getMetaText() {
+        if (useUnitAsSuffix)
+            return UnitUtil.formatLocal(renderedUnit);
         return suffix;
     }
 
@@ -85,21 +94,16 @@ public class AnalogRenderer extends ConvertingRenderer {
 
     @Override
     public String getText(double value, int hint) {
-        if (doConversion)
+        if ((hint & HINT_NO_CONVERT) == 0)
             value = unit.getConverterTo(renderedUnit).convert(value);
         
-//        if (useUnitAsSuffix) {
-//            if (unit.equals(NonSI.DEGREE_ANGLE) || unit.equals(NonSI.MINUTE_ANGLE) || unit.equals(NonSI.SECOND_ANGLE))
-//                suffix = unit.toString();
-//            else
-//                suffix = " " + UnitUtil.formatLocal(unit);
-//        }
+        String suffix = this.suffix;
         
         if (useUnitAsSuffix)
             suffix = " " + UnitUtil.formatLocal(renderedUnit);
         
         String raw = new DecimalFormat(format).format(value);
-        if (hint == HINT_RAW || suffix == null)
+        if ((hint & HINT_RAW) != 0 || suffix == null)
             return raw;
         
         return raw + suffix;
@@ -155,6 +159,8 @@ public class AnalogRenderer extends ConvertingRenderer {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         int ver = in.readInt();
 
+        setDefaults();
+        
         // Switch on the version of the class so that version changes can be elegantly handled.
         if (ver == 1) {
             format = SerializationHelper.readSafeUTF(in);

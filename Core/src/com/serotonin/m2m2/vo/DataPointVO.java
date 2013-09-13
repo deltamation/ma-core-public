@@ -394,6 +394,13 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     }
 
     public void setPointLocator(PointLocatorVO pointLocator) {
+        // if data type changed from non numeric to numeric then use unit as suffix
+        if (pointLocator.getDataTypeId() == DataTypes.NUMERIC &&
+                (this.pointLocator == null || this.pointLocator.getDataTypeId() != DataTypes.NUMERIC) &&
+                textRenderer instanceof ConvertingRenderer) {
+            ConvertingRenderer cr = (ConvertingRenderer) textRenderer;
+            cr.setUseUnitAsSuffix(true);
+        }
         this.pointLocator = pointLocator;
     }
 
@@ -480,11 +487,6 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             renderer.setRenderedUnit(integralUnit);
         else
             renderer.setRenderedUnit(defaultIntegralUnit());
-        
-        // TODO integral renderer should do this conversion
-        // leave it like this until Report module can get the integral renderer
-        // Conversion currently done in StatisticsChartRenderer.addDataToModel()
-        renderer.setDoConversion(false);
         
         renderer.setUseUnitAsSuffix(true);
         renderer.setFormat("0.0");

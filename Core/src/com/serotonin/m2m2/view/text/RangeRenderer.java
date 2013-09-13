@@ -41,14 +41,25 @@ public class RangeRenderer extends ConvertingRenderer {
     @JsonProperty
     private String format;
     @JsonProperty
-    private List<RangeValue> rangeValues = new ArrayList<RangeValue>();
-
+    private List<RangeValue> rangeValues;
+    
     public RangeRenderer() {
-        // no op
+        super();
     }
-
+    
+    /**
+     * @param format
+     */
     public RangeRenderer(String format) {
+        super();
         this.format = format;
+    }
+    
+    @Override
+    protected void setDefaults() {
+        super.setDefaults();
+        format = "";
+        rangeValues = new ArrayList<RangeValue>();
     }
 
     public void addRangeValues(double from, double to, String text, String colour) {
@@ -80,10 +91,10 @@ public class RangeRenderer extends ConvertingRenderer {
 
     @Override
     public String getText(double value, int hint) {
-        if (doConversion)
+        if ((hint & HINT_NO_CONVERT) == 0)
             value = unit.getConverterTo(renderedUnit).convert(value);
         
-        if (hint == HINT_RAW || hint == HINT_SPECIFIC)
+        if ((hint & HINT_RAW) != 0 || (hint & HINT_SPECIFIC) != 0)
             return new DecimalFormat(format).format(value);
 
         RangeValue range = getRangeValue(value);
@@ -145,7 +156,9 @@ public class RangeRenderer extends ConvertingRenderer {
     @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         int ver = in.readInt();
-
+        
+        setDefaults();
+        
         // Switch on the version of the class so that version changes can be elegantly handled.
         if (ver == 1) {
             format = SerializationHelper.readSafeUTF(in);

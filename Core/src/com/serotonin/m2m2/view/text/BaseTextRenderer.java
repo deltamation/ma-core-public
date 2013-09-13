@@ -88,7 +88,7 @@ abstract public class BaseTextRenderer implements TextRenderer, JsonSerializable
 
     @Override
     public String getText(int hint) {
-        if (hint == HINT_RAW)
+        if ((hint & HINT_RAW) != 0)
             return "";
         return UNKNOWN_VALUE;
     }

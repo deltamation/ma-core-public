@@ -25,21 +25,24 @@ import com.serotonin.m2m2.util.UnitUtil;
  */
 public abstract class ConvertingRenderer extends BaseTextRenderer {
     @JsonProperty
-    protected boolean useUnitAsSuffix = true;
-    Unit<?> unit = Unit.ONE;
-    Unit<?> renderedUnit = Unit.ONE;
+    protected boolean useUnitAsSuffix;
+    Unit<?> unit;
+    Unit<?> renderedUnit;
     
-    // not persisted
-    boolean doConversion = true;
+    public ConvertingRenderer() {
+        setDefaults();
+    }
     
-    public boolean isDoConversion() {
-        return doConversion;
+    /**
+     * Sets fields to defaults, called from serialization readObject()
+     * and constructor
+     */
+    protected void setDefaults() {
+        useUnitAsSuffix = true;
+        unit = Unit.ONE;
+        renderedUnit = Unit.ONE;
     }
 
-    public void setDoConversion(boolean doConversion) {
-        this.doConversion = doConversion;
-    }
-    
     public Unit<?> getUnit() {
         return unit;
     }
