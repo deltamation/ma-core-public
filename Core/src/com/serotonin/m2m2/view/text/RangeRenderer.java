@@ -11,15 +11,16 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.measure.unit.Unit;
+
 import com.serotonin.json.spi.JsonProperty;
 import com.serotonin.m2m2.DataTypes;
 import com.serotonin.m2m2.rt.dataImage.types.DataValue;
 import com.serotonin.m2m2.rt.dataImage.types.NumericValue;
 import com.serotonin.m2m2.view.ImplDefinition;
-import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.util.SerializationHelper;
 
-public class RangeRenderer extends BaseTextRenderer implements PointDependentRenderer, ConvertingRenderer {
+public class RangeRenderer extends ConvertingRenderer {
     private static ImplDefinition definition = new ImplDefinition("textRendererRange", "RANGE", "textRenderer.range",
             new int[] { DataTypes.NUMERIC });
 
@@ -79,9 +80,8 @@ public class RangeRenderer extends BaseTextRenderer implements PointDependentRen
 
     @Override
     public String getText(double value, int hint) {
-        if (point.isUseRenderedUnit()) {
-            value = point.getRenderedConverter().convert(value);
-        }
+        if (doConversion)
+            value = unit.getConverterTo(renderedUnit).convert(value);
         
         if (hint == HINT_RAW || hint == HINT_SPECIFIC)
             return new DecimalFormat(format).format(value);
@@ -131,12 +131,15 @@ public class RangeRenderer extends BaseTextRenderer implements PointDependentRen
     // Serialization
     //
     private static final long serialVersionUID = -1;
-    private static final int version = 1;
+    private static final int version = 2;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(version);
         SerializationHelper.writeSafeUTF(out, format);
         out.writeObject(rangeValues);
+        out.writeBoolean(useUnitAsSuffix);
+        out.writeObject(unit);
+        out.writeObject(renderedUnit);
     }
 
     @SuppressWarnings("unchecked")
@@ -148,23 +151,12 @@ public class RangeRenderer extends BaseTextRenderer implements PointDependentRen
             format = SerializationHelper.readSafeUTF(in);
             rangeValues = (List<RangeValue>) in.readObject();
         }
-    }
-    
-    protected DataPointVO point;
-
-    /* (non-Javadoc)
-     * @see com.serotonin.m2m2.view.text.PointDependentRenderer#getPoint()
-     */
-    @Override
-    public DataPointVO getPoint() {
-        return point;
-    }
-
-    /* (non-Javadoc)
-     * @see com.serotonin.m2m2.view.text.PointDependentRenderer#setPoint(com.serotonin.m2m2.vo.DataPointVO)
-     */
-    @Override
-    public void setPoint(DataPointVO point) {
-        this.point = point;
+        else if (ver == 2) {
+            format = SerializationHelper.readSafeUTF(in);
+            rangeValues = (List<RangeValue>) in.readObject();
+            useUnitAsSuffix = in.readBoolean();
+            unit = (Unit<?>) in.readObject();
+            renderedUnit = (Unit<?>) in.readObject();
+        }
     }
 }

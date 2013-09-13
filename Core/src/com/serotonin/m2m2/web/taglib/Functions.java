@@ -50,7 +50,7 @@ public class Functions {
     public static String getIntegralText(DataPointVO point, double integralValue) {
         if (point == null || Double.valueOf(integralValue).isNaN())
             return "-";
-        String result = point.getIntegralRenderer().getText(integralValue, TextRenderer.HINT_SPECIFIC);
+        String result = point.createIntegralRenderer().getText(integralValue, TextRenderer.HINT_SPECIFIC);
         if (!StringUtils.isBlank(result))
             return encodeDQuot(result);
         return result;

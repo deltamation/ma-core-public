@@ -11,19 +11,22 @@ import java.text.DecimalFormat;
 
 import javax.measure.unit.Unit;
 
+import com.serotonin.json.JsonException;
+import com.serotonin.json.JsonReader;
+import com.serotonin.json.ObjectWriter;
 import com.serotonin.json.spi.JsonProperty;
+import com.serotonin.json.type.JsonObject;
 import com.serotonin.m2m2.DataTypes;
 import com.serotonin.m2m2.rt.dataImage.types.DataValue;
 import com.serotonin.m2m2.rt.dataImage.types.NumericValue;
 import com.serotonin.m2m2.util.UnitUtil;
 import com.serotonin.m2m2.view.ImplDefinition;
-import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.util.SerializationHelper;
 
-public class AnalogRenderer extends BaseTextRenderer implements SuffixRenderer, PointDependentRenderer, ConvertingRenderer {
+public class AnalogRenderer extends ConvertingRenderer {
     private static ImplDefinition definition = new ImplDefinition("textRendererAnalog", "ANALOG",
             "textRenderer.analog", new int[] { DataTypes.NUMERIC });
-
+    
     public static ImplDefinition getDefinition() {
         return definition;
     }
@@ -40,12 +43,8 @@ public class AnalogRenderer extends BaseTextRenderer implements SuffixRenderer, 
 
     @JsonProperty
     protected String format;
-    @JsonProperty
     protected String suffix;
     
-    // not persisted
-    DataPointVO point;
-
     public AnalogRenderer() {
         // no op
     }
@@ -86,13 +85,8 @@ public class AnalogRenderer extends BaseTextRenderer implements SuffixRenderer, 
 
     @Override
     public String getText(double value, int hint) {
-        Unit<?> unit = point.getUnit();
-        
-        if (point.isUseRenderedUnit()) {
-            Unit<?> renderedUnit = point.getRenderedUnit();
+        if (doConversion)
             value = unit.getConverterTo(renderedUnit).convert(value);
-            unit = renderedUnit; // so correct suffix is applied
-        }
         
 //        if (useUnitAsSuffix) {
 //            if (unit.equals(NonSI.DEGREE_ANGLE) || unit.equals(NonSI.MINUTE_ANGLE) || unit.equals(NonSI.SECOND_ANGLE))
@@ -100,8 +94,9 @@ public class AnalogRenderer extends BaseTextRenderer implements SuffixRenderer, 
 //            else
 //                suffix = " " + UnitUtil.formatLocal(unit);
 //        }
+        
         if (useUnitAsSuffix)
-            suffix = " " + UnitUtil.formatLocal(unit);
+            suffix = " " + UnitUtil.formatLocal(renderedUnit);
         
         String raw = new DecimalFormat(format).format(value);
         if (hint == HINT_RAW || suffix == null)
@@ -123,12 +118,10 @@ public class AnalogRenderer extends BaseTextRenderer implements SuffixRenderer, 
         this.format = format;
     }
 
-    @Override
     public String getSuffix() {
         return suffix;
     }
 
-    @Override
     public void setSuffix(String suffix) {
         this.suffix = suffix;
     }
@@ -148,16 +141,18 @@ public class AnalogRenderer extends BaseTextRenderer implements SuffixRenderer, 
     // Serialization
     //
     private static final long serialVersionUID = -1;
-    private static final int version = 2;
+    private static final int version = 3;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(version);
         SerializationHelper.writeSafeUTF(out, format);
         SerializationHelper.writeSafeUTF(out, suffix);
         out.writeBoolean(useUnitAsSuffix);
+        out.writeObject(unit);
+        out.writeObject(renderedUnit);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException {
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         int ver = in.readInt();
 
         // Switch on the version of the class so that version changes can be elegantly handled.
@@ -170,34 +165,37 @@ public class AnalogRenderer extends BaseTextRenderer implements SuffixRenderer, 
             suffix = SerializationHelper.readSafeUTF(in);
             useUnitAsSuffix = in.readBoolean();
         }
-    }
-    
-    @JsonProperty
-    protected boolean useUnitAsSuffix = true;
-
-    /* (non-Javadoc)
-     * @see com.serotonin.m2m2.view.text.SuffixRenderer#isUseUnit()
-     */
-    @Override
-    public boolean isUseUnitAsSuffix() {
-        return useUnitAsSuffix;
-    }
-
-    /* (non-Javadoc)
-     * @see com.serotonin.m2m2.view.text.SuffixRenderer#setUseUnit()
-     */
-    @Override
-    public void setUseUnitAsSuffix(boolean useUnit) {
-        this.useUnitAsSuffix = useUnit;
+        else if (ver == 3) {
+            format = SerializationHelper.readSafeUTF(in);
+            suffix = SerializationHelper.readSafeUTF(in);
+            useUnitAsSuffix = in.readBoolean();
+            unit = (Unit<?>) in.readObject();
+            renderedUnit = (Unit<?>) in.readObject();
+        }
     }
     
     @Override
-    public DataPointVO getPoint() {
-        return point;
+    public void jsonWrite(ObjectWriter writer) throws IOException, JsonException {
+        super.jsonWrite(writer);
+        
+        if (!useUnitAsSuffix)
+            writer.writeEntry("suffix", suffix);
     }
     
     @Override
-    public void setPoint(DataPointVO point) {
-        this.point = point;
+    public void jsonRead(JsonReader reader, JsonObject jsonObject) throws JsonException {
+        super.jsonRead(reader, jsonObject);
+        
+        if (useUnitAsSuffix) {
+            suffix = "";
+        } else {
+            String text = jsonObject.getString("suffix");
+            if (text != null) {
+                suffix = text;
+            }
+            else {
+                suffix = "";
+            }
+        }
     }
 }

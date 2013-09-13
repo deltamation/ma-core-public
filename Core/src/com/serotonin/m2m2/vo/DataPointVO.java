@@ -38,10 +38,10 @@ import com.serotonin.m2m2.util.ChangeComparable;
 import com.serotonin.m2m2.util.ExportCodes;
 import com.serotonin.m2m2.util.UnitUtil;
 import com.serotonin.m2m2.view.chart.ChartRenderer;
-import com.serotonin.m2m2.view.text.IntegralRenderer;
+import com.serotonin.m2m2.view.text.AnalogRenderer;
+import com.serotonin.m2m2.view.text.ConvertingRenderer;
 import com.serotonin.m2m2.view.text.NoneRenderer;
 import com.serotonin.m2m2.view.text.PlainRenderer;
-import com.serotonin.m2m2.view.text.PointDependentRenderer;
 import com.serotonin.m2m2.view.text.TextRenderer;
 import com.serotonin.m2m2.vo.dataSource.PointLocatorVO;
 import com.serotonin.m2m2.vo.event.PointEventDetectorVO;
@@ -468,14 +468,27 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     }
 
     public void setTextRenderer(TextRenderer textRenderer) {
-        if (textRenderer instanceof PointDependentRenderer) {
-            ((PointDependentRenderer) textRenderer).setPoint(this);
-        }
         this.textRenderer = textRenderer;
+        setUnitsOnTextRenderer();
     }
     
-    public TextRenderer getIntegralRenderer() {
-        return new IntegralRenderer("0.0", this);
+    public TextRenderer createIntegralRenderer() {
+        AnalogRenderer renderer = new AnalogRenderer();
+        
+        renderer.setUnit(defaultIntegralUnit());
+        if (useIntegralUnit)
+            renderer.setRenderedUnit(integralUnit);
+        else
+            renderer.setRenderedUnit(defaultIntegralUnit());
+        
+        // TODO integral renderer should do this conversion
+        // leave it like this until Report module can get the integral renderer
+        // Conversion currently done in StatisticsChartRenderer.addDataToModel()
+        renderer.setDoConversion(false);
+        
+        renderer.setUseUnitAsSuffix(true);
+        renderer.setFormat("0.0");
+        return renderer;
     }
 
     public ChartRenderer getChartRenderer() {
@@ -753,22 +766,10 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
         return unit.times(SI.SECOND);
     }
     
-    public void calcUnit() {
-        unit = UnitUtil.convertToUnit(engineeringUnits);
-    }
-    
-    public void calcIntegralUnit() {
-        integralUnit = defaultIntegralUnit();
-    }
-    
     public UnitConverter getIntegralConverter() {
         return defaultIntegralUnit().getConverterTo(integralUnit);
     }
     
-    public UnitConverter getRenderedConverter() {
-        return unit.getConverterTo(renderedUnit);
-    }
-
     @Override
     public String toString() {
         return "DataPointVO [id=" + id + ", xid=" + xid + ", name=" + name + ", dataSourceId=" + dataSourceId
@@ -946,14 +947,38 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             useIntegralUnit = in.readBoolean();
             useRenderedUnit = in.readBoolean();
         }
-        setTextRenderer(textRenderer); // makes sure point is set on PointDependentRenderers
-
+        
         // Check the purge type. Weird how this could have been set to 0.
         if (purgeType == 0)
             purgeType = Common.TimePeriods.YEARS;
         // Ditto for purge period
         if (purgePeriod == 0)
             purgePeriod = 1;
+    }
+    
+    private void setUnitsOnTextRenderer() {
+        if (textRenderer instanceof ConvertingRenderer) {
+            ConvertingRenderer cr = (ConvertingRenderer) textRenderer;
+            cr.setUnit(unit);
+            if (useRenderedUnit) {
+                cr.setRenderedUnit(renderedUnit);
+            }
+            else {
+                cr.setRenderedUnit(unit);
+            }
+        }
+    }
+    
+    public void ensureUnitsCorrect() {
+        if (unit == null) {
+            unit = UnitUtil.convertToUnit(engineeringUnits);
+        }
+        
+        if (integralUnit == null || !validateIntegralUnit()) {
+            integralUnit = defaultIntegralUnit();
+        }
+        
+        setUnitsOnTextRenderer();
     }
 
     @Override

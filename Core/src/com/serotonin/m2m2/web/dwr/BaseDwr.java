@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.measure.converter.UnitConverter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -45,6 +46,7 @@ import com.serotonin.m2m2.rt.event.EventInstance;
 import com.serotonin.m2m2.util.DateUtils;
 import com.serotonin.m2m2.view.chart.ChartRenderer;
 import com.serotonin.m2m2.view.text.ConvertingRenderer;
+import com.serotonin.m2m2.view.text.TextRenderer;
 import com.serotonin.m2m2.vo.DataPointExtendedNameComparator;
 import com.serotonin.m2m2.vo.DataPointVO;
 import com.serotonin.m2m2.vo.User;
@@ -210,9 +212,12 @@ abstract public class BaseDwr {
             DataValue value = DataValue.stringToValue(valueStr, point.getPointLocator().getDataTypeId());
             
             // do reverse conversion of renderer
+            TextRenderer tr = point.getTextRenderer();
             if (point.isUseRenderedUnit() && value.getDataType() == DataTypes.NUMERIC && 
-                    point.getTextRenderer() instanceof ConvertingRenderer) {
-                double convertedValue = point.getRenderedConverter().inverse().convert(value.getDoubleValue());
+                    tr instanceof ConvertingRenderer) {
+                ConvertingRenderer cr = (ConvertingRenderer) tr;
+                UnitConverter converter = cr.getRenderedUnit().getConverterTo(cr.getUnit());
+                double convertedValue = converter.convert(value.getDoubleValue());
                 value = new NumericValue(convertedValue);
             }
             

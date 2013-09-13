@@ -116,6 +116,7 @@ public class DataPointDao extends BaseDao {
     }
 
     class DataPointRowMapper implements RowMapper<DataPointVO> {
+        @SuppressWarnings("deprecation")
         @Override
         public DataPointVO mapRow(ResultSet rs, int rowNum) throws SQLException {
             int i = 0;
@@ -138,18 +139,14 @@ public class DataPointDao extends BaseDao {
             dp.setDefaultCacheSize(rs.getInt(++i));
             dp.setDiscardExtremeValues(charToBool(rs.getString(++i)));
             dp.setEngineeringUnits(rs.getInt(++i));
-            if (dp.getUnit() == null) {
-                dp.calcUnit();
-            }
-            if (dp.getIntegralUnit() == null || !dp.validateIntegralUnit()) {
-                dp.calcIntegralUnit();
-            }
-
+            
             // Data source information.
             dp.setDataSourceName(rs.getString(++i));
             dp.setDataSourceXid(rs.getString(++i));
             dp.setDataSourceTypeName(rs.getString(++i));
 
+            dp.ensureUnitsCorrect();
+            
             return dp;
         }
     }
@@ -183,6 +180,7 @@ public class DataPointDao extends BaseDao {
         });
     }
 
+    @SuppressWarnings("deprecation")
     void insertDataPoint(final DataPointVO dp) {
         for (DataPointChangeDefinition def : ModuleRegistry.getDefinitions(DataPointChangeDefinition.class))
             def.beforeInsert(dp);
@@ -242,6 +240,7 @@ public class DataPointDao extends BaseDao {
             def.afterUpdate(dp);
     }
 
+    @SuppressWarnings("deprecation")
     public void updateDataPointShallow(final DataPointVO dp) {
         ejt.update(
                 "update dataPoints set xid=?, name=?, deviceName=?, enabled=?, pointFolderId=?, loggingType=?, " //
