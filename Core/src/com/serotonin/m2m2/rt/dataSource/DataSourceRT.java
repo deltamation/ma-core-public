@@ -62,7 +62,7 @@ abstract public class DataSourceRT implements ILifecycle {
     /**
      * Access to either the addedPoints or removedPoints lists should be synchronized with this object's monitor.
      */
-    protected Boolean pointListChangeLock = new Boolean(false);
+    protected final Boolean pointListChangeLock = new Boolean(false);
 
     private final List<DataSourceEventType> eventTypes;
 
@@ -204,5 +204,9 @@ abstract public class DataSourceRT implements ILifecycle {
     // Additional lifecycle.
     public void beginPolling() {
         // no op
+    }
+
+    public Boolean getPointListChangeLock() {
+        return pointListChangeLock;
     }
 }
