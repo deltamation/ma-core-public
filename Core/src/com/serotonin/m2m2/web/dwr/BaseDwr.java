@@ -213,9 +213,9 @@ abstract public class BaseDwr {
             
             // do reverse conversion of renderer
             TextRenderer tr = point.getTextRenderer();
-            ConvertingRenderer cr = (ConvertingRenderer) tr;
             if (point.getPointLocator().getDataTypeId() == DataTypes.NUMERIC && 
                     tr instanceof ConvertingRenderer) {
+                ConvertingRenderer cr = (ConvertingRenderer) tr;
                 UnitConverter converter = cr.getRenderedUnit().getConverterTo(cr.getUnit());
                 double convertedValue = converter.convert(value.getDoubleValue());
                 value = new NumericValue(convertedValue);
