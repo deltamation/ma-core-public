@@ -20,6 +20,7 @@ import java.util.concurrent.RejectedExecutionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.ConcurrencyFailureException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.dao.TransientDataAccessException;
 import org.springframework.dao.TransientDataAccessResourceException;
@@ -199,7 +200,7 @@ public class PointValueDao extends BaseDao {
         }
     }
 
-    private long savePointValueImpl(int pointId, int dataType, double dvalue, long time, String svalue,
+    private long savePointValueImpl(int pointId, int dataType, Double dvalue, long time, String svalue,
             SetPointSource source) {
         long id = doInsertLong(POINT_VALUE_INSERT, new Object[] { pointId, dataType, dvalue, time });
 
@@ -228,15 +229,42 @@ public class PointValueDao extends BaseDao {
 
         return id;
     }
+    
+    public void modifyPointValue(int dataPointId, int dataType, double value, long time) {
+        PointValueTime pvt = getPointValueAt(dataPointId, time);
+        if (pvt == null)
+            savePointValueImpl(dataPointId, dataType, null, time, null, null);
+        ejt.update("update pointValues set modifiedValue=? where dataPointId=? AND ts=?", new Object[] {value, dataPointId, time});
+    }
+    
+    private static final String POINT_VALUE_REVERT = "SELECT pointValue FROM pointValues WHERE dataPointId=? AND ts=?";
+    public void revertPointValue(int dataPointId, long time) {
+        Double pointValue;
+        try {
+            pointValue = ejt.queryForObject(POINT_VALUE_REVERT, new Object[] {dataPointId, time}, Double.class);
+        } catch (DataAccessException e) {
+            return; // no row in pointValues table for this point and time
+        }
+        
+        if (pointValue == null) {
+            // there is a row but it has no pointValue, i.e. its just a modified value
+            deletePointValueAt(dataPointId, time);
+        }
+        else {
+            // there is a row with a pointValue, reset the modifiedValue to null
+            ejt.update("update pointValues set modifiedValue=? where dataPointId=? AND ts=?", new Object[] {null, dataPointId, time});
+        }
+    }
 
     //
     //
     // Queries
     //
-    private static final String POINT_VALUE_SELECT = //
-    "select pv.dataType, pv.pointValue, pva.textPointValueShort, pva.textPointValueLong, pv.ts, pva.sourceMessage " //
-            + "from pointValues pv " //
-            + "  left join pointValueAnnotations pva on pv.id = pva.pointValueId";
+    private static final String POINT_VALUE_SELECT = "select pv.dataType, pv.modifiedValue, pv.pointValue, " +
+            "pva.textPointValueShort, pva.textPointValueLong, pv.ts, pva.sourceMessage " +
+            "from pointValues pv left join pointValueAnnotations pva on pv.id = pva.pointValueId";
+    private static final String POINT_VALUE_SELECT_RAW = POINT_VALUE_SELECT +
+            " where pv.pointValue is not null";
 
     //
     //
@@ -325,12 +353,22 @@ public class PointValueDao extends BaseDao {
     }
 
     class PointValueRowMapper implements RowMapper<PointValueTime> {
+        boolean raw = false;
+        
+        PointValueRowMapper() {
+        }
+        
+        PointValueRowMapper(boolean raw) {
+            this.raw = raw;
+        }
+        
         @Override
         public PointValueTime mapRow(ResultSet rs, int rowNum) throws SQLException {
-            DataValue value = createDataValue(rs, 1);
-            long time = rs.getLong(5);
+            DataValue value = createDataValue(rs, 1, raw);
+            
+            long time = rs.getLong(6);
 
-            TranslatableMessage sourceMessage = BaseDao.readTranslatableMessage(rs, 6);
+            TranslatableMessage sourceMessage = BaseDao.readTranslatableMessage(rs, 7);
             if (sourceMessage == null)
                 // No annotations, just return a point value.
                 return new PointValueTime(value, time);
@@ -340,27 +378,36 @@ public class PointValueDao extends BaseDao {
         }
     }
 
-    DataValue createDataValue(ResultSet rs, int firstParameter) throws SQLException {
+    DataValue createDataValue(ResultSet rs, int firstParameter, boolean raw) throws SQLException {
         int dataType = rs.getInt(firstParameter);
         DataValue value;
         switch (dataType) {
         case (DataTypes.NUMERIC):
-            value = new NumericValue(rs.getDouble(firstParameter + 1));
+            double dblVal = rs.getDouble(firstParameter + 1);
+            if (raw || rs.wasNull())
+                dblVal = rs.getDouble(firstParameter + 2);
+            value = new NumericValue(dblVal);
             break;
         case (DataTypes.BINARY):
-            value = new BinaryValue(rs.getDouble(firstParameter + 1) == 1);
+            boolean boolVal = rs.getDouble(firstParameter + 1) == 1;
+            if (raw || rs.wasNull())
+                boolVal = rs.getDouble(firstParameter + 2) == 1;
+            value = new BinaryValue(boolVal);
             break;
         case (DataTypes.MULTISTATE):
-            value = new MultistateValue(rs.getInt(firstParameter + 1));
+            int intVal = rs.getInt(firstParameter + 1);
+            if (raw || rs.wasNull())
+                intVal = rs.getInt(firstParameter + 2);
+            value = new MultistateValue(intVal);
             break;
         case (DataTypes.ALPHANUMERIC):
-            String s = rs.getString(firstParameter + 2);
+            String s = rs.getString(firstParameter + 3);
             if (s == null)
-                s = rs.getString(firstParameter + 3);
+                s = rs.getString(firstParameter + 4);
             value = new AlphanumericValue(s);
             break;
         case (DataTypes.IMAGE):
-            value = new ImageValue(Integer.parseInt(rs.getString(firstParameter + 2)), rs.getInt(firstParameter + 1));
+            value = new ImageValue(Integer.parseInt(rs.getString(firstParameter + 3)), rs.getInt(firstParameter + 2));
             break;
         default:
             value = null;
@@ -372,10 +419,11 @@ public class PointValueDao extends BaseDao {
     //
     // Multiple-point callback for point history replays
     //
-    private static final String POINT_ID_VALUE_SELECT = "select pv.dataPointId, pv.dataType, pv.pointValue, " //
-            + "pva.textPointValueShort, pva.textPointValueLong, pv.ts "
-            + "from pointValues pv "
-            + "  left join pointValueAnnotations pva on pv.id = pva.pointValueId";
+    private static final String POINT_ID_VALUE_SELECT = "select pv.dataPointId, pv.dataType, pv.modifiedValue, " +
+            "pv.pointValue, pva.textPointValueShort, pva.textPointValueLong, pv.ts " +
+            "from pointValues pv left join pointValueAnnotations pva on pv.id = pva.pointValueId";
+    private static final String POINT_ID_VALUE_SELECT_RAW = POINT_ID_VALUE_SELECT +
+            " where pv.pointValue is not null";
 
     public void getPointValuesBetween(List<Integer> dataPointIds, long from, long to,
             MappedRowCallback<IdPointValueTime> callback) {
@@ -383,16 +431,25 @@ public class PointValueDao extends BaseDao {
         query(POINT_ID_VALUE_SELECT + " where pv.dataPointId in (" + ids + ") and pv.ts >= ? and pv.ts<? order by ts",
                 new Object[] { from, to }, new IdPointValueRowMapper(), callback);
     }
-
+    
     /**
      * Note: this does not extract source information from the annotation.
      */
     class IdPointValueRowMapper implements RowMapper<IdPointValueTime> {
+        boolean raw = false;
+        
+        IdPointValueRowMapper() {
+        }
+        
+        IdPointValueRowMapper(boolean raw) {
+            this.raw = raw;
+        }
+        
         @Override
         public IdPointValueTime mapRow(ResultSet rs, int rowNum) throws SQLException {
             int dataPointId = rs.getInt(1);
-            DataValue value = createDataValue(rs, 2);
-            long time = rs.getLong(6);
+            DataValue value = createDataValue(rs, 2, raw);
+            long time = rs.getLong(7);
             return new IdPointValueTime(dataPointId, value, time);
         }
     }
@@ -401,6 +458,11 @@ public class PointValueDao extends BaseDao {
     //
     // Point value deletions
     //
+    public long deletePointValueAt(int dataPointId, long time) {
+        return deletePointValues("delete from pointValues where dataPointId=? and ts=?", new Object[] { dataPointId,
+                time }, 0, 0);
+    }
+    
     public long deletePointValuesBefore(int dataPointId, long time) {
         return deletePointValues("delete from pointValues where dataPointId=? and ts<?", new Object[] { dataPointId,
                 time }, 0, 0);
