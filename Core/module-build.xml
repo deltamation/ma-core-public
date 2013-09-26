@@ -5,7 +5,7 @@
   relatively - to the directory of your core project. In Eclipse this can be done by going to 
   Window -> Preferences -> Any -> Runtime -> Properties and adding a the coreHome property.
  -->
-<project name="MA - Module build" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="MA - Module build" basedir="." xmlns:mvn="antlib:org.apache.maven.artifact.ant">
     <property file="module.properties" />
     <property name="fullName" value="m2m2-${name}-${version}" />
     <property file="${coreHome}/module-common.properties" />
@@ -22,33 +22,27 @@
     <if>
         <isset property="pom.exists"/>
         <then>
-        	<artifact:pom file="pom.xml" id="maven-pom" />
-        	<artifact:dependencies filesetId="maven-deps" type="jar" pomRefId="maven-pom" />
-        	<artifact:dependencies filesetId="maven-deps-runtime" type="jar" pomRefId="maven-pom" useScope="runtime" />
+        	<mvn:pom file="pom.xml" id="maven-pom" />
+        	<mvn:dependencies filesetId="maven-deps" type="jar" pomRefId="maven-pom" />
+        	<mvn:dependencies filesetId="maven-deps-runtime" type="jar" pomRefId="maven-pom" useScope="runtime" />
         </then>
         <else>
-        	<!-- Define an empty fileset -->
-        	<fileset id="maven-deps" dir="non.existing.directory" erroronmissingdir="false"/>
-        	<fileset id="maven-deps-runtime" dir="non.existing.directory" erroronmissingdir="false"/>
+        	<!-- Use built core's lib folder instead -->
+        	<fileset id="maven-deps" dir="${coreHome}/target/lib">
+	            <include name="*.jar" />
+	        </fileset>
+        	<!-- Use the lib folder instead -->
+            <fileset id="maven-deps-runtime" dir="lib" erroronmissingdir="false">
+                <include name="*.jar" />
+            </fileset>
         </else>
     </if>
 
     <path id="master-classpath">
-        <fileset dir="${coreHome}/target/lib">
-            <include name="*.jar" />
-        </fileset>
-        <fileset dir="lib" erroronmissingdir="false">
-            <include name="*.jar" />
-        </fileset>
-        <!-- Grab the external libs that we won't package up -->
-        <fileset dir="external-lib" erroronmissingdir="false">
-            <include name="*.jar" />
-        </fileset>
-    	
+    	<fileset refid="maven-deps" />
+    	<fileset refid="maven-deps-runtime" />
+
         <pathelement path="target" />
-    	
-    	<!-- Get the maven fileset -->
-    	<fileset refid="maven-deps"/>
     </path>
 
     <target name="clean" description="Clean the target area">
@@ -122,17 +116,9 @@
     	    </path>
         	<path id="libraryjars">
         		<pathelement path="${java.home}/lib/rt.jar" />
-        		<pathelement path="${coreHome}/bin" />
-        		<fileset dir="${coreHome}/lib">
-		            <include name="*.jar" />
-		        </fileset>
-                <fileset dir="lib" erroronmissingdir="false">
-                    <include name="*.jar" />
-                </fileset>
-                <fileset dir="external-lib" erroronmissingdir="false">
-                    <include name="*.jar" />
-                </fileset>
-                <pathelement path="target" />
+        		<pathelement path="${coreHome}/lib/annotations.jar" />
+            	<fileset refid="maven-deps" />
+            	<fileset refid="maven-deps-runtime" />
 			</path>
         	
             <taskdef resource="proguard/ant/task.properties" classpath="${coreHome}/lib-opt/proguard.jar" />
