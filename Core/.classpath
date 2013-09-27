@@ -12,7 +12,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src-patch"/>
 	<classpathentry kind="src" path="src-unit"/>
 	<classpathentry kind="lib" path="overrides/classes"/>
 	<classpathentry kind="lib" path="classes"/>
