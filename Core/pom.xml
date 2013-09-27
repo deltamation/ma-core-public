@@ -222,11 +222,6 @@
                 <version>9.1.1.B60.25.p2</version>
             </dependency>
             <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>javax.mail-api</artifactId>
-                <version>1.5.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>2.3.11</version>
@@ -245,6 +240,11 @@
                 <groupId>proguard-annotations</groupId>
                 <artifactId>proguard-annotations</artifactId>
                 <version>4.10</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>1.5.0-b01</version>
             </dependency>
   </dependencies>
 </project>
