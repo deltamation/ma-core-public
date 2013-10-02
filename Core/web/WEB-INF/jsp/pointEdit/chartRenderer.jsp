@@ -4,7 +4,7 @@
 --%>
 <%@ include file="/WEB-INF/jsp/include/tech.jsp" %>
 <div class="borderDiv marB marR">
-  <table>
+  <table class="layout">
     <tr><td colspan="3">
       <span class="smallTitle"><fmt:message key="pointEdit.chart.props"/></span>
       <tag:help id="chartRenderers"/>

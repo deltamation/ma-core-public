@@ -171,7 +171,7 @@
     </script>
   </c:if>
       
-  <table width="100%">
+  <table width="100%" class="layout">
     <tr>
       <td valign="top" align="right">
         <fmt:message key="pointDetails.goto"/>:&nbsp;
@@ -197,11 +197,11 @@
     <c:when test="${empty point && !empty currentXid}"><m2m2:translate key="pointDetails.pointNotFound"/></c:when>
     <c:when test="${empty point}"><m2m2:translate key="pointDetails.noPoints"/></c:when>
     <c:otherwise>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table width="100%" cellspacing="0" cellpadding="0" class="layout">
         <tr>
           <td valign="top">
             <div class="borderDiv marB marR">
-              <table>
+              <table class="layout">
                 <tr>
                   <td class="smallTitle" colspan="2">
                     <tag:img png="icon_comp" title="common.point"/>
@@ -246,7 +246,7 @@
             </div>
             
             <div class="borderDiv marB marR">
-              <table width="100%">
+              <table width="100%" class="layout">
                 <tr>
                   <td class="smallTitle"><fmt:message key="pointDetails.statistics"/></td>
                   <td id="statsAsof"></td>
@@ -264,8 +264,8 @@
           </td>
           
           <td valign="top">
-            <div class="borderDiv marB marR">
-              <table width="100%">
+            <div class="borderDivPadded marB marR">
+              <table width="100%" class="layout">
                 <tr>
                   <td class="smallTitle"><fmt:message key="pointDetails.history"/></td>
                   <td id="historyTableAsof"></td>
@@ -291,7 +291,7 @@
           
           <td valign="top">
             <div class="borderDiv marB">
-              <table width="100%">
+              <table width="100%" class="layout">
                 <tr>
                   <td class="smallTitle"><fmt:message key="notes.userNotes"/></td>
                   <td align="right">
@@ -300,7 +300,7 @@
                   </td>
                 </tr>
               </table>
-              <table id="pointComments${point.id}"><tag:comments comments="${point.comments}"/></table>
+              <table id="pointComments${point.id}" class="layout"><tag:comments comments="${point.comments}"/></table>
             </div>
           </td>
         </tr>
@@ -310,7 +310,7 @@
             <td colspan="3">
               <!-- chart with editable properties and annotations -->
               <div class="borderDiv marB">
-                <table width="100%">
+                <table width="100%" class="layout">
                   <tr>
                     <td class="smallTitle"><fmt:message key="pointDetails.chart"/></td>
                     <td id="imageChartAsof"></td>
@@ -333,7 +333,7 @@
           <tr>
             <td colspan="3">
               <div class="borderDiv marB">
-                <table width="100%">
+                <table width="100%" class="layout">
                   <tr>
                     <td class="smallTitle"><fmt:message key="pointDetails.flipbook"/></td>
                     <td id="flipbookAsof"></td>
@@ -355,8 +355,8 @@
       
         <tr>
           <td colspan="3">
-            <div class="borderDiv marB">
-              <table width="100%">
+            <div class="borderDivPadded marB">
+              <table width="100%" class="layout">
                 <tr>
                   <td class="smallTitle"><fmt:message key="pointDetails.events"/></td>
                   <td align="right">
@@ -381,14 +381,14 @@
                     <td align="center"><tag:eventIcon event="${event}"/></td>
                     <td>${m2m2:time(event.activeTimestamp)}</td>
                     <td>
-                      <table cellspacing="0" cellpadding="0" width="100%">
+                      <table cellspacing="0" cellpadding="0" width="100%" class="layout">
                         <tr>
                           <td><b><m2m2:translate message="${event.message}"/></b></td>
                           <td align="right"><tag:img png="comment_add" title="notes.addNote"
                                   onclick="openCommentDialog(${applicationScope['constants.UserComment.TYPE_EVENT']}, ${event.id})"/></td>
                         </tr>
                       </table>
-                      <table cellspacing="0" cellpadding="0" id="eventComments${event.id}">
+                      <table cellspacing="0" cellpadding="0" id="eventComments${event.id}" class="layout">
                         <c:forEach items="${event.eventComments}" var="comment">
                           <tr>
                             <td valign="top" width="16"><tag:img png="comment" title="notes.note"/></td>
@@ -439,7 +439,7 @@
         
         <tr>
           <td colspan="3" valign="top">
-            <div class="borderDiv">
+            <div class="borderDivPadded">
               <span class="smallTitle" style="margin:3px;"><fmt:message key="pointDetails.userAccess"/></span>
               <table width="100%" cellspacing="1">
                 <tr class="rowHeader">

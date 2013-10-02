@@ -62,7 +62,7 @@
         <td align="center"><tag:eventIcon event="${event}"/></td>
         <td>${m2m2:time(event.activeTimestamp)}</td>
         <td>
-          <table cellspacing="0" cellpadding="0" width="100%">
+          <table cellspacing="0" cellpadding="0" width="100%" class="layout">
             <tr>
               <td colspan="2"><b><m2m2:translate message="${event.message}"/></b></td>
               <td align="right">

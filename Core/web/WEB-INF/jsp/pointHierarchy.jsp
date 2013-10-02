@@ -224,11 +224,11 @@
     }
   </script>
   
-  <table>
+  <table class="layout">
     <tr>
       <td valign="top">
         <div class="borderDivPadded">
-          <table class="wide">
+          <table class="wide layout">
             <tr>
               <td>
                 <span class="smallTitle"><fmt:message key="pointHierarchy.hierarchy"/></span>
@@ -249,7 +249,7 @@
       
       <td valign="top">
         <div id="folderEditDiv" class="borderDivPadded" style="display:none; position:absolute;">
-          <table class="wide">
+          <table class="wide layout">
             <tr>
               <td class="smallTitle"><fmt:message key="pointHierarchy.details"/></td>
               <td align="right">
@@ -259,7 +259,7 @@
             </tr>
           </table>
           
-          <table>
+          <table class="layout">
             <tr>
               <td class="formLabelRequired"><fmt:message key="pointHierarchy.name"/></td>
               <td class="formField"><input id="folderName" type="text"

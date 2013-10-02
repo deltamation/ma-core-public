@@ -167,7 +167,7 @@
     }
   </script>
   
-  <table>
+  <table class="layout">
     <tr>
       <td>
         <tag:img png="icon_ds" title="dsList.dataSources"/>

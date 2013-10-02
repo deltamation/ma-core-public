@@ -82,7 +82,7 @@
     }
   </script>
   
-  <table cellspacing="0" cellpadding="0">
+  <table cellspacing="0" cellpadding="0" class="layout">
     <tr>
       <td>
         <tag:img png="transmit" title="publisherList.publishers"/>

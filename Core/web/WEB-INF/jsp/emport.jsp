@@ -79,7 +79,7 @@
   </script>
   
   <div class="borderDiv marR marB" style="float:left;">
-    <table width="100%">
+    <table width="100%" class="layout">
       <tr>
         <td colspan="2">
           <span class="smallTitle"><fmt:message key="emport.export"/></span>
@@ -126,7 +126,7 @@
   </div>
 
   <div class="borderDiv marB" style="float:left;">
-    <table width="100%">
+    <table width="100%" class="layout">
       <tr><td><span class="smallTitle"><fmt:message key="emport.import"/></span></td></tr>
       <tr>
         <td>

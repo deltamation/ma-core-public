@@ -46,11 +46,11 @@
     }
   </script>
   
-  <table>
+  <table class="layout">
     <tr>
       <td id="publisherProperties">
         <c:if test="${!empty publisherEvents}">
-          <table class="borderDiv marB">
+          <table class="borderDiv marB layout">
             <tr><td class="smallTitle"><fmt:message key="publisherEdit.currentAlarms"/></td></tr>
             <c:forEach items="${publisherEvents}" var="event">
               <tr><td class="formError">
@@ -65,7 +65,7 @@
         <div id="message" class="formError" style="display:none;"></div>
         
         <div class="borderDiv marR marB">
-          <table>
+          <table class="layout">
             <tr>
               <td colspan="2" class="smallTitle">
                 <tag:img png="transmit" title="common.edit"/>

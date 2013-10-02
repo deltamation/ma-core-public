@@ -266,7 +266,7 @@
                 td.onmouseout = function() { hourOut(this); };
                 td.onmousedown = function() { return hourDown(this) };
                 
-                content = '<table cellspacing="1" cellpadding="0"><tr>';
+                content = '<table cellspacing="1" cellpadding="0" class="layout"><tr>';
                 for (k=0; k<4; k++) {
                     if (k == 0) title = hour +":00";
                     else if (k == 1) title = hour +":15";
@@ -394,11 +394,11 @@
     }
   </script>
   
-  <table>
+  <table class="layout">
     <tr>
       <td valign="top">
         <div class="borderDiv">
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr>
               <td>
                 <span class="smallTitle"><fmt:message key="mailingLists.mailingLists"/></span>
@@ -408,7 +408,7 @@
                       id="ml${NEW_ID}Img"/></td>
             </tr>
           </table>
-          <table id="mailingListsTable">
+          <table id="mailingListsTable" class="layout">
             <tbody id="ml_TEMPLATE_" onclick="showMailingList(getMangoId(this))" class="ptr" style="display:none;"><tr>
               <td><tag:img id="ml_TEMPLATE_Img" png="book" title="mailingLists.mailingList"/></td>
               <td class="link" id="ml_TEMPLATE_Name"></td>
@@ -419,7 +419,7 @@
       
       <td valign="top" style="display:none;" id="mailingListDetails">
         <div class="borderDiv">
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr>
               <td><span class="smallTitle"><fmt:message key="mailingLists.details"/></span></td>
               <td align="right">
@@ -430,9 +430,9 @@
             </tr>
           </table>
           
-          <table><tr><td colspan="2" id="userMessage" class="formError" style="display:none;"></td></tr></table>
+          <table class="layout"><tr><td colspan="2" id="userMessage" class="formError" style="display:none;"></td></tr></table>
           
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr>
               <td class="formLabelRequired"><fmt:message key="common.xid"/></td>
               <td class="formField"><input type="text" id="xid"/></td>
@@ -459,7 +459,7 @@
             </tr>
           </table>
           
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr><td colspan="3" class="smallTitle"><fmt:message key="mailingLists.entries"/></td></tr>
             <tr id="emptyEntryListMessage">
               <td colspan="3"><fmt:message key="mailingLists.noEntries"/></td>
@@ -478,11 +478,11 @@
               <tr><td width="16"></td><td></td><td width="16"></td></tr>
             </tbody>
           </table>
-          <table width="100%">
+          <table width="100%" class="layout">
             <tbody id="genericMessages"></tbody>
           </table>
           
-          <table>
+          <table class="layout">
             <tr><td colspan="5" class="horzSeparator" colspan="2"></td></tr>
             <tr>
               <td class="smallTitle"><fmt:message key="common.activeTime"/></td>
@@ -493,7 +493,7 @@
             </tr>
             <tr>
               <td style="padding:5px;" colspan="5" >
-                <table cellspacing="0" cellpadding="0">
+                <table cellspacing="0" cellpadding="0" class="layout">
                   <tr>
                     <td></td>
                     <th><fmt:message key="common.day.short.mon"/></th>

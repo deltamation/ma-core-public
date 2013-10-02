@@ -325,7 +325,7 @@
   </script>
   
   <tag:labelledSection labelKey="systemSettings.systemInformation">
-    <table>
+    <table class="layout">
       <tr>
         <td class="formLabel"><fmt:message key="systemSettings.instanceDescription"/></td>
         <td class="formField"><input id="<c:out value="<%= SystemSettingsDao.INSTANCE_DESCRIPTION %>"/>" type="text"/></td>
@@ -377,7 +377,7 @@
   </tag:labelledSection>
   
   <tag:labelledSection labelKey="systemSettings.systemAlarmLevels" closed="true">
-    <table>
+    <table class="layout">
       <tbody id="systemEventAlarmLevelsList"></tbody>
       <tr>
         <td colspan="2" align="center">
@@ -390,7 +390,7 @@
   </tag:labelledSection>
   
   <tag:labelledSection labelKey="systemSettings.auditAlarmLevels" closed="true">
-    <table>
+    <table class="layout">
       <tbody id="auditEventAlarmLevelsList"></tbody>
       <tr>
         <td colspan="2" align="center">
@@ -404,7 +404,7 @@
   
   <c:if test="${!empty availableLanguages}">
     <tag:labelledSection labelKey="systemSettings.languageSettings" closed="true">
-      <table>
+      <table class="layout">
         <tr>
           <td class="formLabelRequired"><fmt:message key="systemSettings.systemLanguage"/></td>
           <td class="formField">
@@ -423,7 +423,7 @@
   </c:if>
   
   <tag:labelledSection labelKey="systemSettings.emailSettings" closed="true">
-    <table>
+    <table class="layout">
       <tr>
         <td class="formLabelRequired"><fmt:message key="systemSettings.smtpHost"/></td>
         <td class="formField"><input id="<c:out value="<%= SystemSettingsDao.EMAIL_SMTP_HOST %>"/>" type="text"/></td>
@@ -482,7 +482,7 @@
   </tag:labelledSection>
   
   <tag:labelledSection labelKey="systemSettings.httpSettings" closed="true">
-    <table>
+    <table class="layout">
       <tr>
         <td class="formLabelRequired"><fmt:message key="systemSettings.useProxy"/></td>
         <td class="formField">
@@ -519,7 +519,7 @@
   </tag:labelledSection>
   
   <tag:labelledSection labelKey="systemSettings.otherSettings" closed="true">
-    <table>
+    <table class="layout">
       <tr>
         <td class="formLabelRequired"><fmt:message key="systemSettings.uiPerformance"/></td>
         <td class="formField">
@@ -575,7 +575,7 @@
   </c:forEach>
   
   <tag:labelledSection labelKey="systemSettings.colourSettings" closed="true">
-    <table id="colourSettingsTab">
+    <table id="colourSettingsTab" class="layout">
       <tr>
         <td class="formLabel"><fmt:message key="systemSettings.chartBackgroundColour"/></td>
         <td class="formField"><input type="text" id="<c:out value="<%= SystemSettingsDao.CHART_BACKGROUND_COLOUR %>"/>"/></td>

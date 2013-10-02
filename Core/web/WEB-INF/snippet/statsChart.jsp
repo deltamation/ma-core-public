@@ -6,7 +6,7 @@
 <c:if test="${!empty startsAndRuntimes}">
   <b><fmt:message key="common.stats.start"/></b>: ${m2m2:fullTime(start)}<br/>
   <b><fmt:message key="common.stats.end"/></b>: ${m2m2:fullTime(end)}<br/>
-  <table>
+  <table class="layout">
     <tr>
       <th><fmt:message key="common.value"/></th>
       <th><fmt:message key="common.stats.starts"/></th>

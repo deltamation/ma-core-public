@@ -147,7 +147,7 @@
     }
   </script>
   
-  <div class="borderDiv marB" style="float:left;">
+  <div class="borderDivPadded marB" style="float:left;">
     <div class="smallTitle titlePadding" style="float:left;">
       <tag:img png="flag_white" title="events.alarms"/>
       <fmt:message key="events.pending"/>
@@ -168,7 +168,7 @@
   <div class="borderDiv" style="clear:left;float:left;">
     <div class="smallTitle titlePadding"><fmt:message key="events.search"/></div>
     <div>
-      <table>
+      <table class="layout">
         <tr>
           <td class="formLabel"><fmt:message key="events.id"/></td>
           <td class="formField"><input id="eventId" type="text"></td>
@@ -213,7 +213,7 @@
         <tr>
           <td class="formLabel"><fmt:message key="events.search.dateRange"/></td>
           <td class="formField">
-            <table>
+            <table class="layout">
               <tr><td>
                  <select id="dateRangeType" onchange="updateDateRangeFields()">
                    <option value="<c:out value="<%= EventsDwr.DATE_RANGE_TYPE_NONE %>"/>"><fmt:message key="events.search.dateRange.none"/></option>
@@ -223,7 +223,7 @@
               </td></tr>
               <tr>
                 <td style="padding-left:40px;">
-                  <table id="dateRangeRelative" style="display: none;">
+                  <table id="dateRangeRelative" style="display: none;" class="layout">
                     <tr>
                       <td valign="top"><input type="radio" name="relativeType" onchange="updateDateRangeFields()"
                               id="relprev" value="<c:out value="<%= EventsDwr.RELATIVE_DATE_TYPE_PREVIOUS %>"/>" 

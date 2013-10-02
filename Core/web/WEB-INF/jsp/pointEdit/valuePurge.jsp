@@ -31,7 +31,7 @@
 </script>
 
 <div class="borderDiv marB marR">
-  <table>
+  <table class="layout">
     <tr><td colspan="3">
       <span class="smallTitle"><fmt:message key="pointEdit.purge.purgeNow"/></span>
       <tag:help id="pointValueLogPurging"/>

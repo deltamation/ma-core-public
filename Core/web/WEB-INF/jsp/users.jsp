@@ -51,7 +51,7 @@
                     dshtml += '<label for="'+ id +'"> '+ dataSources[i].name +'</label><br/>';
                     dshtml += '<div style="margin-left:25px;" id="dsps'+ dataSources[i].id +'">';
                     if (dataSources[i].points.length > 0) {
-                        dshtml +=   '<table cellspacing="0" cellpadding="1">';
+                        dshtml +=   '<table cellspacing="0" cellpadding="1" class="layout">';
                         for (j=0; j<dataSources[i].points.length; j++) {
                             dp = dataSources[i].points[j];
                             dshtml += '<tr>';
@@ -280,11 +280,11 @@
     }
   </script>
   
-  <table>
+  <table class="layout">
     <tr>
       <td valign="top" id="userList" style="display:none;">
         <div class="borderDiv">
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr>
               <td>
                 <span class="smallTitle"><fmt:message key="users.title"/></span>
@@ -294,7 +294,7 @@
                       title="users.add" id="u${applicationScope['constants.Common.NEW_ID']}Img"/></td>
             </tr>
           </table>
-          <table id="usersTable">
+          <table id="usersTable" class="layout">
             <tbody id="u_TEMPLATE_" onclick="showUser(getMangoId(this))" class="ptr" style="display:none;"><tr>
               <td><tag:img id="u_TEMPLATE_Img" png="user_green" title="users.user"/></td>
               <td class="link" id="u_TEMPLATE_Username"></td>
@@ -305,7 +305,7 @@
       
       <td valign="top" style="display:none;" id="userDetails">
         <div class="borderDiv">
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr>
               <td>
                 <span class="smallTitle"><tag:img id="userImg" png="user_green" title="users.user"/>
@@ -320,9 +320,9 @@
             </tr>
           </table>
           
-          <table><tbody id="genericMessages"></tbody></table>
+          <table class="layout"><tbody id="genericMessages"></tbody></table>
           
-          <table>
+          <table class="layout">
             <tr>
               <td colspan="2" id="userMessage" class="formError"></td>
             </tr>

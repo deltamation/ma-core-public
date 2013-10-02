@@ -42,10 +42,10 @@
   }
 </script>
 
-<table width="100%">
+<table width="100%" class="layout">
   <tr>
     <td valign="top">
-      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0" class="layout">
         <spring:bind path="form">
           <c:if test="${status.error}">
             <tr><td colspan="2" class="formError">${status.errorMessage}</td></tr>

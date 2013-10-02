@@ -67,7 +67,7 @@
 
 <div dojoType="dijit.Dialog" id="CommentDialog" bgColor="white" bgOpacity="0.5" toggle="fade" toggleDuration="250">
   <span class="smallTitle"><fmt:message key="notes.addNote"/></span>
-  <table>
+  <table class="layout">
     <tr>
       <td><textarea rows="8" cols="50" id="commentText"></textarea></td>
     </tr>

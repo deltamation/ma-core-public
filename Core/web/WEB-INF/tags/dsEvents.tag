@@ -3,13 +3,13 @@
     @author Matthew Lohbihler
 --%><%@include file="/WEB-INF/tags/decl.tagf"%><%--
 --%><%@tag body-content="empty"%><%--
---%><table width="100%">
+--%><table width="100%" class="layout">
   <tr><td class="smallTitle">
     <tag:img png="flag_white"/>
     <fmt:message key="dsEdit.events.alarmLevels"/>
   </td></tr>
 </table>
-<table cellspacing="1">
+<table cellspacing="1" class="layout">
   <c:choose>
     <c:when test="${empty dataSource.eventTypes}">
       <tr><td><b><fmt:message key="dsEdit.events.noEvents"/></b></td></tr>

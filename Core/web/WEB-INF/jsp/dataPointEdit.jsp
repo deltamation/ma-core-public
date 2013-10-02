@@ -9,7 +9,7 @@
   
   <form action="" method="post">
     <input type="hidden" id="taskName" name="asdf" value=""/>
-    <table width="100%" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0" class="layout">
       <tr>
         <td valign="top">
           <%@ include file="/WEB-INF/jsp/pointEdit/pointProperties.jsp" %>

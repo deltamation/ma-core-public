@@ -15,7 +15,7 @@
 
 <jsp:doBody/>
 
-<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<table width="100%" cellspacing="0" cellpadding="0" border="0" class="layout">
   <tr>
     <td class="footer" align="center">&copy;2006-2010 Serotonin Software Technologies Inc., <fmt:message key="footer.rightsReserved"/></td>
   </tr>

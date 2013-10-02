@@ -604,13 +604,13 @@
     }
   </script>
   
-  <table class="borderDiv marB"><tr><td>
+  <table class="borderDiv marB layout"><tr><td>
     <tag:img png="cog" title="eventHandlers.eventHandlers"/>
     <span class="smallTitle"><fmt:message key="eventHandlers.eventHandlers"/></span>
     <tag:help id="eventHandlers"/>
   </td></tr></table>
   
-  <table cellpadding="0" cellspacing="0">
+  <table cellpadding="0" cellspacing="0" class="layout">
     <tr>
       <td valign="top">
         <div class="borderDivPadded marR">
@@ -622,7 +622,7 @@
       
       <td valign="top">
         <div id="handlerEditDiv" class="borderDivPadded" style="display:none;">
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr>
               <td class="smallTitle"><fmt:message key="eventHandlers.eventHandler"/></td>
               <td align="right">
@@ -633,7 +633,7 @@
             <tr><td class="formError" id="userMessage"></td></tr>
           </table>
           
-          <table width="100%">
+          <table width="100%" class="layout">
             <tr>
               <td class="formLabelRequired"><fmt:message key="eventHandlers.type"/></td>
               <td class="formField">
@@ -666,7 +666,7 @@
             <tr><td class="horzSeparator" colspan="2"></td></tr>
           </table>
           
-          <table id="handler<c:out value="<%= EventHandlerVO.TYPE_SET_POINT %>"/>" style="display:none" width="100%">
+          <table id="handler<c:out value="<%= EventHandlerVO.TYPE_SET_POINT %>"/>" style="display:none" width="100%" class="layout">
             <tr>
               <td class="formLabelRequired"><fmt:message key="eventHandlers.target"/></td>
               <td class="formField">
@@ -717,7 +717,7 @@
             </tr>
           </table>
             
-          <table id="handler<c:out value="<%= EventHandlerVO.TYPE_EMAIL %>"/>" style="display:none" width="100%">
+          <table id="handler<c:out value="<%= EventHandlerVO.TYPE_EMAIL %>"/>" style="display:none" width="100%" class="layout">
             <tbody id="emailRecipients"></tbody>
             
             <tr><td class="horzSeparator" colspan="2"></td></tr>
@@ -752,7 +752,7 @@
             <tbody id="inactiveRecipients"></tbody>
           </table>
           
-          <table id="handler<c:out value="<%= EventHandlerVO.TYPE_PROCESS %>"/>" style="display:none" width="100%">
+          <table id="handler<c:out value="<%= EventHandlerVO.TYPE_PROCESS %>"/>" style="display:none" width="100%" class="layout">
             <tr>
               <td class="formLabelRequired"><fmt:message key="eventHandlers.activeCommand"/></td>
               <td class="formField">
@@ -780,7 +780,7 @@
             </tr>
           </table>
           
-          <table>
+          <table class="layout">
             <tbody id="genericMessages"></tbody>
           </table>
         </div>

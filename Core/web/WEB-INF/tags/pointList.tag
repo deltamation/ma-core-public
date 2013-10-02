@@ -5,11 +5,11 @@
 <%@include file="/WEB-INF/tags/decl.tagf"%>
 <%@attribute name="pointHelpId" %>
 
-<table cellpadding="0" cellspacing="0" id="pointProperties" style="display:none;">
+<table cellpadding="0" cellspacing="0" id="pointProperties" style="display:none;" class="layout">
   <tr>
     <td valign="top">
-      <div class="borderDiv marR marB">
-        <table width="100%">
+      <div class="borderDivPadded marR marB">
+        <table width="100%" class="layout">
           <tr>
             <td class="smallTitle"><fmt:message key="dsEdit.points.points"/></td>
             <td align="right">
@@ -27,7 +27,7 @@
 
     <td valign="top">
       <div id="pointDetails" class="borderDiv marB" style="display: none; position:absolute;">
-        <table width="100%">
+        <table width="100%" class="layout">
           <tr>
             <td>
               <span class="smallTitle"><fmt:message key="dsEdit.points.details"/></span>
@@ -43,7 +43,7 @@
         </table>
         <div id="pointMessage" class="ctxmsg formError"></div>
         
-        <table>
+        <table class="layout">
           <tr>
             <td class="formLabelRequired"><fmt:message key="dsEdit.points.name"/></td>
             <td class="formField"><input type="text" id="name"/></td>

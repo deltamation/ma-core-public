@@ -95,7 +95,7 @@
 
 <body class="${theme}">
 
-<table id="mainContainer" width="100%" cellspacing="0" cellpadding="0" border="0">
+<table id="mainContainer" width="100%" cellspacing="0" cellpadding="0" border="0" class="layout">
   <tr id="headerArea">
     <td>
       <page:header/>
@@ -113,7 +113,7 @@
 
   <tr id="footerArea">
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0" class="layout">
         <tr><td colspan="2">&nbsp;</td></tr>
         <tr>
           <td colspan="2" class="footer" align="center">&copy;2006-2012 Serotonin Software Technologies Inc., <fmt:message key="footer.rightsReserved"/></td>

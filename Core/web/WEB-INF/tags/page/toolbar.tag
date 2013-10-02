@@ -6,7 +6,7 @@
 <%@tag import="com.serotonin.m2m2.module.MenuItemDefinition"%>
 
 <c:if test="${!simple}">
-  <table width="100%" cellspacing="0" cellpadding="0" border="0" id="subHeader">
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" id="subHeader" class="layout">
     <tr>
       <td style="cursor:default">
         <c:if test="${!empty sessionUser}">

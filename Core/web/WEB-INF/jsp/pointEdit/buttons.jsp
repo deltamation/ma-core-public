@@ -4,7 +4,7 @@
 --%>
 <%@ include file="/WEB-INF/jsp/include/tech.jsp" %>
 <%@page import="com.serotonin.m2m2.web.mvc.controller.DataPointEditController"%>
-<table>
+<table class="layout">
   <tr>
     <td colspan="2" align="center">
       <input type="submit" value="<fmt:message key="common.save"/>"

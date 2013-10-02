@@ -5,7 +5,7 @@
 <%@ include file="/WEB-INF/jsp/include/tech.jsp" %>
 
 <div class="borderDiv marB marR">
-  <table>
+  <table class="layout">
     <tr><td colspan="3">
       <span class="smallTitle"><fmt:message key="pointEdit.text.props"/></span>
       <tag:help id="textRenderers"/>
@@ -47,7 +47,7 @@
       <tr>
         <td class="formLabelRequired"><fmt:message key="pointEdit.text.zero"/></td>
         <td class="formField">
-          <table cellspacing="0" cellpadding="0">
+          <table cellspacing="0" cellpadding="0" class="layout">
             <tr>
               <td valign="top"><input id="textRendererBinaryZero" type="text"/></td>
               <td width="10"></td>
@@ -62,7 +62,7 @@
       <tr>
         <td class="formLabelRequired"><fmt:message key="pointEdit.text.one"/></td>
         <td class="formField">
-          <table cellspacing="0" cellpadding="0">
+          <table cellspacing="0" cellpadding="0" class="layout">
             <tr>
               <td valign="top"><input id="textRendererBinaryOne" type="text"/></td>
               <td width="10"></td>

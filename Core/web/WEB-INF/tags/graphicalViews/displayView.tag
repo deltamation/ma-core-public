@@ -58,7 +58,7 @@
                   onmouseover="vcOver('c${vc.id}', 5);" onmouseout="vcOut('c${vc.id}');">
           ${vc.staticContent}
           <div id="c${vc.id}Controls" class="controlsDiv">
-            <table cellpadding="0" cellspacing="1">
+            <table cellpadding="0" cellspacing="1" class="layout">
               <tr onmouseover="showMenu('c${vc.id}Info', 16, 0);" onmouseout="hideLayer('c${vc.id}Info');"><td>
                 <tag:img png="information"/>
                 <div id="c${vc.id}Info" onmouseout="hideLayer(this);">

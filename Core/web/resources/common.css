@@ -142,11 +142,10 @@ a.rowHeaderLink, a.rowHeaderLink:visited, a.rowHeaderLink:link, a.rowHeaderLink:
 }
 .formLabel, .formLabelRequired {
 	color: #333333;
-	padding-right: 10px;
+	padding-right: 10px !important;
 	text-align: right;
 	white-space: nowrap;
-	padding-top: 5px;
-	vertical-align: top;
+	vertical-align: middle;
 }
 .formLabelRequired, .formError { font-weight: bold; }
 .formField { padding: 2px; color: #333333; }
@@ -157,18 +156,25 @@ select, input, textarea {
 	border: 1px solid #F07800;
 	padding: 2px;
 	margin-bottom: 2px;
+	border-radius: 2px;
+}
+.dijitTextBox {
+	border-radius: 2px;
+}
+input[type="text"] {
+	width: 150px;
 }
 input[type="checkbox"], input[type="radio"] {
 	color: #F07800;
 	border: 0;
 }
-.formVeryShort {
+.formVeryShort, input[type="text"].formVeryShort {
 	width: 30px;
 }
-.formShort {
+.formShort, input[type="text"].formShort {
 	width: 50px;
 }
-.formLong {
+.formLong, input[type="text"].formLong {
 	width: 250px;
 }
 .formDisabled {
@@ -176,9 +182,8 @@ input[type="checkbox"], input[type="radio"] {
 }
 input[type="submit"], input[type="button"] {
 	overflow: visible;
+	cursor: pointer;
 }
-
-
 
 /**
  * View styles
@@ -422,8 +427,21 @@ span.disabled { color: #aaa; }
 /**
  * Table attribute substitutes
  */
-table { padding: 0; border-spacing: 2px; border-collapse: separate; }
-table tr td, table tr th { border: 0; }
+table { border-collapse: collapse; }
+table tr td, table tr th {
+	padding:3px;
+	border: 1px solid white;
+}
+
+table.layout { padding: 0; border-spacing: 2px; border-collapse: separate; }
+
+table.layout > tbody > tr > td,
+table.layout > thead > tr > th
+{
+	padding: 0;
+	border: 0;
+}
+
 table.wide { width: 100%; }
 
 #pointDetails { background-color: #FFF; }

@@ -28,11 +28,11 @@
         }
     });
   </script>
-  <table cellspacing="0" cellpadding="0" border="0">
+  <table cellspacing="0" cellpadding="0" border="0" class="layout">
     <tr>
       <td>
         <form id="loginForm" action="login.htm" method="post">
-          <table>
+          <table class="layout">
             <spring:bind path="login.username">
               <tr>
                 <td class="formLabelRequired"><fmt:message key="login.userId"/></td>
@@ -75,7 +75,7 @@
         <br/>
       </td>
       <td valign="top">
-        <table>
+        <table class="layout">
           <tr>
             <td valign="top"><img id="browserImg" src="images/magnifier.png"/></td>
             <td><b><span id="browser"><fmt:message key="login.unknownBrowser"/></span></b></td>

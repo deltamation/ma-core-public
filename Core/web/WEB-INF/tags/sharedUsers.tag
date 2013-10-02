@@ -6,7 +6,7 @@
 --%><%@attribute name="doxId" required="true" %><%--
 --%><%@attribute name="noUsersKey" required="true" %><%--
 --%><%@attribute name="closeFunction" %>
-<table>
+<table class="layout">
   <tr>
     <td>
       <tag:img png="user" title="share.sharing"/>

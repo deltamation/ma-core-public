@@ -3,7 +3,7 @@
     @author Matthew Lohbihler
 --%><%@include file="/WEB-INF/tags/decl.tagf"%><%--
 --%><%@tag body-content="empty"%>
-<table>
+<table class="layout">
   <tr>
     <td><fmt:message key="common.dateRangeFrom"/></td>
     <td><input type="text" id="fromYear" class="formVeryShort" value="${fromYear}"/></td>

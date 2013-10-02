@@ -327,7 +327,7 @@
   
   <tag:labelledSection labelKey="dsEdit.currentAlarms" id="alarmsTable" closed="true">
     <div style="float: right"><tag:img png="control_repeat_blue" title="common.refresh" onclick="getAlarms()"/></div>
-    <table>
+    <table class="layout">
       <tr id="noAlarmsMsg"><td><b><fmt:message key="dsEdit.noAlarms"/></b></td></tr>
       <tbody id="alarmsList"></tbody>
     </table>

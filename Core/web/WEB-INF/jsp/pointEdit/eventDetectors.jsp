@@ -5,7 +5,7 @@
 <%@ include file="/WEB-INF/jsp/include/tech.jsp" %>
 <%@page import="com.serotonin.m2m2.vo.event.PointEventDetectorVO"%>
 <div class="borderDiv">
-  <table id="eventDetectorTable">
+  <table id="eventDetectorTable" class="layout">
     <tr><td colspan="2">
       <span class="smallTitle"><fmt:message key="pointEdit.detectors.eventDetectors"/></span>
       <tag:help id="eventDetectors"/>
@@ -30,7 +30,7 @@
     </td></tr>
   </table>
   
-  <table style="display:none;">
+  <table style="display:none;" class="layout">
     <tbody id="detectorType<%= PointEventDetectorVO.TYPE_ANALOG_HIGH_LIMIT %>">
       <tr><td class="horzSeparator" colspan="2"></td></tr>
       <tr>

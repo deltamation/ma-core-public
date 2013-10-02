@@ -8,7 +8,7 @@
 <c:choose>
   <c:when test="${empty chartData}"><fmt:message key="common.noData"/></c:when>
   <c:otherwise>
-    <table cellpadding="0" cellspacing="0">
+    <table cellpadding="0" cellspacing="0" class="layout">
       <tr><td>
         <c:forEach items="${chartData}" var="imageValue" varStatus="status">
           <img src="<%= ImageValueServlet.servletPath %>${imageValue.value.filename}?id=${point.id}w=50&h=50"/>
