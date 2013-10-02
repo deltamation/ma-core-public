@@ -182,6 +182,17 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     
     boolean useIntegralUnit = false;
     boolean useRenderedUnit = false;
+    
+    /**
+     * error associated with this point's values
+     */
+    @JsonProperty
+    private double error = 0.0D;
+    /**
+     * true if the error represents a percent of the value
+     */
+    @JsonProperty
+    private boolean errorInPercent = false;
 
     private int plotType = PlotTypes.STEP;
 
@@ -795,7 +806,7 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
     //
     // Serialization
     //
-    private static final int version = 7;
+    private static final int version = 8;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(version);
@@ -811,10 +822,15 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
         out.writeObject(renderedUnit);
         out.writeBoolean(useIntegralUnit);
         out.writeBoolean(useRenderedUnit);
+        out.writeDouble(error);
+        out.writeBoolean(errorInPercent);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         int ver = in.readInt();
+        
+        error = 0.0D;
+        errorInPercent = false;
 
         // Switch on the version of the class so that version changes can be elegantly handled.
         if (ver == 1) {
@@ -935,7 +951,7 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             unit = null; // calcUnit() is called from Dao
             integralUnit = UnitUtil.convertToUnit(in.readInt()); // legacy integralEngUnits
         }
-        else if (ver == 7) {
+        else if (ver >= 7) {
             textRenderer = (TextRenderer) in.readObject();
             chartRenderer = (ChartRenderer) in.readObject();
             pointLocator = (PointLocatorVO) in.readObject();
@@ -948,6 +964,10 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
             renderedUnit = (Unit<?>) in.readObject();
             useIntegralUnit = in.readBoolean();
             useRenderedUnit = in.readBoolean();
+        }
+        if (ver >= 8) {
+            error = in.readDouble();
+            errorInPercent = in.readBoolean();
         }
         
         // Check the purge type. Weird how this could have been set to 0.
@@ -1101,5 +1121,21 @@ public class DataPointVO implements Serializable, Cloneable, JsonSerializable, C
         catch (Exception e) {
             throw new TranslatableJsonException("emport.error.parseError", item);
         }
+    }
+
+    public double getError() {
+        return error;
+    }
+
+    public void setError(double error) {
+        this.error = error;
+    }
+
+    public boolean isErrorInPercent() {
+        return errorInPercent;
+    }
+
+    public void setErrorInPercent(boolean errorInPercent) {
+        this.errorInPercent = errorInPercent;
     }
 }

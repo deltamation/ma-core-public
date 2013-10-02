@@ -55,6 +55,7 @@ public class DataPointEditController extends SimpleFormController {
             dataPoint.setPurgeOverride(false); // Checkbox
             dataPoint.setUseIntegralUnit(false); // Checkbox
             dataPoint.setUseRenderedUnit(false); // Checkbox
+            dataPoint.setErrorInPercent(false); // Checkbox
         }
         else {
             int id;

@@ -32,7 +32,7 @@
 </script>
 
 <div class="borderDiv marB marR">
-  <table>
+  <table class="layout">
     <tr>
       <td colspan="3">
         <img src="images/icon_comp_edit.png"/>
@@ -68,6 +68,26 @@
     </spring:bind>
     
     <tbody id="unitSection" style="display:none;">
+      <spring:bind path="form.error">
+        <tr>
+          <td class="formLabelRequired"><fmt:message key="pointEdit.props.accuracy"/></td>
+          <td class="formField">
+            <div style="position: relative; height: 25px">
+                <div style="position: absolute; left:3px; top: 1px; z-index: 1; font-weight:bold">&plusmn;</div>
+                <input type="text" name="error" value="${status.value}" style="padding-left:10px; position: absolute; left:0; top: 0; width:142px"/>
+            </div>
+          </td>
+          <td class="formError">${status.errorMessage}</td>
+        </tr>
+      </spring:bind>
+      <tr>
+        <td class="formLabelRequired"></td>
+        <td class="formField">
+          <sst:checkbox id="errorInPercent" name="errorInPercent" selectedValue="${form.errorInPercent}" />
+          <label for="errorInPercent"><fmt:message key="pointEdit.props.accuracyInPercent"/></label>
+        </td>
+        <td class="formError"></td>
+      </tr>
       <spring:bind path="form.unit">
         <tr>
           <td class="formLabelRequired"><fmt:message key="pointEdit.props.unit"/></td>
