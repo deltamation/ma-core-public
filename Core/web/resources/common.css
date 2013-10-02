@@ -83,17 +83,17 @@ img { border-style: none; }
 .rowHeader td, .smRowHeader td, .row td, .smRow td, .rowAlt td, .smRowAlt td, .rowAlt2 td {
 	font-size: 11px;
 }
-.rowHeader td, .smRowHeader td {
+.rowHeader td, .smRowHeader td, .rowHeader th, .smRowHeader th {
 	font-weight: bold;
 	color: #FFFFFF;
 	background-color: #F07800;
 	text-align: center;
     white-space: nowrap;
 }
-.rowHeader td {
+.rowHeader td, .rowHeader th {
 	padding: 3px 10px 3px 10px;
 }
-.smRowHeader td {
+.smRowHeader td, .smRowHeader th {
 	padding: 2px 3px 2px 3px;
 }
 a.rowHeaderLink, a.rowHeaderLink:visited, a.rowHeaderLink:link, a.rowHeaderLink:hover {
