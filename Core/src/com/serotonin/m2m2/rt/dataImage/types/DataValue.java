@@ -14,6 +14,19 @@ import com.serotonin.m2m2.DataTypes;
  * @author Matthew Lohbihler
  */
 abstract public class DataValue {
+    /**
+     * Indicates if this is the original stored value
+     */
+    protected final boolean original;
+    
+    public DataValue() {
+        this.original = true;
+    }
+    
+    public DataValue(boolean original) {
+        this.original = original;
+    }
+    
     public static DataValue stringToValue(String valueStr, int dataType) {
         switch (dataType) {
         case DataTypes.BINARY:
@@ -76,4 +89,8 @@ abstract public class DataValue {
     }
 
     abstract public <T extends DataValue> int compareTo(T that);
+
+    public boolean isOriginal() {
+        return original;
+    }
 }

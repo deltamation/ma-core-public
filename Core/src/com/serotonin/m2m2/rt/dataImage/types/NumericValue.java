@@ -25,6 +25,12 @@ public class NumericValue extends DataValue implements Comparable<NumericValue> 
     private final double value;
 
     public NumericValue(double value) {
+        super();
+        this.value = value;
+    }
+    
+    public NumericValue(double value, boolean original) {
+        super(original);
         this.value = value;
     }
 

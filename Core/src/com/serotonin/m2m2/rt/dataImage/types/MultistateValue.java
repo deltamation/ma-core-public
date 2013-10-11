@@ -25,6 +25,12 @@ public class MultistateValue extends DataValue implements Comparable<MultistateV
     private final int value;
 
     public MultistateValue(int value) {
+        super();
+        this.value = value;
+    }
+    
+    public MultistateValue(int value, boolean original) {
+        super(original);
         this.value = value;
     }
 

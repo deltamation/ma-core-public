@@ -17,8 +17,11 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.RejectedExecutionException;
 
+import javax.measure.unit.Unit;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jscience.physics.amount.Amount;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.RecoverableDataAccessException;
@@ -237,6 +240,14 @@ public class PointValueDao extends BaseDao {
         ejt.update("update pointValues set modifiedValue=? where dataPointId=? AND ts=?", new Object[] {value, dataPointId, time});
     }
     
+    public void modifyPointValue(int dataPointId, long time, Amount<?> amount) {
+        DataPointDao pointDao = new DataPointDao();
+        
+        Unit<?> destinationUnit = pointDao.getDataPoint(dataPointId).getUnit();
+        double storedValue = amount.to(destinationUnit).getEstimatedValue();
+        modifyPointValue(dataPointId, DataTypes.NUMERIC, storedValue, time);
+    }
+    
     private static final String POINT_VALUE_REVERT = "SELECT pointValue FROM pointValues WHERE dataPointId=? AND ts=?";
     public void revertPointValue(int dataPointId, long time) {
         Double pointValue;
@@ -378,27 +389,39 @@ public class PointValueDao extends BaseDao {
         }
     }
 
-    DataValue createDataValue(ResultSet rs, int firstParameter, boolean raw) throws SQLException {
+    DataValue createDataValue(ResultSet rs, int firstParameter, boolean retrieveOriginal) throws SQLException {
         int dataType = rs.getInt(firstParameter);
         DataValue value;
         switch (dataType) {
         case (DataTypes.NUMERIC):
             double dblVal = rs.getDouble(firstParameter + 1);
-            if (raw || rs.wasNull())
+            if (retrieveOriginal || rs.wasNull()) {
                 dblVal = rs.getDouble(firstParameter + 2);
-            value = new NumericValue(dblVal);
+                value = new NumericValue(dblVal);
+            }
+            else {
+                value = new NumericValue(dblVal, false);
+            }
             break;
         case (DataTypes.BINARY):
             boolean boolVal = rs.getDouble(firstParameter + 1) == 1;
-            if (raw || rs.wasNull())
+            if (retrieveOriginal || rs.wasNull()) {
                 boolVal = rs.getDouble(firstParameter + 2) == 1;
-            value = new BinaryValue(boolVal);
+                value = new BinaryValue(boolVal);
+            }
+            else {
+                value = new BinaryValue(boolVal, false);
+            }
             break;
         case (DataTypes.MULTISTATE):
             int intVal = rs.getInt(firstParameter + 1);
-            if (raw || rs.wasNull())
+            if (retrieveOriginal || rs.wasNull()) {
                 intVal = rs.getInt(firstParameter + 2);
-            value = new MultistateValue(intVal);
+                value = new MultistateValue(intVal);
+            }
+            else {
+                value = new MultistateValue(intVal, false);
+            }
             break;
         case (DataTypes.ALPHANUMERIC):
             String s = rs.getString(firstParameter + 3);

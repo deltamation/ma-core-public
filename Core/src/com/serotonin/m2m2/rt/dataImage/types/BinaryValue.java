@@ -24,6 +24,12 @@ public class BinaryValue extends DataValue implements Comparable<BinaryValue> {
     private final boolean value;
 
     public BinaryValue(boolean value) {
+        super();
+        this.value = value;
+    }
+    
+    public BinaryValue(boolean value, boolean original) {
+        super(original);
         this.value = value;
     }
 
