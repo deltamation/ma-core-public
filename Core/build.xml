@@ -103,6 +103,7 @@
         <!-- Empty the filedata dir -->
         <delete dir="${build.dir}/web/WEB-INF/filedata" />
         <mkdir dir="${build.dir}/web/WEB-INF/filedata" />
+
         
 		<copy todir="${build.dir}/overrides" preservelastmodified="true">
         	<fileset dir="overrides"><include name="**/*.*"/></fileset>
@@ -110,8 +111,12 @@
         <mkdir dir="${build.dir}/logs" />
 	</target>
     
-    <taskdef name="jetty-jspc" classname="com.serotonin.ant.JettyJspCompile"><classpath refid="master-classpath" /></taskdef>
-    <target name="jsp-compile" depends="build" description="Compile the JSPs">
+    <taskdef name="jetty-jspc" classname="com.serotonin.ant.JettyJspCompile">
+    	<classpath refid="master-classpath" />
+    </taskdef>
+    
+	<target name="jsp-compile" depends="build" description="Compile the JSPs">
+		<echo message="${build.dir}/web"/>
         <jetty-jspc uriroot="${build.dir}/web" outputDir="${build.dir}/work/jsp" compile="true"
                 compilerSourceVM="1.5" compilerTargetVM="1.5">
             <classpath>
