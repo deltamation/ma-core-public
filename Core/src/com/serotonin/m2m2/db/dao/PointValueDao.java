@@ -234,37 +234,39 @@ public class PointValueDao extends BaseDao {
     }
     
     public void modifyPointValue(int dataPointId, int dataType, double value, long time) {
-        PointValueTime pvt = getPointValueAt(dataPointId, time);
-        if (pvt == null)
-            savePointValueImpl(dataPointId, dataType, null, time, null, null);
-        ejt.update("update pointValues set modifiedValue=? where dataPointId=? AND ts=?", new Object[] {value, dataPointId, time});
+        modifyPointValues(dataPointId, dataType, value, time, time+1);
     }
     
     public void modifyPointValue(int dataPointId, long time, Amount<?> amount) {
+        modifyPointValues(dataPointId, time, time+1, amount);
+    }
+    
+    public void modifyPointValues(int dataPointId, long from, long to, Amount<?> amount) {
         DataPointDao pointDao = new DataPointDao();
         
         Unit<?> destinationUnit = pointDao.getDataPoint(dataPointId).getUnit();
         double storedValue = amount.to(destinationUnit).getEstimatedValue();
-        modifyPointValue(dataPointId, DataTypes.NUMERIC, storedValue, time);
+        modifyPointValues(dataPointId, DataTypes.NUMERIC, storedValue, from, to);
     }
     
-    private static final String POINT_VALUE_REVERT = "SELECT pointValue FROM pointValues WHERE dataPointId=? AND ts=?";
-    public void revertPointValue(int dataPointId, long time) {
-        Double pointValue;
-        try {
-            pointValue = ejt.queryForObject(POINT_VALUE_REVERT, new Object[] {dataPointId, time}, Double.class);
-        } catch (DataAccessException e) {
-            return; // no row in pointValues table for this point and time
-        }
+    public void modifyPointValues(int dataPointId, int dataType, double value, long from, long to) {
+        PointValueTime pvt = getPointValueAt(dataPointId, from);
+        if (pvt == null)
+            savePointValueImpl(dataPointId, dataType, null, from, null, null);
         
-        if (pointValue == null) {
-            // there is a row but it has no pointValue, i.e. its just a modified value
-            deletePointValueAt(dataPointId, time);
-        }
-        else {
-            // there is a row with a pointValue, reset the modifiedValue to null
-            ejt.update("update pointValues set modifiedValue=? where dataPointId=? AND ts=?", new Object[] {null, dataPointId, time});
-        }
+        ejt.update("UPDATE pointValues SET modifiedValue=? WHERE dataPointId=? AND ts>=? AND ts<?",
+                new Object[] {value, dataPointId, from, to});
+    }
+    
+    public void revertPointValue(int dataPointId, long time) {
+        revertPointValues(dataPointId, time, time+1);
+    }
+    
+    public void revertPointValues(int dataPointId, long from, long to) {
+        ejt.update("DELETE FROM pointValues WHERE dataPointId=? AND ts>=? AND ts<? AND pointValue IS NULL",
+                new Object[] {dataPointId, from, to});
+        ejt.update("UPDATE pointValues SET modifiedValue=? WHERE dataPointId=? AND ts>=? AND ts<?",
+                new Object[] {null, dataPointId, from, to});
     }
 
     //
