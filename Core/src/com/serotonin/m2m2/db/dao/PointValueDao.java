@@ -233,29 +233,38 @@ public class PointValueDao extends BaseDao {
         return id;
     }
     
-    public void modifyPointValue(int dataPointId, int dataType, double value, long time) {
-        modifyPointValues(dataPointId, dataType, value, time, time+1);
+    public boolean modifyPointValue(int dataPointId, int dataType, double value, long time) {
+        if (modifyPointValues(dataPointId, dataType, value, time, time+1) == 0)
+            return false;
+        return true;
     }
     
-    public void modifyPointValue(int dataPointId, long time, Amount<?> amount) {
-        modifyPointValues(dataPointId, time, time+1, amount);
+    public boolean modifyPointValue(int dataPointId, long time, Amount<?> amount) {
+        if (modifyPointValues(dataPointId, time, time+1, amount) == 0)
+            return false;
+        return true;
     }
     
-    public void modifyPointValues(int dataPointId, long from, long to, Amount<?> amount) {
+    public int modifyPointValues(int dataPointId, long from, long to, Amount<?> amount) {
         DataPointDao pointDao = new DataPointDao();
         
         Unit<?> destinationUnit = pointDao.getDataPoint(dataPointId).getUnit();
         double storedValue = amount.to(destinationUnit).getEstimatedValue();
-        modifyPointValues(dataPointId, DataTypes.NUMERIC, storedValue, from, to);
+        return modifyPointValues(dataPointId, DataTypes.NUMERIC, storedValue, from, to);
     }
     
-    public void modifyPointValues(int dataPointId, int dataType, double value, long from, long to) {
+    public int modifyPointValues(int dataPointId, int dataType, double value, long from, long to) {
         PointValueTime pvt = getPointValueAt(dataPointId, from);
         if (pvt == null)
             savePointValueImpl(dataPointId, dataType, null, from, null, null);
         
-        ejt.update("UPDATE pointValues SET modifiedValue=? WHERE dataPointId=? AND ts>=? AND ts<?",
-                new Object[] {value, dataPointId, from, to});
+        Integer dataPointId_Obj = dataPointId;
+        Double value_Obj = value;
+        Long from_Obj = from;
+        Long to_Obj = to;
+        
+        return ejt.update("UPDATE pointValues SET modifiedValue=? WHERE dataPointId=? AND ts>=? AND ts<?",
+                new Object[] {value_Obj, dataPointId_Obj, from_Obj, to_Obj});
     }
     
     public void revertPointValue(int dataPointId, long time) {
