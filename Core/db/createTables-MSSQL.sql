@@ -151,6 +151,7 @@ create table pointValues (
   dataType int not null,
   pointValue float,
   ts bigint not null,
+  modifiedValue double,
   primary key (id)
 );
 create index pointValuesIdx1 on pointValues (dataPointId, ts);

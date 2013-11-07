@@ -153,7 +153,8 @@ create table pointValues (
   dataPointId int not null,
   dataType int not null,
   pointValue double,
-  ts bigint not null
+  ts bigint not null,
+  modifiedValue double
 );
 alter table pointValues add constraint pointValuesPk primary key (id);
 create index pointValuesIdx1 on pointValues (dataPointId, ts);

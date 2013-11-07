@@ -158,6 +158,7 @@ create table pointValues (
   dataType int not null,
   pointValue double,
   ts bigint not null,
+  modifiedValue double,
   primary key (id)
 ) engine=MyISAM;
 create index pointValuesIdx1 on pointValues (dataPointId, ts);
