@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jscience.physics.amount.Amount;
 import org.springframework.dao.ConcurrencyFailureException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.dao.TransientDataAccessException;
 import org.springframework.dao.TransientDataAccessResourceException;
@@ -285,6 +284,7 @@ public class PointValueDao extends BaseDao {
     private static final String POINT_VALUE_SELECT = "select pv.dataType, pv.modifiedValue, pv.pointValue, " +
             "pva.textPointValueShort, pva.textPointValueLong, pv.ts, pva.sourceMessage " +
             "from pointValues pv left join pointValueAnnotations pva on pv.id = pva.pointValueId";
+    @SuppressWarnings("unused")
     private static final String POINT_VALUE_SELECT_RAW = POINT_VALUE_SELECT +
             " where pv.pointValue is not null";
 
@@ -456,6 +456,7 @@ public class PointValueDao extends BaseDao {
     private static final String POINT_ID_VALUE_SELECT = "select pv.dataPointId, pv.dataType, pv.modifiedValue, " +
             "pv.pointValue, pva.textPointValueShort, pva.textPointValueLong, pv.ts " +
             "from pointValues pv left join pointValueAnnotations pva on pv.id = pva.pointValueId";
+    @SuppressWarnings("unused")
     private static final String POINT_ID_VALUE_SELECT_RAW = POINT_ID_VALUE_SELECT +
             " where pv.pointValue is not null";
 
